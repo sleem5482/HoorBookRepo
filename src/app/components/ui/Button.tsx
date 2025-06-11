@@ -6,7 +6,7 @@ interface ButtonProps {
     onclick?: () => void;
     disabeld?: boolean;
     type?: "button" | "submit" | "reset";
-    theme: string;
+    theme?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
