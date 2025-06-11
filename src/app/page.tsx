@@ -1,9 +1,7 @@
 "use client"
 
-import Container from "./components/container";
-import { Button } from "./components/ui/Button";
+import Container from "./components/Container";
 import { Card } from "./components/ui/Card";
-import Image from "next/image";
 import productImage from './../../public/asset/images/admin profile.jpg' 
 import { Circle } from "./components/ui/Circle";
 import Link from "next/link";

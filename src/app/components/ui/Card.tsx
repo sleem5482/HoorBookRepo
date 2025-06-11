@@ -1,8 +1,8 @@
 import { type CardProps } from '@/app/lib/type'
 import React, { useState } from 'react'
-import Container from '../container'
 import Image from 'next/image'
 import { Heart } from 'lucide-react'
+import Container from '../Container'
 
 export const Card: React.FC<CardProps > = ({
 id,

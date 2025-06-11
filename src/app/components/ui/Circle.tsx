@@ -1,7 +1,7 @@
 import {type CircleProps } from '@/app/lib/type'
 import Image from 'next/image'
 import React from 'react'
-import Container from '../container'
+import Container from '../Container'
 export const Circle:React.FC<CircleProps>=({
     id,
     image,
