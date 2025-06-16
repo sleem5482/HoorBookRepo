@@ -1,15 +1,10 @@
-import { type ApiResponse } from "./type";
 import { CallApi } from "./utilits";
 
 export const fetchData = async <T = unknown>(APIURL: string): Promise<T> => {
   try {
-    const res: ApiResponse<T> = await CallApi("get", `${APIURL}`);
-    
-    if (!res.succeeded) {
-      throw new Error(res.message || "Failed to fetch data");
-    }
-
-    return res.data;
+    const res: T = await CallApi("get", `${APIURL}`);
+  
+    return res;
   } catch (error) {
     console.error(`API fetch error (${APIURL}):`, error);
     throw new Error(`Failed to fetch ${APIURL} data`);

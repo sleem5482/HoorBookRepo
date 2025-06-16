@@ -17,7 +17,7 @@ export const CallApi = async <T = unknown>(
     const token = getAuthToken();
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}), 
+      // ...(token ? { Authorization: `Bearer ${token}` } : {}), 
       ...customHeaders,
     };
 
