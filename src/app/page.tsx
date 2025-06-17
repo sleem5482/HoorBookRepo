@@ -141,6 +141,9 @@ sethomedata(response.data);
   </svg>
 </div>
 
+
+
+
 <div className="w-full bg-white">
   <div className="max-w-screen-xl mx-auto p-5 text-black z-[10000]">
 {homedata?.sliders?.length > 0 && (
@@ -179,7 +182,7 @@ sethomedata(response.data);
 </div>
 
 
-<div className="w-full bg-white m4-3">
+<div className="w-full bg-white mt-3">
    <div className="flex justify-end">
       <h2 className="text-btn-color font-bold text-xl">
         الأكثر مبيعاً
@@ -222,7 +225,7 @@ sethomedata(response.data);
 
 
 
-<div className="w-full bg-white m4-3">
+<div className="w-full bg-white mt-3">
    <div className="flex justify-end">
       <h2 className="text-btn-color font-bold text-xl">
 عروض مميزة
@@ -236,24 +239,24 @@ sethomedata(response.data);
           className="min-w-[250px] sm:min-w-[300px] lg:min-w-[350px] flex-shrink-0"
         >
       
-         <Card
-  id={index + 1}
-  image={image.image}
-  name={image.name}
-  description={image.description}
-  price={image.price} 
-  originalPrice={image.originalPrice}
-  category={image.category}
-  discount={image.discount}
-  love={image.love}
-  stock={image.stock}
-  soldOut={image.soldOut} 
-  packet_pieces={image.packet_pieces}
-  packet_price={image.packet_price}
-  piece_price_after_offer={image.piece_price_after_offer}
-  packet_price_after_offer={image.packet_price_after_offer}
-  reviews_avg={image.reviews_avg} // e.g., 2.5, 4.1
-  handellove={() => console.log(`Liked product ${index + 1}`)}
+  <Card
+      id={index + 1}
+      image={image.image}
+      name={image.name}
+      description={image.description}
+      price={image.price} 
+      originalPrice={image.originalPrice}
+      category={image.category}
+      discount={image.discount}
+      love={image.love}
+      stock={image.stock}
+      soldOut={image.soldOut} 
+      packet_pieces={image.packet_pieces}
+      packet_price={image.packet_price}
+      piece_price_after_offer={image.piece_price_after_offer}
+      packet_price_after_offer={image.packet_price_after_offer}
+      reviews_avg={image.reviews_avg} // e.g., 2.5, 4.1
+      handellove={() => console.log(`Liked product ${index + 1}`)}
 />
 
         </div>
@@ -263,6 +266,47 @@ sethomedata(response.data);
 </div>
 
 
+<div className="w-full bg-white mt-3">
+  {homedata.categoriesWithProducts?.map((item) => (
+    <div key={item.id} className="mb-6">
+      <h2 className="text-btn-color font-bold text-xl text-right px-4 mb-2">
+        {item.name}
+      </h2>
+
+      {/* Product List */}
+      <div className="overflow-x-auto scrollbar-hide px-1 py-5">
+        <div className="flex gap-4 w-max">
+          {item.products.map((product) => (
+            <div
+              key={product.id}
+              className="min-w-[250px] sm:min-w-[300px] lg:min-w-[350px] flex-shrink-0"
+            >
+              <Card
+                id={product.id}
+                image={product.image}
+                name={product.name}
+                description={product.description}
+                price={product.price}
+                originalPrice={product.originalPrice}
+                category={product.category}
+                discount={product.discount}
+                love={product.love}
+                stock={product.stock}
+                soldOut={product.soldOut}
+                packet_pieces={product.packet_pieces}
+                packet_price={product.packet_price}
+                piece_price_after_offer={product.piece_price_after_offer}
+                packet_price_after_offer={product.packet_price_after_offer}
+                reviews_avg={product.reviews_avg}
+                handellove={() => console.log(`Liked product ${product.id}`)}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
 
 </div>
 
