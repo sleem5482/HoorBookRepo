@@ -7,6 +7,22 @@ export interface ApiResponse<T>{
     errors: string | null;
     data: T;
   }
+
+
+
+
+
+////////// field form 
+
+export interface FieldForm {
+  name: string;
+  label: string;
+  type: "text" | "number" | "email" | "select";
+  options?: string[];       
+  fetchUrl?: string;        
+}
+
+
 //////card type
 export interface CardProps {
   id: number
@@ -111,3 +127,7 @@ export interface acesstoken{
     sub?: string;
   };
 }
+
+
+
+

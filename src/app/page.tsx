@@ -4,7 +4,7 @@
   import { Card } from "./components/ui/Card"; 
   import InputField from "./components/ui/Input";
   import { Heart, Home, List, Search, ShoppingCart, User2 } from "lucide-react";
-  import Logo from '../../public/asset/images/H&B.jpeg'
+  import Logo from '../../public/asset/images/حورلوجو.jpeg'
   import Image from "next/image";
   import 'swiper/css';
   import 'swiper/css/pagination';
