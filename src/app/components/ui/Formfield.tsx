@@ -29,36 +29,39 @@ const handelchange=(field:string,value:any)=>{
     onChange(updatedData);
 }
     return (
-        <Container>
-            <div className="space-y-4 text-black">
-      {fields.map((field) => (
-        <div key={field.name} className="flex flex-col gap-1">
-          <label>{field.label}</label>
-          {field.type === "select" ? (
-            <select
-            name={field.name}
-            title={field.label}
-              value={formData[field.name] || ""}
-              onChange={(e) => handelchange(field.name, e.target.value)}
-            >
-              <option value="">اختر...</option>
-              {(field.options || dynamicOptions[field.name] || []).map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <InputField
-            name={field.name}
-              type={field.type}
-              value={formData[field.name] || ""}
-              onChange={(e) => handelchange(field.name, (e.target.value))}
-            />
-          )}
-        </div>
-      ))}
-    </div>
-        </Container>
+      <Container>
+      <div dir="rtl" className="space-y-4 text-right text-black font-sans">
+        {fields.map((field) => (
+          <div key={field.name} className="flex flex-col gap-1">
+            <label className="block mb-1 text-sm">{field.label}</label>
+
+            {field.type === "select" ? (
+              <select
+                name={field.name}
+                value={formData[field.name] || ""}
+                onChange={(e) => handelchange(field.name, e.target.value)}
+                className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
+              >
+                <option value="">اختر...</option>
+                {(field.options || dynamicOptions[field.name] || []).map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <InputField
+                name={field.name}
+                type={field.type}
+                value={formData[field.name] || ""}
+                onChange={(e) => handelchange(field.name, e.target.value)}
+                placeholder={field.placeholder}
+                className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
+              />
+            )}
+          </div>
+        ))}
+      </div>
+    </Container>
     )
 }

@@ -1,54 +1,82 @@
-  "use client"
+"use client";
 
-  import Container from "./components/Container";
-  import { Card } from "./components/ui/Card"; 
-  import InputField from "./components/ui/Input";
-  import { Heart, Home, List, Search, ShoppingCart, User2 } from "lucide-react";
-  import Logo from '../../public/asset/images/حورلوجو.jpeg'
-  import Image from "next/image";
-  import 'swiper/css';
-  import 'swiper/css/pagination';
+import Container from "./components/Container";
+import { Card } from "./components/ui/Card"; 
+import InputField from "./components/ui/Input";
+import { Heart, Home, List, Search, ShoppingCart, User2 } from "lucide-react";
+import Logo from '../../public/asset/images/حورلوجو.jpeg';
+import Image from "next/image";
+import 'swiper/css';
+import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-
 import { Slider } from "./components/ui/Slider";
 import { Circle } from "./components/ui/Circle";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ApiResponse, HomePageData } from "./lib/type";
 import { fetchData } from "./lib/methodes";
 import { BaseUrl } from "./components/Baseurl";
-  export default function HomePage() {
-const urldatapage=`${BaseUrl}api/home`;
+import debounce from "lodash.debounce";
+import Link from "next/link";
 
 
-const [homedata,sethomedata]=useState<HomePageData>({
-   sliders: [],
+export default function HomePage() {
+  const urldatapage = `${BaseUrl}api/home`;
+  const [homedata, sethomedata] = useState<HomePageData>({
+    sliders: [],
     hotDeals: [],
     topSelling: [],
-    categoriesWithProducts: [
-      
-    ],
+    categoriesWithProducts: [],
     categories: [],
-})
+  });
 
+  const [searchText, setSearchText] = useState("");
 
-useEffect(()=>{
-  const fetchdatapage=async()=>{
-    try{
-   const response:ApiResponse<HomePageData> = await fetchData(urldatapage);
-sethomedata(response.data);
-
-      console.log("Data fetched successfully:", response);
+  const searchProducts = async (value: string) => {
+    if (!value) {
+      const response: ApiResponse<HomePageData> = await fetchData(urldatapage);
+      sethomedata(response.data);
+      return;
     }
-    catch(error){
-      console.error("Error fetching data:", error);
+
+   const url = `${BaseUrl}api/products?name=${value}`;
+   try {
+      const response: ApiResponse<any> = await fetchData(url);
+const result = response?.data?.data ?? [];
+
+      sethomedata({
+        sliders: [],
+        hotDeals: [],
+        topSelling: result,
+        categoriesWithProducts: [],
+        categories: [],
+      });
+    } catch (error) {
+      console.error("Error in search:", error);
     }
-   
-  }
-  fetchdatapage();
-  
-},[])
+  };
 
+  const debouncedSearch = useMemo(
+    () => debounce((value: string) => searchProducts(value), 200),
+    []
+  );
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchText(value);
+    debouncedSearch(value);
+  };
+
+  useEffect(() => {
+    const fetchdatapage = async () => {
+      try {
+        const response: ApiResponse<HomePageData> = await fetchData(urldatapage);
+        sethomedata(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchdatapage();
+  }, []);
   return (
     <section className="bg-white">
     {/* Navbar */}
@@ -60,12 +88,14 @@ sethomedata(response.data);
 
   <div className="flex flex-1 mx-4 max-w-xl bg-white rounded-lg outline-none overflow-hidden shadow-inner">
     <div className="flex-grow">
-      <InputField
-        type="text"
-        name="search"
-        placeholder="بتدور على ايه؟"
-        className="!bg-white text-black placeholder:text-gray-400 border-solid-[1px] border-gray-400 outline-none focus:ring-0"
-      />
+       <InputField
+              type="text"
+              name="search"
+              placeholder="بتدور على ايه؟"
+              value={searchText}
+              onChange={handleSearchChange}
+              className="!bg-white text-black placeholder:text-gray-400 border-solid-[1px] border-gray-400 outline-none focus:ring-0"
+            />
     </div>
     <div className=" px-4 py-2  font-bold text-sm flex items-center rounded-none rounded-l-lg text-black">
       <Search className="ml-1" size={18} />
@@ -73,11 +103,12 @@ sethomedata(response.data);
   </div>
 
   <div className="flex items-center space-x-4 rtl:space-x-reverse text-white">
-    
+    <Link href={'/register'}>
     <div className="flex items-center gap-1 cursor-pointer hover:text-yellow-400 transition">
       <User2 size={22} />
       <span className="text-sm">تسجيل دخول</span>
     </div>
+    </Link>
 
     <div className="h-6 w-px bg-gray-400"></div>
 

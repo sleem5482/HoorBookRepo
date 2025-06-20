@@ -17,10 +17,24 @@ export interface ApiResponse<T>{
 export interface FieldForm {
   name: string;
   label: string;
-  type: "text" | "number" | "email" | "select";
+  type: "text" | "number" | "email" | "select"|"password";
   options?: string[];       
-  fetchUrl?: string;        
+  fetchUrl?: string;
+  placeholder?:string 
+  requierd?:boolean       
 }
+
+////////// field form 
+
+
+////login
+export interface Login{
+  email: string;
+  password: string;
+
+}
+////login
+
 
 
 //////card type
