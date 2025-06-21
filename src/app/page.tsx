@@ -4,7 +4,7 @@ import Container from "./components/Container";
 import { Card } from "./components/ui/Card"; 
 import InputField from "./components/ui/Input";
 import { Heart, Home, List, Search, ShoppingCart, User2 } from "lucide-react";
-import Logo from '../../public/asset/images/حورلوجو.jpeg';
+import Logo from '../../public/asset/images/حورلوجو-1.png';
 import Image from "next/image";
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -17,6 +17,7 @@ import { fetchData } from "./lib/methodes";
 import { BaseUrl } from "./components/Baseurl";
 import debounce from "lodash.debounce";
 import Link from "next/link";
+import SliderSkeleton from "./components/ui/SliderSkeleton";
 
 
 export default function HomePage() {
@@ -30,6 +31,10 @@ export default function HomePage() {
   });
 
   const [searchText, setSearchText] = useState("");
+const [loading, setLoading] = useState<Boolean>(true);
+
+
+
 
   const searchProducts = async (value: string) => {
     if (!value) {
@@ -73,13 +78,18 @@ const result = response?.data?.data ?? [];
         sethomedata(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
-      }
+      }finally {
+      setLoading(false);
+    }
     };
     fetchdatapage();
   }, []);
   return (
     <section className="bg-white">
-    {/* Navbar */}
+      {loading?(
+        <SliderSkeleton/>
+      ):(
+<>
   <div dir="rtl" className="navbar px-4 py-2 flex items-center justify-center gap-[40px] shadow-sm bg-btn-color">
 
   <div className="text-white font-bold text-lg">
@@ -153,9 +163,6 @@ const result = response?.data?.data ?? [];
     <span className="text-xs ">حسابي</span>
   </div>
 </div>
-
-
-
 <Container >
 <div className="max-w-screen-xl mx-auto">
 <div className="absolute top-[150px] left-0 w-full h-[600px] z-0 pointer-events-none overflow-hidden">
@@ -177,7 +184,7 @@ const result = response?.data?.data ?? [];
 
 <div className="w-full bg-white">
   <div className="max-w-screen-xl mx-auto p-5 text-black z-[10000]">
-{homedata?.sliders?.length > 0 && (
+{homedata?.sliders?.length > 0 &&(
   <Slider
     items={homedata.sliders}
     height="h-[500px]"
@@ -343,6 +350,12 @@ const result = response?.data?.data ?? [];
 
 
 </Container>
+</>
+      )}
+    {/* Navbar */}
+
+
+
 
   </section>
   );
