@@ -5,8 +5,9 @@ import { FieldForm } from "../lib/type";
 import { useState } from "react";
 import FormField from "../components/ui/Formfield";
 import Image from "next/image";
-import Logo from '../../../public/asset/images/حورلوجو.jpeg';
+import Logo from '../../../public/asset/images/حورلوجو-1.png';
 import { Heart, ShoppingCart, User2 } from "lucide-react";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [login, setLogin] = useState<Record<string, any>>({});
@@ -44,7 +45,9 @@ export default function LoginPage() {
     <>
       <div dir="rtl" className="navbar px-4 py-2 flex items-center justify-between p-5 shadow-md bg-btn-color">
         <div className="text-white font-bold text-lg">
+          <Link href={'/'}>
           <Image src={Logo} alt="شعار الموقع" className="h-[42px] w-[55px] rounded-[10px]" />
+          </Link>
         </div>
 
         <div className="flex items-center space-x-4 rtl:space-x-reverse text-white">
@@ -65,7 +68,7 @@ export default function LoginPage() {
 
       <div className="min-h-screen bg-gradient-to-br from-purple-50 to-orange-50 flex items-center justify-center">
         <Container>
-          <form onSubmit={handleSubmit} className="bg-white shadow-xl rounded-2x p-8 w-full max-w-md space-y-6">
+          <form onSubmit={handleSubmit} className="bg-white rounded-md shadow-xl rounded-2x p-8 w-full max-w-md space-y-6">
             <div className="text-black flex flex-col items-center justify-center">
 
               <h2 className="text-2xl font-bold text-purple-800 text-center">مرحبا بعودتك</h2>
