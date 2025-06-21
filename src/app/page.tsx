@@ -19,76 +19,56 @@ import debounce from "lodash.debounce";
 import Link from "next/link";
 import SliderSkeleton from "./components/ui/SliderSkeleton";
 import LogoImageAnimation from "./components/ui/Loader";
-
+import { HomeStore } from "./store/useHomeDataStore";
 
 export default function HomePage() {
-  const urldatapage = `${BaseUrl}api/home`;
-  const [homedata, sethomedata] = useState<HomePageData>({
-    sliders: [],
-    hotDeals: [],
-    topSelling: [],
-    categoriesWithProducts: [],
-    categories: [],
-  });
-
+   const { data, loadingdata, fetchHomeData } = HomeStore();
   const [searchText, setSearchText] = useState("");
-const [loading, setLoading] = useState<Boolean>(true);
-const [show,setshow]=useState<Boolean>(true);
+  const [show, setShow] = useState(true);
 
-
-
-  const searchProducts = async (value: string) => {
+  const handleSearch = async (value: string) => {
     if (!value) {
-      const response: ApiResponse<HomePageData> = await fetchData(urldatapage);
-      sethomedata(response.data);
+      fetchHomeData();
       return;
     }
 
-   const url = `${BaseUrl}api/products?name=${value}`;
-   try {
+    try {
+      const url = `${BaseUrl}api/products?name=${value}`;
       const response: ApiResponse<any> = await fetchData(url);
-const result = response?.data?.data ?? [];
+      const result = response?.data?.data ?? [];
 
-      sethomedata({
-        sliders: [],
-        hotDeals: [],
-        topSelling: result,
-        categoriesWithProducts: [],
-        categories: [],
-      });
-    } catch (error) {
-      console.error("Error in search:", error);
+      HomeStore.setState((prev) => ({
+        data: {
+          ...prev.data,
+          sliders: [],
+          hotDeals: [],
+          topSelling: result,
+          categories: [],
+          categoriesWithProducts: []
+        }
+      }));
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  const debouncedSearch = useMemo(
-    () => debounce((value: string) => searchProducts(value), 200),
-    []
-  );
+  const debouncedSearch = useMemo(() => debounce(handleSearch, 300), []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchText(value);
-    debouncedSearch(value);
+    setSearchText(e.target.value);
+    debouncedSearch(e.target.value);
   };
 
   useEffect(() => {
-    const time=setTimeout(() => {
-      setshow(false)
-    }, 3000);
-    const fetchdatapage = async () => {
-      try {
-        const response: ApiResponse<HomePageData> = await fetchData(urldatapage);
-        sethomedata(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }finally {
-      setLoading(false);
+    const time = setTimeout(() => setShow(false), 3000);
+
+    if (data.sliders.length === 0) {
+      fetchHomeData();
     }
-    };
-    fetchdatapage();
-        return () => clearTimeout(time);
+
+    return () => clearTimeout(time);
   }, []);
+
   return (
     <section className="bg-white">
       {show?(
@@ -96,7 +76,7 @@ const result = response?.data?.data ?? [];
       ):
     (
       <>
-      {loading?(
+      {loadingdata ?(
         <SliderSkeleton/>
       ):(
     <>
@@ -194,9 +174,9 @@ const result = response?.data?.data ?? [];
     
     <div className="w-full bg-white">
     <div className="max-w-screen-xl mx-auto p-5 text-black z-[10000]">
-    {homedata?.sliders?.length > 0 &&(
+    {data?.sliders?.length > 0 &&(
     <Slider
-    items={homedata.sliders}
+    items={data.sliders}
     height="h-[500px]"
     objectFit="cover"
     showNavigation={true}
@@ -216,7 +196,7 @@ const result = response?.data?.data ?? [];
     
     <div className=" p-5 overflow-x-auto scrollbar-hide">
     <div className="flex w-max">
-      {homedata.categories?.map((image, index) => (
+      {data.categories?.map((image, index) => (
         <div key={index}>
           <Circle
             id={index + 1}
@@ -238,12 +218,11 @@ const result = response?.data?.data ?? [];
     </div>
     <div className=" overflow-x-auto scrollbar-hide px-1 py-5">
     <div className="flex gap-4 w-max">
-      {homedata.topSelling?.map((image, index) => (
+      {data.topSelling?.map((image, index) => (
         <div
           key={index}
           className="min-w-[250px] sm:min-w-[300px] lg:min-w-[350px] flex-shrink-0"
         >
-      
          <Card
     id={index + 1}
     image={image.image}
@@ -281,7 +260,7 @@ const result = response?.data?.data ?? [];
     </div>
     <div className=" overflow-x-auto scrollbar-hide px-1 py-5">
     <div className="flex gap-4 w-max">
-      {homedata.hotDeals?.map((image, index) => (
+      {data.hotDeals?.map((image, index) => (
         <div
           key={index}
           className="min-w-[250px] sm:min-w-[300px] lg:min-w-[350px] flex-shrink-0"
@@ -315,7 +294,7 @@ const result = response?.data?.data ?? [];
     
     
     <div className="w-full bg-white mt-3">
-    {homedata.categoriesWithProducts?.map((item) => (
+    {data.categoriesWithProducts?.map((item) => (
     <div key={item.id} className="mb-6">
       <h2 className="text-btn-color font-bold text-xl text-right px-4 mb-2">
         {item.name}
@@ -366,7 +345,6 @@ const result = response?.data?.data ?? [];
 
     )
     }
-    {/* Navbar */}
 
 
 

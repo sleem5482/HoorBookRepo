@@ -143,5 +143,13 @@ export interface acesstoken{
 }
 
 
+/// state managment
+export interface HomeDataState {
+  data: HomePageData;
+  loadingdata: boolean;
+  fetchHomeData: () => Promise<void>;
+}
+
+
 
 
