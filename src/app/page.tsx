@@ -15,7 +15,6 @@ import { useEffect, useMemo, useState } from "react";
 import { ApiResponse, HomePageData } from "./lib/type";
 import { fetchData } from "./lib/methodes";
 import { BaseUrl } from "./components/Baseurl";
-import debounce from "lodash.debounce";
 import Link from "next/link";
 import SliderSkeleton from "./components/ui/SliderSkeleton";
 import LogoImageAnimation from "./components/ui/Loader";
@@ -52,12 +51,8 @@ export default function HomePage() {
     }
   };
 
-  const debouncedSearch = useMemo(() => debounce(handleSearch, 300), []);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
-    debouncedSearch(e.target.value);
-  };
+
 
   useEffect(() => {
     const time = setTimeout(() => setShow(false), 3000);
@@ -87,19 +82,19 @@ export default function HomePage() {
     </div>
     
     <div className="flex flex-1 mx-4 max-w-xl bg-white rounded-lg outline-none overflow-hidden shadow-inner">
+  <Link href={'/Products'} className="flex w-full items-center">
     <div className="flex-grow">
        <InputField
               type="text"
               name="search"
               placeholder="بتدور على ايه؟"
-              value={searchText}
-              onChange={handleSearchChange}
               className="!bg-white text-black placeholder:text-gray-400 border-solid-[1px] border-gray-400 outline-none focus:ring-0"
             />
     </div>
     <div className=" px-4 py-2  font-bold text-sm flex items-center rounded-none rounded-l-lg text-black">
       <Search className="ml-1" size={18} />
     </div>
+      </Link>
     </div>
     
     <div className="flex items-center space-x-4 rtl:space-x-reverse text-white">
@@ -199,7 +194,7 @@ export default function HomePage() {
       {data.categories?.map((image, index) => (
         <div key={index}>
           <Circle
-            id={index + 1}
+            id={image.id}
             image={image.image}
             name={image.name}
           />
@@ -221,7 +216,8 @@ export default function HomePage() {
       {data.topSelling?.map((image, index) => (
         <div
           key={index}
-          className="min-w-[250px] sm:min-w-[300px] lg:min-w-[350px] flex-shrink-0"
+          className="min-w-[250px] sm:min-w-[300px] lg:min-w-[350px] flex-shrink-0 truncate"
+          dir="rtl"
         >
          <Card
     id={index + 1}

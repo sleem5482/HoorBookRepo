@@ -150,6 +150,16 @@ export interface HomeDataState {
   fetchHomeData: () => Promise<void>;
 }
 
-
+//// pagination 
+export interface ProductsState {
+  products: CardProps[];
+  page: number;
+  lastPage: number;
+  loading: boolean;
+  hasMore: boolean;
+  searchTerm:string;
+  setSearchTerm: (term: string) => void;
+  fetchProducts: (reset?: boolean, search?: string) => Promise<void>;
+}
 
 
