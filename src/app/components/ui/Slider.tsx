@@ -41,7 +41,7 @@ export const Slider:React.FC<SwiperSliderProps>=({
           src={`${BaseUrl}${src.image}`} 
           alt={`Slide ${i + 1}`}
           fill
-          className={`object-${objectFit} rounded-sm`}
+          className={`object-${objectFit} rounded-xl`}
           sizes="100vw"
           priority={i === 0}
         />

@@ -18,7 +18,6 @@ export default function LogoImageAnimation() {
         },
       });
 
-      // أنيميشن الدخول
       tl.fromTo(
         logoRef.current,
         {

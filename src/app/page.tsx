@@ -22,46 +22,27 @@ import { HomeStore } from "./store/useHomeDataStore";
 
 export default function HomePage() {
    const { data, loadingdata, fetchHomeData } = HomeStore();
-  const [searchText, setSearchText] = useState("");
   const [show, setShow] = useState(true);
 
-  const handleSearch = async (value: string) => {
-    if (!value) {
-      fetchHomeData();
-      return;
-    }
 
-    try {
-      const url = `${BaseUrl}api/products?name=${value}`;
-      const response: ApiResponse<any> = await fetchData(url);
-      const result = response?.data?.data ?? [];
-
-      HomeStore.setState((prev) => ({
-        data: {
-          ...prev.data,
-          sliders: [],
-          hotDeals: [],
-          topSelling: result,
-          categories: [],
-          categoriesWithProducts: []
-        }
-      }));
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
 
 
 
   useEffect(() => {
-    const time = setTimeout(() => setShow(false), 3000);
-
+        const hasShownLoader = sessionStorage.getItem("hasShownLoader");
+    if (hasShownLoader) {
+      setShow(false);
+    } else {
+      setTimeout(() => {
+        setShow(false);
+        sessionStorage.setItem("hasShownLoader", "true");
+      }, 2000); 
+    }
     if (data.sliders.length === 0) {
       fetchHomeData();
     }
 
-    return () => clearTimeout(time);
   }, []);
 
   return (
@@ -75,7 +56,7 @@ export default function HomePage() {
         <SliderSkeleton/>
       ):(
     <>
-    <div dir="rtl" className="navbar px-4 py-2 flex items-center justify-center gap-[40px] shadow-sm bg-btn-color">
+    <div dir="rtl" className="navbar px-4 py-2 flex items-center justify-center gap-[40px] shadow-sm bg-btn-color ">
     
     <div className="text-white font-bold text-lg">
     <Image src={Logo} alt="شعار الموقع" className="h-[42px] w-[55px] rounded-[10px]" />
@@ -117,40 +98,10 @@ export default function HomePage() {
     
     
     {/* Routing icons */}
-    <div dir="rtl" className="navbar px-4 py-3 flex items-center justify-center gap-6 bg-white shadow-md rounded-xl">
-    {/* الرئيسية */}
-    <div className="flex flex-col items-center p-3  bg-btn-color rounded-xl shadow-md text-white cursor-pointer">
-    <Home size={22} />
-    <span className="text-xs ">الرئيسية</span>
-    </div>
     
-    {/* الفئات */}
-    <div className="flex flex-col items-center p-3 px-4   bg-btn-color rounded-xl shadow-md text-white cursor-pointer">
-    <List size={22} />
-    <span className="text-xs ">الفئات</span>
-    </div>
-    
-    {/* عربة التسوق */}
-    <div className="flex flex-col items-center p-3 px-4  bg-btn-color rounded-xl shadow-md text-white cursor-pointer">
-    <ShoppingCart size={22} />
-    <span className="text-xs ">السلة</span>
-    </div>
-    
-    {/* المفضلة */}
-    <div className="flex flex-col items-center p-3  bg-btn-color rounded-xl shadow-md text-white cursor-pointer">
-    <Heart size={22} />
-    <span className="text-xs ">المفضلة</span>
-    </div>
-    
-    {/* الملف الشخصي */}
-    <div className="flex flex-col items-center p-3 px-4  bg-btn-color rounded-xl shadow-md text-white cursor-pointer">
-    <User2 size={22} />
-    <span className="text-xs ">حسابي</span>
-    </div>
-    </div>
     <Container >
     <div className="max-w-screen-xl mx-auto">
-    <div className="absolute top-[150px] left-0 w-full h-[600px] z-0 pointer-events-none overflow-hidden">
+    <div className="absolute top-[65px] left-0 w-full h-[600px] z-0 pointer-events-none overflow-hidden">
     <svg
     viewBox="0 0 1440 220"
     className="w-full h-full"
@@ -189,8 +140,8 @@ export default function HomePage() {
     
     <div className="w-full bg-white mt-3">
     
-    <div className=" p-5 overflow-x-auto scrollbar-hide">
-    <div className="flex w-max">
+    <div className=" p-5 overflow-x-auto scrollbar-hide space-x-reverse flex flex-row-reverse">
+    <div className="flex w-max flex-row-reverse ">
       {data.categories?.map((image, index) => (
         <div key={index}>
           <Circle
@@ -206,13 +157,13 @@ export default function HomePage() {
     
     
     <div className="w-full bg-white mt-3">
-    <div className="flex justify-end">
-      <h2 className="text-btn-color font-bold text-xl">
+    <div className="flex justify-center items-center text-2xl">
+      <h2 className="text-btn-color font-bold text-2xl">
         الأكثر مبيعاً
       </h2>
     </div>
-    <div className=" overflow-x-auto scrollbar-hide px-1 py-5">
-    <div className="flex gap-4 w-max">
+    <div className=" overflow-x-auto scrollbar-hide  px-1 py-5 flex flex-row-reverse">
+    <div className="flex gap-4 w-max space-x-reverse flex-row-reverse">
       {data.topSelling?.map((image, index) => (
         <div
           key={index}
@@ -220,7 +171,7 @@ export default function HomePage() {
           dir="rtl"
         >
          <Card
-    id={index + 1}
+    id={image.id}
     image={image.image}
     name={image.name}
     description={image.description}
@@ -236,7 +187,7 @@ export default function HomePage() {
     piece_price_after_offer={image.piece_price_after_offer}
     packet_price_after_offer={image.packet_price_after_offer}
     reviews_avg={image.reviews_avg} // e.g., 2.5, 4.1
-    handellove={() => console.log(`Liked product ${index + 1}`)}
+    handellove={() => console.log(`Liked product ${image.id}`)}
     />
     
         </div>
@@ -249,13 +200,13 @@ export default function HomePage() {
     
     
     <div className="w-full bg-white mt-3">
-    <div className="flex justify-end">
-      <h2 className="text-btn-color font-bold text-xl">
+    <div className="flex justify-center items-center text-2xl">
+      <h2 className="text-btn-color font-bold text-2xl">
     عروض مميزة
       </h2>
     </div>
-    <div className=" overflow-x-auto scrollbar-hide px-1 py-5">
-    <div className="flex gap-4 w-max">
+    <div className=" overflow-x-auto scrollbar-hide px-1 py-5 flex flex-row-reverse">
+    <div className="flex gap-4 w-max space-x-reverse flex-row-reverse">
       {data.hotDeals?.map((image, index) => (
         <div
           key={index}
@@ -263,7 +214,7 @@ export default function HomePage() {
         >
       
     <Card
-      id={index + 1}
+      id={image.id}
       image={image.image}
       name={image.name}
       description={image.description}
@@ -279,7 +230,7 @@ export default function HomePage() {
       piece_price_after_offer={image.piece_price_after_offer}
       packet_price_after_offer={image.packet_price_after_offer}
       reviews_avg={image.reviews_avg} // e.g., 2.5, 4.1
-      handellove={() => console.log(`Liked product ${index + 1}`)}
+      handellove={() => console.log(`Liked product ${image.id}`)}
     />
     
         </div>
@@ -292,13 +243,13 @@ export default function HomePage() {
     <div className="w-full bg-white mt-3">
     {data.categoriesWithProducts?.map((item) => (
     <div key={item.id} className="mb-6">
-      <h2 className="text-btn-color font-bold text-xl text-right px-4 mb-2">
+      <h2 className="text-btn-color font-bold text-2xl text-center px-4 ">
         {item.name}
       </h2>
     
       {/* Product List */}
-      <div className="overflow-x-auto scrollbar-hide px-1 py-5">
-        <div className="flex gap-4 w-max">
+      <div className="overflow-x-auto scrollbar-hide px-1 py-5 flex flex-row-reverse">
+        <div className="flex gap-4 w-max space-x-reverse  flex-row-reverse">
           {item.products.map((product) => (
             <div
               key={product.id}

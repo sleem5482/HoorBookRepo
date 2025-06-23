@@ -4,7 +4,9 @@ import Image from 'next/image'
 import { Heart, Star } from 'lucide-react'
 import Container from '../Container'
 import { BaseUrl } from '../Baseurl'
-
+import Logo from '../../../../public/asset/images/حورلوجو-1.png'
+import { Button } from './Button'
+import Link from 'next/link'
 export const Card: React.FC<CardProps> = ({
   id, name, description, image, category,
   price, discount, originalPrice,
@@ -44,16 +46,30 @@ export const Card: React.FC<CardProps> = ({
 
   return (
     <Container>
-      <div  className="w-[360px] min-h-[460px] rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-[#e8f3f0] to-[#f8f8f8] hover:shadow-xl transition relative">
-  <div className="absolute top-2 left-2 bg-pink-100 p-1 rounded-full z-10 cursor-pointer" onClick={handleLoveToggle}>
+      <div  className="group  w-[360px] min-h-[460px] rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-[#e8f3f0] to-[#f8f8f8] hover:shadow-xl transition relative ">
+  <div className="absolute top-2 left-2 bg-pink-100 p-1 rounded-full  cursor-pointer z-50" onClick={handleLoveToggle}>
           {loveit
             ? <Heart size={18} className="text-pink-500" fill="#ec4899" stroke="#ec4899" />
             : <Heart size={18} className="text-gray-500" fill="none" stroke="#6b7280" />
           }
         </div>
+<div className="absolute inset-0 bg-[#6B2B7A]/80 flex flex-col items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+  <Image src={Logo} alt="Logo" width={220} height={220} className="w-[120px] h-[120px] object-contain rounded-full mb-4" />
+  <div dir="rtl">
+  
+<Link href={`/Categories/${id}`} className="text-white font-bold text-lg mb-2">
+<Button classname="bg-[#FFD166] text-[#6B2B7A] font-bold text-lg px-6 py-2 rounded-xl hover:bg-[#ffc94d] transition w-full">
+  عرض التفاصيل
+</Button>
+</Link>
+
+
+  </div>
+</div>
+
 
         <div className="relative w-full h-56 ">
-          <Image src={`${BaseUrl}${image}`} alt={name} fill className="object-contain rounded-t-2xl pt-5" sizes="300px" />
+          <Image src={`${BaseUrl}${image}`} alt={name} fill className="object-contain rounded-t-2xl pt-5 "  />
         </div>
 
         <div className="p-4 space-y-2 text-left" dir='rtl'>
@@ -90,7 +106,7 @@ export const Card: React.FC<CardProps> = ({
             </p>
           )}
 
-          {soldOut && <span className="text-red-600 font-bold text-sm">نفذت الكمية</span>}
+          {soldOut && <span className="text-red-600 font-bold text-xl">نفذت الكمية</span>}
         </div>
       </div>
     </Container>
