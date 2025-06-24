@@ -4,9 +4,8 @@ import { signIn } from "next-auth/react";
 import { FieldForm } from "../lib/type";
 import { useState } from "react";
 import FormField from "../components/ui/Formfield";
-import Image from "next/image";
-import Logo from '../../../public/asset/images/حورلوجو-1.png';
-import { Heart, ShoppingCart, User2 } from "lucide-react";
+import SmartNavbar from "../components/ui/Navbar";
+import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -14,82 +13,72 @@ export default function LoginPage() {
 
   const fields: FieldForm[] = [
     {
-      label: "Email",
+      label: "البريد الإلكتروني",
       name: "email",
       type: "email",
-      requierd: true
+      requierd: true,
     },
     {
-      label: "Password",
+      label: "كلمة المرور",
       name: "password",
       type: "password",
-      requierd: true
-    }
+      requierd: true,
+    },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // You can handle normal form-based login here if needed
     console.log("Form Submitted:", login);
-  };
-
-  const handleGoogleSignIn = async () => {
-    const result = await signIn("google", {
-      redirect: true,
-    });
-
-    console.log("Google Sign-in result:", result);
   };
 
   return (
     <>
-      <div dir="rtl" className="navbar px-4 py-2 flex items-center justify-between p-5 shadow-md bg-btn-color">
-        <div className="text-white font-bold text-lg">
-          <Link href={'/'}>
-          <Image src={Logo} alt="شعار الموقع" className="h-[42px] w-[55px] rounded-[10px]" />
-          </Link>
-        </div>
+      <SmartNavbar />
 
-        <div className="flex items-center space-x-4 rtl:space-x-reverse text-white">
-          <div className="flex items-center gap-1 cursor-pointer hover:text-yellow-400 transition">
-            <User2 size={22} />
-            <span className="text-sm">تسجيل دخول</span>
-          </div>
-
-          <div className="h-6 w-px bg-gray-400"></div>
-
-          <Heart size={22} className="cursor-pointer hover:text-yellow-400 transition" />
-
-          <div className="h-6 w-px bg-gray-400"></div>
-
-          <ShoppingCart size={22} className="cursor-pointer hover:text-yellow-400 transition" />
-        </div>
-      </div>
-
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-orange-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-orange-50 flex items-center justify-center px-4">
         <Container>
-          <form onSubmit={handleSubmit} className="bg-white rounded-md shadow-xl rounded-2x p-8 w-full max-w-md space-y-6">
-            <div className="text-black flex flex-col items-center justify-center">
-
-              <h2 className="text-2xl font-bold text-purple-800 text-center">مرحبا بعودتك</h2>
-
-              <FormField fields={fields} data={login} onChange={setLogin} />
-
-              <button
-                type="submit"
-                className="w-full mt-2 bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition"
-              >
-                تسجيل الدخول
-              </button>
-
-              <button
-                type="button"
-                  onClick={() => signIn("google",{ callbackUrl: "/" })}
-                className="mt-4 w-full bg-red-500 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition"
-              >
-                Google تسجيل الدخول عبر 
-              </button>
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md space-y-6"
+          >
+            <div className="flex flex-col items-center text-center space-y-2">
+              <h2 className="text-3xl font-bold text-purple-800">مرحبًا بعودتك</h2>
+              <p className="text-sm text-gray-500">سجّل دخولك للوصول إلى حسابك</p>
             </div>
+
+            <FormField fields={fields} data={login} onChange={setLogin} />
+
+            <button
+              type="submit"
+              className="w-full mt-2 bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition"
+            >
+              تسجيل الدخول
+            </button>
+
+            <div className="relative flex items-center justify-center text-gray-400">
+              <div className="absolute left-0 right-0 h-px bg-gray-200" />
+              <span className="bg-white px-3 z-10 text-sm">أو</span>
+            </div>
+
+            <button
+              type="button"
+              
+              onClick={() => signIn("google", { callbackUrl: "/" })}
+              className="flex items-center p-4  justify-center gap-2 mt-2 w-full bg-white border border-gray-300 text-gray-700 font-semibold py-2 rounded-lg shadow-sm hover:bg-gray-100 transition"
+            >
+              <FcGoogle className="text-xl" />
+              تسجيل الدخول باستخدام Google
+            </button>
+
+            <p className="text-sm text-center mt-4">
+              لا تمتلك حسابًا؟{" "}
+              <Link
+                href="/register"
+                className="text-purple-700 hover:underline font-semibold"
+              >
+                إنشاء حساب جديد
+              </Link>
+            </p>
           </form>
         </Container>
       </div>

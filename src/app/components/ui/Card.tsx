@@ -58,9 +58,9 @@ export const Card: React.FC<CardProps> = ({
   <div dir="rtl">
   
 <Link href={`/Categories/${id}`} className="text-white font-bold text-lg mb-2">
-<Button classname="bg-[#FFD166] text-[#6B2B7A] font-bold text-lg px-6 py-2 rounded-xl hover:bg-[#ffc94d] transition w-full">
+<button className=" font-bold text-lg px-6 py-2 rounded-xl bg-[#ffc94d] transition w-full">
   عرض التفاصيل
-</Button>
+</button>
 </Link>
 
 

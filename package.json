@@ -15,7 +15,6 @@
     "chart.js": "^4.4.7",
     "clsx": "^2.1.1",
     "debounce": "^2.2.0",
-    "framer-motion": "^11.14.1",
     "gsap": "^3.13.0",
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.514.0",
@@ -31,6 +30,7 @@
     "zustand": "^5.0.5"
   },
   "devDependencies": {
+    "@types/aos": "^3.0.7",
     "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20",
     "@types/react": "^18",
