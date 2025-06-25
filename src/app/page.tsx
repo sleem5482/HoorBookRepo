@@ -84,7 +84,8 @@ export default function HomePage() {
     
     
     
-    <div className="w-full bg-white pt-4">
+   <div className="w-full bg-white mt-[120px] sm:mt-[100px] md:mt-[100px] relative">
+
     <div className="max-w-screen-xl mx-auto  p-5 text-black z-[10000]">
     {data?.sliders?.length > 0 &&(
     <Slider

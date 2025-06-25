@@ -28,7 +28,7 @@ const SmartNavbar = () => {
       } bg-gradient-to-tr from-[#6B2B7A] via-[#844C9A] to-[#6B2B7A] shadow-lg backdrop-blur-md`}
     >
       {/* الشريط الرئيسي */}
-      <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+      <div className="max-w-screen-xl mx-auto px-4 py-3  flex items-center justify-between gap-4">
         
         {/* الشعار */}
         <Link href="/" className="flex items-center gap-2">
