@@ -10,11 +10,11 @@ import Image from 'next/image'
 import { Autoplay, Pagination ,Navigation} from 'swiper/modules'
 import Link from 'next/link'
 import { BaseUrl } from '../Baseurl'
-
+import clsx from 'clsx'
 
 export const Slider:React.FC<SwiperSliderProps>=({
   items ,
-  height = "h-[400px]",
+  height = "h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px]",
   objectFit = "cover",
   showNavigation = true,
   showPagination = true,
@@ -41,7 +41,10 @@ export const Slider:React.FC<SwiperSliderProps>=({
           src={`${BaseUrl}${src.image}`} 
           alt={`Slide ${i + 1}`}
           fill
-          className={`object-${objectFit} rounded-xl`}
+              className={clsx("rounded-xl", {
+      "object-cover": objectFit === "cover",
+      "object-contain": objectFit === "contain"
+    })}
           sizes="100vw"
           priority={i === 0}
         />

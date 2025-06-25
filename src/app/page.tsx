@@ -16,6 +16,7 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import SmartNavbar from "./components/ui/Navbar";
+import Footer from "./components/ui/Footer";
 
 export default function HomePage() {
    const { data, loadingdata, fetchHomeData } = HomeStore();
@@ -60,26 +61,26 @@ export default function HomePage() {
     
     <Container >
     <div className="max-w-screen-xl mx-auto">
-    <div className="absolute top-[20px] left-0 w-full h-[600px] z-0 pointer-events-none overflow-hidden">
-    <svg
+<div className="absolute inset-x-0 top-[20px]  h-[250px] sm:h-[350px] md:h-[500px] lg:h-[600px] z-0 pointer-events-none overflow-hidden w-full aspect-[1440/220] sm:aspect-[1440/300] lg:aspect-[1440/400] ">
+  <svg
     viewBox="0 0 1440 220"
     className="w-full h-full"
     preserveAspectRatio="none"
-    >
+  >
+    <defs>
+      <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="1">
+        <stop offset="0%" stopColor="#F5EFFF" />
+        <stop offset="100%" stopColor="#fdfbff" />
+      </linearGradient>
+    </defs>
     <path
-       fill="url(#gradient)"
+      fill="url(#gradient)"
       fillOpacity="1"
       d="M0,224L48,213.3C96,203,192,181,288,186.7C384,192,480,224,576,224C672,224,768,192,864,165.3C960,139,1056,117,1152,122.7C1248,128,1344,160,1392,176L1440,192L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
-    ></path>
-    <defs>
-  <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="1">
-    <stop offset="0%" stopColor="#F5EFFF" />
-    <stop offset="100%" stopColor="#fdfbff" />
-  </linearGradient>
-</defs>
-    </svg>
-    </div>
-    
+    />
+  </svg>
+</div>
+
     
     
     
@@ -88,7 +89,7 @@ export default function HomePage() {
     {data?.sliders?.length > 0 &&(
     <Slider
     items={data.sliders}
-    height="h-[500px]"
+    height="h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px]"
     objectFit="cover"
     showNavigation={true}
     showPagination={true}
@@ -313,13 +314,13 @@ export default function HomePage() {
     
     
     </Container>
+<Footer/>
     </>
       )}
       </>
 
     )
     }
-
 
 
 

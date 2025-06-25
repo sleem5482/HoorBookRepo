@@ -45,70 +45,83 @@ export const Card: React.FC<CardProps> = ({
   }
 
   return (
-    <Container>
-      <div  className="group  w-[360px] min-h-[460px] rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-[#e8f3f0] to-[#f8f8f8] hover:shadow-xl transition relative ">
-  <div className="absolute top-2 left-2 bg-pink-100 p-1 rounded-full  cursor-pointer z-50" onClick={handleLoveToggle}>
-          {loveit
-            ? <Heart size={18} className="text-pink-500" fill="#ec4899" stroke="#ec4899" />
-            : <Heart size={18} className="text-gray-500" fill="none" stroke="#6b7280" />
-          }
-        </div>
-<div className="absolute inset-0 bg-[#6B2B7A]/80 flex flex-col items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-  <Image src={Logo} alt="Logo" width={220} height={220} className="w-[120px] h-[120px] object-contain rounded-full mb-4" />
-  <div dir="rtl">
-  
-<Link href={`/Categories/${id}`} className="text-white font-bold text-lg mb-2">
-<button className=" font-bold text-lg px-6 py-2 rounded-xl bg-[#ffc94d] transition w-full">
-  عرض التفاصيل
-</button>
-</Link>
+   <Container>
+  <div className="group w-full max-w-[360px] md:w-[360px] min-h-[460px] rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-[#e8f3f0] to-[#f8f8f8] hover:shadow-xl transition relative mx-auto">
+    
+    {/* زر القلب */}
+    <div className="absolute top-2 left-2 bg-pink-100 p-1 rounded-full cursor-pointer z-50" onClick={handleLoveToggle}>
+      {loveit ? (
+        <Heart size={18} className="text-pink-500" fill="#ec4899" stroke="#ec4899" />
+      ) : (
+        <Heart size={18} className="text-gray-500" fill="none" stroke="#6b7280" />
+      )}
+    </div>
 
-
-  </div>
-</div>
-
-
-        <div className="relative w-full h-56 ">
-          <Image src={`${BaseUrl}${image}`} alt={name} fill className="object-contain rounded-t-2xl pt-5 "  />
-        </div>
-
-        <div className="p-4 space-y-2 text-left" dir='rtl'>
-          {category && <span className="text-xs font-medium text-gray-500 uppercase">{typeof category === 'string' ? category : category.name}</span>}
-
-          <h2 className="text-lg font-semibold text-gray-900 line-clamp-1 text-left truncate " dir='rtl'>{name}</h2>
-
-  <p
-  className="text-sm text-gray-600 overflow-hidden text-ellipsis whitespace-nowrap text-left"
-  
->
-  {description}
-</p>
-
-
-
-          {renderStars(reviews_avg)}
-
-          <div className="flex items-center justify-end mt-2">
-            <div className="space-x-1 rtl:space-x-reverse">
-              <span className="font-bold text-lg text-black">{piece_price_after_offer ?? price} ج.م</span>
-              {originalPrice && <span className="text-gray-400 line-through">{originalPrice} ج.م</span>}
-            </div>
-            {discount && <span className="bg-pink-100 text-pink-700 px-2 py-0.5 rounded text-xs font-semibold">خصم {discount}%</span>}
-          </div>
-
-          {packet_price && packet_pieces !== undefined && (
-            <p className="text-xs text-gray-600">السعر بالكرتونة: {packet_price_after_offer ?? packet_price} ج.م ({packet_pieces} قطعة)</p>
-          )}
-
-          {typeof stock === 'number' && (
-            <p className={`text-xs font-bold  ${stock === 0 ? 'text-red-500' : stock <= 4 ? 'text-orange-300' : 'text-gray-600'}`}>
-              {stock === 0 ? 'غير متوفر في المخزن' : stock <= 4 ? `متبقى ${stock} قطعة` : `كمية: ${stock}`}
-            </p>
-          )}
-
-          {soldOut && <span className="text-red-600 font-bold text-xl">نفذت الكمية</span>}
-        </div>
+    {/* أوفرلي عند الهوفر */}
+    <div className="absolute inset-0 bg-[#6B2B7A]/80 flex flex-col items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+      <Image src={Logo} alt="Logo" width={220} height={220} className="w-[120px] h-[120px] object-contain rounded-full mb-4" />
+      <div dir="rtl">
+        <Link href={`/Categories/${id}`} className="text-white font-bold text-lg mb-2">
+          <button className="font-bold text-lg px-6 py-2 rounded-xl bg-[#ffc94d] transition w-full">عرض التفاصيل</button>
+        </Link>
       </div>
-    </Container>
+    </div>
+
+    {/* صورة المنتج */}
+    <div className="relative w-full h-56">
+      <Image src={`${BaseUrl}${image}`} alt={name} fill className="object-contain rounded-t-2xl pt-5" />
+    </div>
+
+    {/* التفاصيل */}
+    <div className="p-4 space-y-2 text-left" dir="rtl">
+      {category && (
+        <span className="text-xs font-medium text-gray-500 uppercase">
+          {typeof category === 'string' ? category : category.name}
+        </span>
+      )}
+
+      <h2 className="text-lg font-semibold text-gray-900 truncate">{name}</h2>
+
+      <p className="text-sm text-gray-600 overflow-hidden text-ellipsis whitespace-nowrap">
+        {description}
+      </p>
+
+      {renderStars(reviews_avg)}
+
+      <div className="flex items-center justify-end mt-2">
+        <div className="space-x-1 rtl:space-x-reverse">
+          <span className="font-bold text-lg text-black">
+            {piece_price_after_offer ?? price} ج.م
+          </span>
+          {originalPrice && (
+            <span className="text-gray-400 line-through">{originalPrice} ج.م</span>
+          )}
+        </div>
+        {discount && (
+          <span className="bg-pink-100 text-pink-700 px-2 py-0.5 rounded text-xs font-semibold">
+            خصم {discount}%
+          </span>
+        )}
+      </div>
+
+      {packet_price && packet_pieces !== undefined && (
+        <p className="text-xs text-gray-600">
+          السعر بالكرتونة: {packet_price_after_offer ?? packet_price} ج.م ({packet_pieces} قطعة)
+        </p>
+      )}
+
+      {typeof stock === 'number' && (
+        <p className={`text-xs font-bold ${stock === 0 ? 'text-red-500' : stock <= 4 ? 'text-orange-300' : 'text-gray-600'}`}>
+          {stock === 0 ? 'غير متوفر في المخزن' : stock <= 4 ? `متبقى ${stock} قطعة` : `كمية: ${stock}`}
+        </p>
+      )}
+
+      {soldOut && (
+        <span className="text-red-600 font-bold text-xl">نفذت الكمية</span>
+      )}
+    </div>
+  </div>
+</Container>
+
   )
 }
