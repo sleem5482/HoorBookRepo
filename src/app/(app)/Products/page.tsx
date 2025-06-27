@@ -198,8 +198,8 @@ const [visible, setVisible] = useState(true)
       {renderProducts.length === 0 ? (
         <div className="flex justify-center item-center flex-col">
 
-
-        <p className="text-center text-gray-500 mt-20 text-lg">لا توجد منتجات</p>
+    
+        <p className="text-center text-gray-500 mt-20 text-lg"> لاتوجد منتجات</p>
           </div>
       ) : (
         <div
