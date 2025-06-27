@@ -10,40 +10,61 @@ export const Searchproduct = create<ProductsState>((set, get) => ({
   loading: false,
   hasMore: true,
   searchTerm: "",
+  hasColors:'',
+  hasOffer:'',
+  hasStock:'',
+  hasPacket:'',
 
   setSearchTerm: (term: string) => set({ searchTerm: term }),
 
-  fetchProducts: async (reset = false, search = '') => {
-    const { page, lastPage, loading, searchTerm } = get();
+fetchProducts:async (reset = false, search = '',filter={
+        hasStock: '',
+    hasColors: '',
+    hasPacket: '',
+    hasOffer: ''
+  }
+) => {
+  const {
+    page, lastPage, loading, searchTerm,
+  } = get();
 
-    if (loading || (!reset && page > lastPage)) return;
+  if (loading || (!reset && page > lastPage)) return;
 
-    const currentPage = reset ? 1 : page;
-    const searchQuery = search || searchTerm;
+  const currentPage = reset ? 1 : page;
+  const searchQuery = search || searchTerm;
 
-    const url = `${BaseUrl}api/products?page=${currentPage}${
-      searchQuery ? `&name=${encodeURIComponent(searchQuery)}` : ''
-    }`;
+  const params = new URLSearchParams({
+    page:currentPage.toString(),
+    name: searchQuery,
+    hasColors: filter.hasColors || '',
+    hasOffer: filter.hasOffer || '',
+    hasStock: filter.hasStock || '',
+    hasPacket: filter.hasPacket || '',
+    
+  });
 
-    set({ loading: true });
+  const url = `${BaseUrl}api/products?${params.toString()}`;
 
-    try {
-      const response: ApiResponse<any> = await fetchData(url);
-      const result = response.data;
+  set({ loading: true });
 
-      const newProducts = result.data;
-      const newLastPage = result.meta.last_page;
+  try {
+    const response: ApiResponse<any> = await fetchData(url);
+    const result = response.data;
 
-      set((state) => ({
-        products: reset ? newProducts : [...state.products, ...newProducts],
-        page: currentPage + 1,
-        lastPage: newLastPage,
-        hasMore: currentPage < newLastPage,
-      }));
-    } catch (error) {
-      console.error('Fetch Error:', error);
-    } finally {
-      set({ loading: false });
-    }
-  },
+    const newProducts = result.data;
+    const newLastPage = result.meta.last_page;
+
+    set((state) => ({
+      products: reset ? newProducts : [...state.products, ...newProducts],
+      page: currentPage + 1,
+      lastPage: newLastPage,
+      hasMore: currentPage < newLastPage,
+    }));
+  } catch (error) {
+    console.error('Fetch Error:', error);
+  } finally {
+    set({ loading: false });
+  }
+}
+
 }));

@@ -124,6 +124,7 @@ sliders: ProductSliderItem[];
   topSelling: CardProps[];
   categoriesWithProducts: CategoryWithProducts[];
   categories: CategoryProps[];
+  data?:[]
 }
 // home type
 
@@ -158,8 +159,17 @@ export interface ProductsState {
   loading: boolean;
   hasMore: boolean;
   searchTerm:string;
+
   setSearchTerm: (term: string) => void;
-  fetchProducts: (reset?: boolean, search?: string) => Promise<void>;
+  fetchProducts: (reset?: boolean, search?: string,
+
+  filter?: {
+    hasStock?: string;
+    hasColors?: string;
+    hasPacket?: string;
+    hasOffer?: string;
+  }
+  ) => Promise<void>;
 }
 
 

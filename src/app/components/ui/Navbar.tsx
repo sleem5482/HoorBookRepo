@@ -41,12 +41,15 @@ const SmartNavbar = () => {
 
         {/* شريط البحث */}
         <div className="hidden md:flex flex-1 max-w-lg items-center bg-white/90 backdrop-blur rounded-full px-4 py-1 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
+          <Link href="/Products" className="flex items-center">
           <Search className="text-gray-500 ml-2" size={18} />
           <input
-            type="text"
-            placeholder="إبحث عن منتج..."
-            className="bg-transparent flex-1 text-sm focus:outline-none text-gray-800 placeholder:text-gray-400"
+          
+          type="text"
+          placeholder="إبحث عن منتج..."
+          className="bg-transparent flex-1 text-sm focus:outline-none text-gray-800 placeholder:text-gray-400"
           />
+          </Link>
         </div>
 
         {/* الأيقونات */}
