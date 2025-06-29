@@ -17,6 +17,7 @@ import 'swiper/css/navigation'
 import { ChevronRight, ChevronLeft } from 'lucide-react'
 import SmartNavbar from "./components/ui/Navbar";
 import Footer from "./components/ui/Footer";
+import Link from "next/link";
 
 export default function HomePage() {
    const { data, loadingdata, fetchHomeData } = HomeStore();
@@ -176,7 +177,7 @@ export default function HomePage() {
         className="relative px-4 sm:px-6 lg:px-8"
       >
         {data.topSelling?.map((image, index) => (
-<SwiperSlide key={index}>
+          <SwiperSlide key={index}>
   <div 
     className="px-1 transition-all duration-300 hover:scale-[1.02] hover:shadow-md"
     

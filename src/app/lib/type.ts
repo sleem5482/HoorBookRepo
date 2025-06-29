@@ -173,3 +173,56 @@ export interface ProductsState {
 }
 
 
+
+/// details
+export interface user{
+  id:number,
+  name:string;
+  email:string;
+}
+export interface colors{
+  id:number;
+  code:string;
+  stock:number;
+  media:number[];
+}
+export interface media{
+  id:number;
+  image:string | StaticImageData;
+  color_id:number;
+}
+export interface reviews{
+  id:number;
+  review:number;
+  comment:string;
+  created_at:string;
+  user:user;
+}
+
+export interface Category{
+  id:number;
+  name:string;
+  image:string | StaticImageData;
+
+}
+
+export interface ProductDetails {
+    id: number;
+  name: string;
+  desc: string;
+  image: string | StaticImageData;
+  stock: number;
+  packet_pieces: number;
+  piece_price: string;
+  packet_price: string;
+  piece_price_after_offer: string | null;
+  packet_price_after_offer: string | null;
+  offer: number;
+  user_favourite: boolean;
+  Category:Category,
+  reviews: reviews[];
+  reviews_avg: number;
+  media: media[];
+  colors: colors[];
+}
+

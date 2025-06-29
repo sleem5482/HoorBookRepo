@@ -10,7 +10,6 @@ import Link from "next/link";
 import Logo from '../../../../public/asset/images/حورلوجو-1.png'
 import debounce from "lodash.debounce";
 import { motion, AnimatePresence } from 'framer-motion';
-import empty from '../../../../public/asset/images/empty2-removebg-preview.png';
 export default function ProductPage() {
   const [inputValue, setInputValue] = useState("");
   const [homeData, setHomeData] = useState<HomePageData | null>(null);
@@ -53,17 +52,17 @@ const [showFilters,setShowFilters]=useState(false)
   // Debounce input
 
 const debouncedSearch = useRef(
-  debounce((value: string) => {
+  debounce((value: string, filtersParam: typeof filters) => {
     setSearchTerm(value);
-    fetchProducts(true, value);
+    fetchProducts(true, value,filtersParam);
   }, 500)
 ).current;
 
 useEffect(() => {
   if (inputValue.trim()) {
-    debouncedSearch(inputValue);
+    debouncedSearch(inputValue,filters);
   }
-}, [inputValue]);
+}, [inputValue,filters]);
 
 
   // Infinite Scroll
@@ -279,7 +278,7 @@ const [visible, setVisible] = useState(true)
             },
           },
         }}
-        className="w-[90%] sm:w-[340px] p-5 rounded-3xl bg-[#0E1330]/90 shadow-[0_10px_40px_rgba(0,0,0,0.6)] mb-8"
+        className="w-[90%] sm:w-[340px] p-5 rounded-3xl bg-btn-color shadow-[0_10px_40px_rgba(0,0,0,0.6)] mb-8"
         onClick={(e) => e.stopPropagation()}
       >
         {[
@@ -314,8 +313,8 @@ const [visible, setVisible] = useState(true)
             onClick={btn.onClick}
             className={`w-full py-3 px-4 mt-3 rounded-full font-semibold text-sm tracking-wide transition-all duration-300 backdrop-blur-md border ${
               btn.active
-                ? 'bg-[#6B2B7A] text-white border-transparent shadow-lg'
-                : 'bg-transparent text-[#F06292] border-[#F06292] hover:bg-[#f0629215] hover:shadow-[0_0_8px_#F06292]'
+                ? 'bg-[#2e1534] text-white border-transparent shadow-lg'
+                : 'bg-white text-[#F06292] border-[#F06292] hover:bg-[#f0629215] hover:shadow-[0_0_8px_#F06292]'
             }`}
           >
             {btn.text}

@@ -43,10 +43,24 @@ fetchProducts:async (reset = false, search = '',filter={
     
   });
 
-  const url = `${BaseUrl}api/products?${params.toString()}`;
 
+    const params2 = new URLSearchParams({
+    page:currentPage.toString(),
+    hasColors: filter.hasColors || '',
+    hasOffer: filter.hasOffer || '',
+    hasStock: filter.hasStock || '',
+    hasPacket: filter.hasPacket || '',
+    
+  });
+  let url:string='';
+if(searchQuery===''){
+
+ url= `${BaseUrl}api/products?${params2.toString()}`;
+}
+else{
+  url= `${BaseUrl}api/products?${params.toString()}`;
+}
   set({ loading: true });
-
   try {
     const response: ApiResponse<any> = await fetchData(url);
     const result = response.data;
