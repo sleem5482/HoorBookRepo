@@ -32,6 +32,8 @@ export default function Details() {
 
   const selectedMedia = details.media.find((img) => img.color_id === selectedColorId);
   const mainImage = selectedMedia?.image || details.image;
+const selectedColor = details.colors.find((color) => color.id === selectedColorId);
+const maxStock = selectedColor?.stock || 0; 
 
   const price =
     selectedUnit === "piece"
@@ -72,6 +74,8 @@ export default function Details() {
             >
               قطعة ({details.piece_price} ج.م)
             </button>
+            {(details.packet_pieces!=0)?(
+
             <button
               className={`flex-1 px-4 py-2 border rounded-md transition text-sm md:text-base ${
                 selectedUnit === "packet"
@@ -80,8 +84,11 @@ export default function Details() {
               }`}
               onClick={() => setSelectedUnit("packet")}
             >
-              دستة ({details.packet_price} ج.م)
+             ( {details.packet_pieces} قطعة  ({details.packet_price} ج.م)دسته
             </button>
+            ):(
+              ''
+            )}
           </div>
 
           {/* الألوان */}
@@ -105,24 +112,53 @@ export default function Details() {
           <p className="text-green-600 font-semibold mb-4 text-sm md:text-base">✅ متوفر حالياً</p>
 
           {/* السعر والكمية */}
-          <div className="flex items-center justify-between mb-6">
-            <span className="text-2xl font-bold text-orange-600">{price} ج.م</span>
-            <div className="flex items-center border rounded-md shadow-sm">
-              <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="px-3 py-1 text-lg font-bold text-black hover:bg-gray-100"
-              >
-                -
-              </button>
-              <span className="px-4 text-black">{quantity}</span>
-              <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="px-3 py-1 text-lg font-bold text-black hover:bg-gray-100"
-              >
-                +
-              </button>
-            </div>
-          </div>
+     <div className="flex items-center justify-between mb-6 text-black">
+  {/* السعر */}
+  <span className="text-2xl font-bold text-orange-600">{price} ج.م</span>
+
+  {/* تحديد الكمية من select */}
+  <div className="flex items-center gap-2">
+
+    {maxStock?
+    (
+          <select
+      value={quantity}
+      onChange={(e) => setQuantity(Number(e.target.value))}
+      className="p-2 border rounded-md text-sm"
+      disabled={!selectedColor}
+    >
+      {selectedColor &&
+        Array.from({ length: maxStock }, (_, i) => i + 1).map((num) => (
+          <option key={num} value={num}>
+            {num}
+          </option>
+        ))}
+    </select>
+    ):
+    (
+       <select
+      value={quantity}
+      onChange={(e) => setQuantity(Number(e.target.value))}
+      className="p-2 border rounded-md text-sm"
+    >
+      {
+        Array.from({ length: details.stock }, (_, i) => i + 1).map((num) => (
+          <option key={num} value={num}>
+            {num}
+          </option>
+        ))}
+    </select>
+    )
+    }
+
+
+    {/* عرض المتاح */}
+    {selectedColor && (
+      <span className="text-sm text-gray-600">({maxStock} متاح)</span>
+    )}
+  </div>
+</div>
+
 
           {/* زر الإضافة للسلة */}
           <button className="w-full bg-gradient-to-r from-orange-400 to-purple-500 text-white py-3 rounded-lg text-lg font-semibold shadow-lg hover:opacity-90 transition">
@@ -143,7 +179,12 @@ export default function Details() {
         {/* التقييمات */}
         <div className="md:col-span-2 mt-10">
           <h3 className="text-md font-semibold text-violet-900 mb-3">
-            ⭐ تقييمات المستخدمين ({details.reviews_avg.toFixed(1)})
+            
+            {(details.reviews_avg!==null) ? (
+              `⭐ تقييمات المستخدمين ({${details.reviews_avg.toFixed(1)}})`
+            ): (
+              <span className="text-gray-400">كن انت اول المقيمين </span>
+            )}
           </h3>
           <div className="space-y-4">
             {details.reviews.map((review) => (
