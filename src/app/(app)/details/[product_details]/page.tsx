@@ -2,7 +2,7 @@
 import { BaseUrl } from "@/app/components/Baseurl";
 import Container from "@/app/components/Container";
 import { fetchData } from "@/app/lib/methodes";
-import { ApiResponse, ProductDetails } from "@/app/lib/type";
+import { AddToChart, ApiResponse, ProductDetails } from "@/app/lib/type";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -15,6 +15,22 @@ export default function Details() {
   const [selectedColorId, setSelectedColorId] = useState<number | null>(null);
   const [selectedUnit, setSelectedUnit] = useState<"piece" | "packet">("piece");
   const [quantity, setQuantity] = useState(1);
+
+  const [chart,setchart]=useState<AddToChart>({
+    product_id: Number(productid),
+    qty:0,
+    product_type:"",
+    color_id:0,
+
+  }) 
+
+
+  const handelchange = (field: keyof AddToChart, value: string | number) => {
+    setchart((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  }
 
   useEffect(() => {
     const getDetails = async () => {
@@ -40,6 +56,12 @@ const maxStock = selectedColor?.stock || 0;
       ? details.piece_price_after_offer || details.piece_price
       : details.packet_price_after_offer || details.packet_price;
 
+
+
+  const handelsupmit=()=>{
+    console.log(chart);
+    
+  }  
   return (
     <Container>
       <SmartNavbar />
@@ -70,9 +92,26 @@ const maxStock = selectedColor?.stock || 0;
                   ? "bg-violet-100 border-violet-600 font-semibold text-black"
                   : "border-gray-300 text-black"
               }`}
-              onClick={() => setSelectedUnit("piece")}
+              onClick={() => {setSelectedUnit("piece"),handelchange("product_type","piece")}}
             >
-              قطعة ({details.piece_price} ج.م)
+              {(details.piece_price_after_offer==='')?
+              `
+              قطعة (${details.piece_price} ج.م)
+              `
+              :(
+                <div  className="flex flex-col">
+                <span>
+
+                قطعة (${details.piece_price_after_offer} ج.م)
+                </span>
+
+                
+                <span className="line-through text-gray-400">
+              قطعة (${details.piece_price} ج.م)
+
+                </span>
+                </div>
+              )}
             </button>
             {(details.packet_pieces!=0)?(
 
@@ -82,9 +121,26 @@ const maxStock = selectedColor?.stock || 0;
                   ? "bg-violet-100 border-violet-600 font-semibold text-black"
                   : "border-gray-300 text-black"
               }`}
-              onClick={() => setSelectedUnit("packet")}
+              onClick={() => {setSelectedUnit("packet"),handelchange("product_type","packet")}}
+
             >
-             ( {details.packet_pieces} قطعة  ({details.packet_price} ج.م)دسته
+              {(details.packet_price_after_offer==='')?(
+                `
+                ${details.packet_price} قطعة  دسته
+                `
+              ):(
+                <div className="flex flex-col">
+                  <span>
+                ${details.packet_price_after_offer} قطعة  ({details.packet_price_after_offer} ج.م)دسته
+
+                  </span>
+
+                  <span className="line-through text-gray-500 text-sm">
+                ${details.packet_price} قطعة  ({details.packet_price} ج.م)دسته
+
+                  </span>
+                </div>
+              )}
             </button>
             ):(
               ''
@@ -98,10 +154,11 @@ const maxStock = selectedColor?.stock || 0;
               {details.colors.map((color) => (
                 <div
                   key={color.id}
-                  onClick={() => setSelectedColorId(color.id)}
+                  onClick={() => {setSelectedColorId(color.id),handelchange("color_id",color.id)}}
                   className={`w-10 h-10 rounded-full border-4 cursor-pointer transition-transform ${
                     selectedColorId === color.id ? "border-black scale-110" : "border-gray-300"
                   }`}
+                  onChange={(e)=>{handelchange("color_id",Number(color.id))}}
                   style={{ backgroundColor: color.code }}
                 ></div>
               ))}
@@ -123,7 +180,8 @@ const maxStock = selectedColor?.stock || 0;
     (
           <select
       value={quantity}
-      onChange={(e) => setQuantity(Number(e.target.value))}
+      onChange={(e) => handelchange("qty",Number(e.target.value))}
+
       className="p-2 border rounded-md text-sm"
       disabled={!selectedColor}
     >
@@ -138,7 +196,7 @@ const maxStock = selectedColor?.stock || 0;
     (
        <select
       value={quantity}
-      onChange={(e) => setQuantity(Number(e.target.value))}
+      onChange={(e) => handelchange("qty",Number(e.target.value))}
       className="p-2 border rounded-md text-sm"
     >
       {
@@ -161,7 +219,11 @@ const maxStock = selectedColor?.stock || 0;
 
 
           {/* زر الإضافة للسلة */}
-          <button className="w-full bg-gradient-to-r from-orange-400 to-purple-500 text-white py-3 rounded-lg text-lg font-semibold shadow-lg hover:opacity-90 transition">
+          <button 
+          className="w-full bg-gradient-to-r from-orange-400 to-purple-500 text-white py-3 rounded-lg text-lg font-semibold shadow-lg hover:opacity-90 transition"
+          onClick={()=>{handelsupmit()}}
+          
+          >
             🛒 أضف إلى السلة
           </button>
         </div>
@@ -181,7 +243,7 @@ const maxStock = selectedColor?.stock || 0;
           <h3 className="text-md font-semibold text-violet-900 mb-3">
             
             {(details.reviews_avg!==null) ? (
-              `⭐ تقييمات المستخدمين ({${details.reviews_avg.toFixed(1)}})`
+              `⭐ تقييمات المستخدمين (${details.reviews_avg.toFixed(1)})`
             ): (
               <span className="text-gray-400">كن انت اول المقيمين </span>
             )}

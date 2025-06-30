@@ -226,3 +226,10 @@ export interface ProductDetails {
   colors: colors[];
 }
 
+///// add to chart
+export interface AddToChart {
+  product_id: number,
+  qty: number,
+   product_type: string,
+  color_id?: number
+}
