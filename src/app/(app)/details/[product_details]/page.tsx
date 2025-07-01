@@ -1,25 +1,27 @@
 "use client";
 import { BaseUrl } from "@/app/components/Baseurl";
 import Container from "@/app/components/Container";
-import { fetchData } from "@/app/lib/methodes";
+import { fetchData, Postresponse } from "@/app/lib/methodes";
 import { AddToChart, ApiResponse, ProductDetails } from "@/app/lib/type";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import SmartNavbar from "@/app/components/ui/Navbar";
+import { CallApi } from "@/app/lib/utilits";
 
 export default function Details() {
+  const sendres=`${BaseUrl}api/carts`
   const pathname = usePathname();
   const productid = pathname.split("/").pop();
   const [details, setDetails] = useState<ProductDetails>();
   const [selectedColorId, setSelectedColorId] = useState<number | null>(null);
-  const [selectedUnit, setSelectedUnit] = useState<"piece" | "packet">("piece");
+  const [selectedUnit, setSelectedUnit] = useState<"Piece" | "Packet">("Piece");
   const [quantity, setQuantity] = useState(1);
 
   const [chart,setchart]=useState<AddToChart>({
-    product_id: Number(productid),
-    qty:0,
     product_type:"",
+    qty:0,
+    product_id: Number(productid),
     color_id:0,
 
   }) 
@@ -52,16 +54,35 @@ const selectedColor = details.colors.find((color) => color.id === selectedColorI
 const maxStock = selectedColor?.stock || 0; 
 
   const price =
-    selectedUnit === "piece"
+    selectedUnit === "Piece"
       ? details.piece_price_after_offer || details.piece_price
       : details.packet_price_after_offer || details.packet_price;
 
 
 
-  const handelsupmit=()=>{
+  const handelsupmit=async()=>{
     console.log(chart);
+      const headers = {
+    Authorization: 'Bearer 2876|C8xIR59urI2TsjizNJhYEwBdzF0fQKy1Gn8XIJ0Gb441a05d',
+    userType: '2',
+    fcmToken: 'cyKAsscERdS9D9ySlWf0_g:APA91bHqA6kBk9mt26OFjDnbElFxhyYRN06y5wDAFX-ReAYrJJBun5mgIMiBCWR--BlbunQli8_fais25oeGF0FCSgm5gIM6-118-hiM7NfMMGnQ6kLAAZ0',
+    lang: 'ar',
+    'Content-Type': 'application/json',
+  };
+    try {
+
+      
+      const res:ApiResponse<AddToChart>=await CallApi("post",sendres,chart,headers)
+      console.log(res);
+      
+    }
+    catch(error){
+      console.log(error);
+    }
+      
+    }
     
-  }  
+    
   return (
     <Container>
       <SmartNavbar />
@@ -88,11 +109,11 @@ const maxStock = selectedColor?.stock || 0;
           <div className="flex gap-4 mb-4">
             <button
               className={`flex-1 px-4 py-2 border rounded-md transition text-sm md:text-base ${
-                selectedUnit === "piece"
+                selectedUnit === "Piece"
                   ? "bg-violet-100 border-violet-600 font-semibold text-black"
                   : "border-gray-300 text-black"
               }`}
-              onClick={() => {setSelectedUnit("piece"),handelchange("product_type","piece")}}
+              onClick={() => {setSelectedUnit("Piece");handelchange("product_type","Piece");handelchange("qty", 0); setQuantity(1); }}
             >
               {(details.piece_price_after_offer==='')?
               `
@@ -117,11 +138,11 @@ const maxStock = selectedColor?.stock || 0;
 
             <button
               className={`flex-1 px-4 py-2 border rounded-md transition text-sm md:text-base ${
-                selectedUnit === "packet"
+                selectedUnit === "Packet"
                   ? "bg-violet-100 border-violet-600 font-semibold text-black"
                   : "border-gray-300 text-black"
               }`}
-              onClick={() => {setSelectedUnit("packet"),handelchange("product_type","packet")}}
+              onClick={() => {setSelectedUnit("Packet");handelchange("product_type","Packet");handelchange("qty", 0); setQuantity(1); }}
 
             >
               {(details.packet_price_after_offer==='')?(
@@ -154,7 +175,9 @@ const maxStock = selectedColor?.stock || 0;
               {details.colors.map((color) => (
                 <div
                   key={color.id}
-                  onClick={() => {setSelectedColorId(color.id),handelchange("color_id",color.id)}}
+                  onClick={() => {setSelectedColorId(color.id);handelchange("color_id",color.id);  setQuantity(1); 
+  handelchange("qty", 1);
+                    handelchange("qty", 0);}}
                   className={`w-10 h-10 rounded-full border-4 cursor-pointer transition-transform ${
                     selectedColorId === color.id ? "border-black scale-110" : "border-gray-300"
                   }`}
@@ -164,9 +187,13 @@ const maxStock = selectedColor?.stock || 0;
               ))}
             </div>
           </div>
+{maxStock && details.stock?(
 
-          {/* حالة التوفر */}
-          <p className="text-green-600 font-semibold mb-4 text-sm md:text-base">✅ متوفر حالياً</p>
+  <p className="text-green-600 font-semibold mb-4 text-sm md:text-base">✅ متوفر حالياً</p>
+):(
+  <p className="text-red-600 font-semibold mb-4 text-sm md:text-base">نفذت الكميه </p>
+
+)}
 
           {/* السعر والكمية */}
      <div className="flex items-center justify-between mb-6 text-black">
@@ -175,16 +202,19 @@ const maxStock = selectedColor?.stock || 0;
 
   {/* تحديد الكمية من select */}
   <div className="flex items-center gap-2">
-
-    {maxStock?
-    (
-          <select
+{maxStock ? (
+  <>
+    <select
       value={quantity}
-      onChange={(e) => handelchange("qty",Number(e.target.value))}
-
+      onChange={(e) => {
+        const val = Number(e.target.value);
+        setQuantity(val);
+        handelchange("qty", val);
+      }}
       className="p-2 border rounded-md text-sm"
       disabled={!selectedColor}
     >
+      <option value={0} disabled>اختر الكمية</option>
       {selectedColor &&
         Array.from({ length: maxStock }, (_, i) => i + 1).map((num) => (
           <option key={num} value={num}>
@@ -192,22 +222,31 @@ const maxStock = selectedColor?.stock || 0;
           </option>
         ))}
     </select>
-    ):
-    (
-       <select
+
+    
+  </>
+) : (
+  <>
+    <select
       value={quantity}
-      onChange={(e) => handelchange("qty",Number(e.target.value))}
+      onChange={(e) => {
+        const val = Number(e.target.value);
+        setQuantity(val);
+        handelchange("qty", val);
+      }}
       className="p-2 border rounded-md text-sm"
     >
-      {
-        Array.from({ length: details.stock }, (_, i) => i + 1).map((num) => (
-          <option key={num} value={num}>
-            {num}
-          </option>
-        ))}
+      <option value={0} disabled>اختر الكمية</option>
+      {Array.from({ length: details.stock }, (_, i) => i + 1).map((num) => (
+        <option key={num} value={num}>
+          {num}
+        </option>
+      ))}
     </select>
-    )
-    }
+
+  </>
+)}
+
 
 
     {/* عرض المتاح */}
