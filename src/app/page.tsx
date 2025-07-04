@@ -18,14 +18,29 @@ import { ChevronRight, ChevronLeft } from 'lucide-react'
 import SmartNavbar from "./components/ui/Navbar";
 import Footer from "./components/ui/Footer";
 import Link from "next/link";
+import { ApiResponse, Favorit } from "./lib/type";
+import { BaseUrl, headers } from "./components/Baseurl";
+import { CallApi } from "./lib/utilits";
 
 export default function HomePage() {
    const { data, loadingdata, fetchHomeData } = HomeStore();
   const [show, setShow] = useState(true);
+const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
+
+const url =`${BaseUrl}api/products/favourite`
 
 
+const [favoriteProducts, setFavoriteProducts] = useState<number[]>([]);
 
-
+const fetchFavorites = async () => {
+  try {
+    const res: any = await CallApi("get", `${BaseUrl}api/products?page=1&favourite=1`, {}, headers);
+    const favIds = res?.data?.data?.map((item: any) => item.id) || [];
+    setFavoriteProducts(favIds);
+  } catch (error) {
+    console.error("Error fetching favorites:", error);
+  }
+};
 
   useEffect(() => {
 
@@ -41,9 +56,22 @@ export default function HomePage() {
   if (!data || data.sliders?.length === 0) {
     fetchHomeData();
   }
-
+fetchFavorites();
 
   }, []);
+
+const handelfavorit = async (id: number) => {
+  try {
+    const dataToSend = { product_id: id };
+    const res: ApiResponse<Favorit> = await CallApi("post", url, dataToSend, headers);
+    console.log('Accepted', res);
+       setFavoriteIds((prev) =>
+      prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   return (
     <section className="bg-white">
@@ -182,7 +210,12 @@ export default function HomePage() {
     className="px-1 transition-all duration-300 hover:scale-[1.02] hover:shadow-md"
     
   >
-    <Card {...image} handellove={() => console.log(`Liked product ${image.id}`)} />
+<Card 
+  {...image} 
+  love={favoriteProducts.includes(image.id)} 
+  handellove={() => handelfavorit(image.id)} 
+/>
+
   </div>
 </SwiperSlide>
 
@@ -240,7 +273,11 @@ export default function HomePage() {
   <div
     className="px-1 transition-all duration-300 hover:scale-[1.02] hover:shadow-md"
   >
-    <Card {...image} handellove={() => console.log(`Liked product ${image.id}`)} />
+<Card 
+  {...image} 
+  love={favoriteProducts.includes(image.id)} 
+  handellove={() => handelfavorit(image.id)} 
+/>
   </div>
 </SwiperSlide>
         ))}
@@ -291,7 +328,10 @@ export default function HomePage() {
   <div
     className="px-1 transition-all duration-300 hover:scale-[1.02] hover:shadow-md"
   >
-    <Card {...product} handellove={() => console.log(`Liked product ${product.id}`)} />
+    <Card {...product}  handellove={() => {handelfavorit(product.id)}} 
+  love={favoriteProducts.includes(product.id)} 
+    
+    />
   </div>
 </SwiperSlide>
         ))}

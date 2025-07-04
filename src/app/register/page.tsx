@@ -2,32 +2,60 @@
 import { useState } from "react";
 import Container from "../components/Container";
 import FormField from "../components/ui/Formfield";
-import { FieldForm } from "../lib/type";
+import { ApiResponse, FieldForm, Register } from "../lib/type";
 import { Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import SmartNavbar from "../components/ui/Navbar";
 import Logo from "../../../public/asset/images/حورلوجو.jpeg";
+import { Postresponse } from "../lib/methodes";
+import { BaseUrl } from "../components/Baseurl";
+import Cookies from 'js-cookie'
 
 export default function RegisterPage() {
   const fields: FieldForm[] = [
-    { name: "fullName", label: "الاسم كاملاً", type: "text", placeholder: "ادخل اسمك كاملاً" },
+    { name: "name", label: "الاسم كاملاً", type: "text", placeholder: "ادخل اسمك كاملاً" },
     { name: "email", label: "البريد الإلكتروني", type: "email", placeholder: "ادخل بريدك الالكتروني" },
     { name: "password", label: "الرقم السري", type: "password", placeholder: "ادخل الرقم السري" },
-    { name: "confirmPassword", label: "تأكيد كلمة السر", type: "password", placeholder: "ادخل تأكيد كلمة السر" },
+    { name: "password_confirmation", label: "تأكيد كلمة السر", type: "password", placeholder: "ادخل تأكيد كلمة السر" },
     {
-      name: "accountType",
+      name: "type",
       label: "نوع الحساب",
       type: "select",
-      options: ["مستخدم عادي", "مدير"],
+      options: [
+        {label:"مستخدم عادي",value:2},
+      ]
+      
+      
     },
   ];
-
+const url = `${BaseUrl}api/user/register`
   const [formData, setFormData] = useState<Record<string, any>>({});
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit =async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("✅ بيانات التسجيل:", formData);
+    try{
+      const res:ApiResponse<Register>=await Postresponse(url,formData);
+      console.log(res)
+      const {token , user}=res.data;
+    Cookies.set("token", token, { expires: 1 });
+    Cookies.set("type", user.type.toString()); 
+    Cookies.set("type_name", user.type_name);
+    Cookies.set("email", user.email);
+    Cookies.set("name", user.name);
+    Cookies.set("user_id", user.id.toString());
+    Cookies.set("cart_count", user.CartCount.toString());
+     if (user.pointsSettings) {
+      Cookies.set("points", user.pointsSettings.points);
+      Cookies.set("point_price", user.pointsSettings.point_price);
+      Cookies.set("price", user.pointsSettings.price);
+    }  
+  }
+    
+    catch(error){
+      console.log(error);
+      
+    }
   };
 
   return (

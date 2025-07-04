@@ -1,0 +1,75 @@
+"use client";
+
+import { BaseUrl, headers } from "@/app/components/Baseurl";
+import Container from "@/app/components/Container";
+import { fetchData } from "@/app/lib/methodes";
+import { ApiResponse, CardProps, PaginatedResponse } from "@/app/lib/type";
+import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import { CallApi } from "@/app/lib/utilits";
+import axios from "axios";
+import { Card } from "@/app/components/ui/Card";
+
+export default function Favorite() {
+  const [product, setProduct] = useState<CardProps[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+
+const fetchFavorit = async () => {
+  type ProductsResponse = ApiResponse<PaginatedResponse<CardProps>>;
+  try {
+    const url = `${BaseUrl}api/products?page=${page}&favourite=1`;
+    const res = await axios.get<ProductsResponse>(url, {
+      headers: headers,
+    });
+
+setProduct(prev => {
+  const ids = new Set(prev.map(p => p.id));
+  const newProducts = res.data.data.data?.filter(p => !ids.has(p.id)) || [];
+  return [...prev, ...newProducts];
+});
+
+    setHasMore(!!res.data.data.links?.next);
+    setPage(prev => prev + 1);
+  } catch (error) {
+    console.error("Error fetching favorites:", error);
+  }
+};
+
+
+  useEffect(() => {
+    fetchFavorit();
+  }, []);
+
+  useEffect(() => {
+    if (!loaderRef.current || !hasMore) return;
+
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        fetchFavorit();
+      }
+    });
+
+    observer.observe(loaderRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [loaderRef.current, hasMore]);
+
+  return (
+    <Container>
+      <h2 className="text-2xl font-bold mb-4">المفضلة</h2>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
+      {product.map((p, index) => (
+  <Card key={`${p.id}-${index}`} {...p} love={true}/>
+))}
+
+      </div>
+
+      {hasMore && <div ref={loaderRef} className="h-10" />}
+    </Container>
+  );
+}

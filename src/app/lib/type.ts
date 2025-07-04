@@ -18,10 +18,11 @@ export interface FieldForm {
   name: string;
   label: string;
   type: "text" | "number" | "email" | "select"|"password";
-  options?: string[];       
+  options?: { label: string; value: string | number }[];      
   fetchUrl?: string;
   placeholder?:string 
-  requierd?:boolean       
+  requierd?:boolean   
+      
 }
 
 ////////// field form 
@@ -29,13 +30,35 @@ export interface FieldForm {
 
 ////login
 export interface Login{
-  email: string;
-  password: string;
-
+    access_token: string;
+  token_type: string;
+  user: UserData;
 }
 ////login
 
+//// register
 
+export interface UserData {
+  id: number;
+  name: string;
+  email: string;
+  email_verified_at: string | null;
+  type: number;
+  type_name: string;
+  libraryInformations: any;
+  CartCount: number;
+  points: number | null;
+  pointsSettings?: {
+    points: string;
+    price: string;
+    point_price: string;
+  };
+}
+export interface Register{
+ token: string;
+  type: string;
+  user: UserData;
+}
 
 //////card type
 export interface CardProps {
@@ -232,4 +255,39 @@ export interface AddToChart {
   qty: number,
    product_type: string,
   color_id?: number
+}
+export interface Favorit{
+  product_id: number,
+
+}
+export interface Comment{
+  reviewable_type:string,
+  reviewable_id:number,
+  review:string,
+  comment:string,
+}
+
+//// favorit
+export interface PaginatedResponse<T> {
+  data: T[];
+  links: {
+    first: string;
+    last: string;
+    prev: string | null;
+    next: string | null;
+  };
+  meta: {
+    current_page: number;
+    from: number;
+    last_page: number;
+    links: {
+      url: string | null;
+      label: string;
+      active: boolean;
+    }[];
+    path: string;
+    per_page: number;
+    to: number;
+    total: number;
+  };
 }

@@ -10,17 +10,25 @@ fields: FieldForm[];
 data: Record<string, any>;
 onChange: (updatedData: Record<string, any>) => void;
 };
+type Option = {
+  label: string;
+  value: string;
+};
+
 export default function FormField({ fields, data, onChange }: Props){
   const [formData, setFormData] = useState(data);
-  const [dynamicOptions, setDynamicOptions] = useState<Record<string, string[]>>({});
+  const [dynamicOptions, setDynamicOptions] = useState<Record<string, Option[]>>({});
 useEffect(()=>{
     fields.forEach(async(field)=>{
-        if(field.type==="select"&&field.fetchUrl){
-            const res:ApiResponse<any>=await fetchData(field.fetchUrl);
-            const optons= res.data;
-            setDynamicOptions((prev)=>({...prev,[field.name]:optons}));
+     if (field.type === "select" && field.fetchUrl) {
+  const res: ApiResponse<any> = await fetchData(field.fetchUrl);
+  const options = res.data.map((item: any) => ({
+    label: item.label, // تأكد السيرفر يرجع label
+    value: item.value, // تأكد السيرفر يرجع value
+  }));
+  setDynamicOptions((prev) => ({ ...prev, [field.name]: options }));
+}
 
-        }
     })
 },[fields])
 const handelchange=(field:string,value:any)=>{
@@ -37,22 +45,29 @@ const handelchange=(field:string,value:any)=>{
 
          {field.type === "select" ? (
 <div className="bg-purple-100 rounded-xl p-2 flex justify-between items-center text-center overflow-hidden">
-  {(field.options || dynamicOptions[field.name] || []).map((opt, idx, arr) => (
-    <div
-      key={opt}
-      className={`flex-1 py-2 cursor-pointer relative transition
-        ${formData[field.name] === opt
-          ? "bg-purple-600 text-white"
-          : "text-purple-800 hover:bg-purple-200"}
-        ${idx === 0 ? "rounded-r-lg" : ""}
-        ${idx === arr.length - 1 ? "rounded-l-lg" : ""}
-        ${idx !== arr.length - 1 ? "border-l border-purple-300" : ""}
-      `}
-      onClick={() => handelchange(field.name, opt)}
-    >
-      {opt}
-    </div>
-  ))}
+{(
+  (field.options?.map((opt: any) =>
+    typeof opt === "string"
+      ? { label: opt, value: opt }
+      : opt
+  ) || dynamicOptions[field.name] || []) as Option[]
+).map((opt, idx, arr) => (
+  <div
+    key={opt.value}
+    className={`flex-1 py-2 cursor-pointer relative transition
+      ${formData[field.name] === opt.value
+        ? "bg-purple-600 text-white"
+        : "text-purple-800 hover:bg-purple-200"}
+      ${idx === 0 ? "rounded-r-lg" : ""}
+      ${idx === arr.length - 1 ? "rounded-l-lg" : ""}
+      ${idx !== arr.length - 1 ? "border-l border-purple-300" : ""}
+    `}
+    onClick={() => handelchange(field.name, opt.value)}
+  >
+    {opt.label}
+  </div>
+))}
+
 </div>
 
 
