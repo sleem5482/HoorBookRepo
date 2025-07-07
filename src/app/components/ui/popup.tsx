@@ -68,7 +68,7 @@ export default function CommentPopup({ productId, imageUrl, onClose }: CommentPo
 
         {/* الصورة */} 
         <div className="w-full h-60 relative mb-4 rounded-lg overflow-hidden shadow-md">
-          <Image src={imageUrl} alt="صورة المنتج" fill objectFit="contain" />
+          <Image src={imageUrl} alt="صورة المنتج" fill objectFit="contain"unoptimized />
         </div>
 
         <h2 className="text-xl font-semibold mb-4 text-violet-900 text-center">أضف تقييمك</h2>

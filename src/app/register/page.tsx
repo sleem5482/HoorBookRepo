@@ -75,6 +75,7 @@ const url = `${BaseUrl}api/user/register`
                 width={60}
                 height={60}
                 className="rounded-full shadow-md"
+                unoptimized
               />
               <h2 className="text-2xl font-bold text-purple-800 text-center flex items-center gap-1">
                 <Sparkles className="w-5 h-5 text-orange-400 animate-bounce" />

@@ -37,6 +37,7 @@ const EditModal = ({ item, onClose, onSave }: {
             alt={item.product.name}
             layout="fill"
             objectFit="cover"
+            unoptimized
           />
         </div>
 
@@ -181,6 +182,7 @@ export default function Cart() {
                     alt={item.product.name}
                     layout="fill"
                     objectFit="cover"
+                    unoptimized
                   />
                 </div>
 

@@ -9,6 +9,7 @@ const FeaturesCard = () => {
           alt={`Feature icon`}
           width={50}
           height={50}
+          unoptimized
         />
       </div>
       <div className="text">

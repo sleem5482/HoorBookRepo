@@ -104,6 +104,7 @@ const imgcomment=`${BaseUrl}${details.image}`
               fill
               objectFit="contain"
               className="transition-transform duration-300 hover:scale-105 rounded-xl"
+              unoptimized
             />
           </div>
         </div>

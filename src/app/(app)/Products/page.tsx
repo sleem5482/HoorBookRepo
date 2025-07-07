@@ -146,6 +146,7 @@ const [visible, setVisible] = useState(true)
               src={Logo}
               alt="شعار الموقع"
               className="h-[42px] w-[55px] rounded-[10px]"
+              unoptimized
             />
           </div>
 
