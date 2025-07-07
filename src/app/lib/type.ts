@@ -207,7 +207,7 @@ export interface colors{
   id:number;
   code:string;
   stock:number;
-  media:number[];
+  media?:number[];
 }
 export interface media{
   id:number;
@@ -290,4 +290,80 @@ export interface PaginatedResponse<T> {
     to: number;
     total: number;
   };
+}
+
+
+export interface Product_Card{
+  id: number;
+  name: string;
+  desc: string;
+  image: string;
+  stock: number;
+  packet_pieces: number;
+  piece_price: string;
+  packet_price: string;
+  piece_price_after_offer: string;
+  packet_price_after_offer: string;
+}
+export interface CartItem {
+  id: number;
+  product_id: number;
+  color_id: number | null;
+  qty: number;
+  product_type: string;
+  price_before_discount: string;
+  price_after_discount: string;
+  created_at: string; 
+  product: Product_Card;
+  color: colors;
+}
+export interface PaginationLinks {
+  first: string;
+  last: string;
+  prev: string | null;
+  next: string | null;
+}
+ export interface PageLink {
+  url: string | null;
+  label: string;
+  active: boolean;
+}
+export interface PaginationMeta {
+  current_page: number;
+  from: number;
+  last_page: number;
+  links: PageLink[];
+  path: string;
+  per_page: number;
+  to: number;
+  total: number;
+}
+export  interface Info {
+  total: string; 
+  delivery_discount: number;
+  points_settings: {
+    points: string;
+    price: string;
+    point_price: string;
+  };
+}
+export interface CartData {
+  data: CartItem[];
+  links: PaginationLinks;
+  meta: PaginationMeta;
+}
+export interface MainData {
+  data: CartData;
+  info: Info;
+}
+
+export interface ResponseStatus {
+  status: boolean;
+  code: number;
+  messages: string;
+}
+
+export interface CartResponse {
+  data: MainData;
+  status: ResponseStatus;
 }

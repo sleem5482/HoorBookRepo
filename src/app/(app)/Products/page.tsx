@@ -174,7 +174,7 @@ const [visible, setVisible] = useState(true)
 
             <div className="h-6 w-px bg-white/30 hidden sm:block"></div>
 
-            <Link href="/wishlist">
+            <Link href="/favorite">
               <Heart
                 size={22}
                 className="cursor-pointer hover:text-pink-300 transition transform hover:scale-110"
@@ -211,7 +211,7 @@ const [visible, setVisible] = useState(true)
               className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.015] border border-gray-100"
             >
               <Card
-                id={index + 1}
+                id={image.id}
                 image={image.image}
                 name={image.name}
                 description={image.description}

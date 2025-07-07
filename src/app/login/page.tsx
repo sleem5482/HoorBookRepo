@@ -10,6 +10,7 @@ import Link from "next/link";
 import { BaseUrl } from "../components/Baseurl";
 import { Postresponse } from "../lib/methodes";
 import Cookies from 'js-cookie'
+import toast, {Toaster} from 'react-hot-toast';
 export default function LoginPage() {
   const [login, setLogin] = useState<Record<string, any>>({});
 
@@ -31,19 +32,19 @@ const url= `${BaseUrl}api/user/login`
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form Submitted:", login);
+    toast.success('تم تسجيل الدخول بنجاح 🎉')
     try{
       const res :ApiResponse<Login> = await Postresponse(url,login)
-      console.log(res.data);
-     const { access_token, user, token_type } = res.data;
-     Cookies.set("access_token_login", access_token, { expires: 1 }); // اسم مختلف
-Cookies.set("token_type_login", token_type);
-Cookies.set("login_user_id", user.id.toString());
-Cookies.set("login_user_name", user.name);
-Cookies.set("login_user_email", user.email);
-Cookies.set("login_user_type", user.type.toString());
-Cookies.set("login_user_type_name", user.type_name);
-Cookies.set("login_cart_count", user.CartCount.toString());
-
+      const { access_token, user, token_type } = res.data;
+      Cookies.set("access_token_login", access_token, { expires: 1 }); // اسم مختلف
+      Cookies.set("token_type_login", token_type);
+      Cookies.set("login_user_id", user.id.toString());
+      Cookies.set("login_user_name", user.name);
+      Cookies.set("login_user_email", user.email);
+      Cookies.set("login_user_type", user.type.toString());
+      Cookies.set("login_user_type_name", user.type_name);
+      Cookies.set("login_cart_count", user.CartCount.toString());
+      
 if (user.pointsSettings) {
   Cookies.set("login_points", user.pointsSettings.points);
   Cookies.set("login_price", user.pointsSettings.price);
@@ -52,8 +53,7 @@ if (user.pointsSettings) {
  
     }
     catch(error){
-      console.log(error);
-      
+      toast.error('فشل الدخول يرجى اعاده المحاوله ')
     }
   };
 

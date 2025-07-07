@@ -2,13 +2,11 @@
 
 import { BaseUrl, headers } from "@/app/components/Baseurl";
 import Container from "@/app/components/Container";
-import { fetchData } from "@/app/lib/methodes";
 import { ApiResponse, CardProps, PaginatedResponse } from "@/app/lib/type";
 import { useState, useRef, useEffect } from "react";
-import Image from "next/image";
-import { CallApi } from "@/app/lib/utilits";
 import axios from "axios";
 import { Card } from "@/app/components/ui/Card";
+import SmartNavbar from "@/app/components/ui/Navbar";
 
 export default function Favorite() {
   const [product, setProduct] = useState<CardProps[]>([]);
@@ -59,17 +57,21 @@ setProduct(prev => {
   }, [loaderRef.current, hasMore]);
 
   return (
+    <div>
+<SmartNavbar/>
     <Container>
-      <h2 className="text-2xl font-bold mb-4">المفضلة</h2>
+      
+      <h2 className="text-2xl font-bold mb-4 ">المفضلة</h2>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4 ">
       {product.map((p, index) => (
-  <Card key={`${p.id}-${index}`} {...p} love={true}/>
-))}
+        <Card key={`${p.id}-${index}`} {...p} love={true}/>
+      ))}
 
       </div>
 
       {hasMore && <div ref={loaderRef} className="h-10" />}
     </Container>
+      </div>
   );
 }
