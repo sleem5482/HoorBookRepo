@@ -4,11 +4,13 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Search, ShoppingCart, Heart, User2 } from 'lucide-react'
 import Logo from '../../../../public/asset/images/حورلوجو-1.png'
+import { getCartLength } from '@/app/lib/api/cart'
+import { useCartStore } from '@/app/store/cartStore'
 
 const SmartNavbar = () => {
   const [visible, setVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
-
+const { cartCount, refreshCartCount } = useCartStore()
   const controlNavbar = () => {
     const currentScrollY = window.scrollY
     setVisible(currentScrollY < lastScrollY || currentScrollY < 80)
@@ -20,6 +22,10 @@ const SmartNavbar = () => {
     return () => window.removeEventListener('scroll', controlNavbar)
   }, [lastScrollY])
 
+
+  useEffect(() => {
+    refreshCartCount()
+  }, [])
   return (
     <header
       dir="rtl"
@@ -27,40 +33,34 @@ const SmartNavbar = () => {
         visible ? 'translate-y-0' : '-translate-y-full'
       } bg-gradient-to-tr from-[#6B2B7A] via-[#844C9A] to-[#6B2B7A] shadow-lg backdrop-blur-md`}
     >
-      {/* الشريط الرئيسي */}
-      <div className="max-w-screen-xl mx-auto px-4 py-3  flex items-center justify-between gap-4">
-        
-        {/* الشعار */}
+      <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        {/* شعار */}
         <Link href="/" className="flex items-center gap-2">
           <Image
             src={Logo}
             alt="شعار"
-            className="w-[46px] h-[46px] rounded-full "
+            className="w-[46px] h-[46px] rounded-full"
             unoptimized
           />
         </Link>
 
-        {/* شريط البحث */}
-       
-        <Link href="/Products" className=" w-full flex justify-center items-center">
-      <div className="w-full max-w-md hidden md:block">
-        <div className="flex items-center bg-white/90 rounded-full px-4 py-2 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
-          <Search className="text-gray-500 ml-2" size={18} />
-          <input
-            type="text"
-            placeholder="إبحث عن منتج..." 
-            className="bg-transparent flex-1 text-sm focus:outline-none text-gray-700 placeholder:text-gray-400"
-            />
-        </div>
-      </div>
-            </Link>
+        {/* بحث */}
+        <Link href="/Products" className="w-full flex justify-center items-center">
+          <div className="w-full max-w-md hidden md:block">
+            <div className="flex items-center bg-white/90 rounded-full px-4 py-2 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
+              <Search className="text-gray-500 ml-2" size={18} />
+              <input
+                type="text"
+                placeholder="إبحث عن منتج..."
+                className="bg-transparent flex-1 text-sm focus:outline-none text-gray-700 placeholder:text-gray-400"
+              />
+            </div>
+          </div>
+        </Link>
 
-        {/* الأيقونات */}
+        {/* أيقونات */}
         <div className="flex items-center gap-4 text-white text-xs sm:text-sm">
-          <Link
-            href="/register"
-            className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110"
-          >
+          <Link href="/register" className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
             <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
               <User2 size={20} />
             </div>
@@ -68,10 +68,7 @@ const SmartNavbar = () => {
 
           <div className="border-l border-white/30 h-6 mx-1" />
 
-          <Link
-            href="/favorite"
-            className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110"
-          >
+          <Link href="/favorite" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
             <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
               <Heart size={20} />
             </div>
@@ -79,29 +76,32 @@ const SmartNavbar = () => {
 
           <div className="border-l border-white/30 h-6 mx-1" />
 
-          <Link
-            href="/cart"
-            className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110"
-          >
+          <Link href="/cart" className="relative flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
             <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
               <ShoppingCart size={20} />
             </div>
+            {/* ✅ عداد عدد المنتجات */}
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] p-4 rounded-full font-bold">
+                {cartCount}
+              </span>
+            )}
           </Link>
         </div>
       </div>
 
-      {/* البحث في الموبايل */}
+      {/* بحث موبايل */}
       <div className="md:hidden px-4 pb-3">
         <Link href="/Products" className="block">
-        <div className="flex items-center bg-white/90 rounded-full px-4 py-2 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
-          <Search className="text-gray-500 ml-2" size={18} />
-          <input
-            type="text"
-            placeholder="إبحث عن منتج..."
-            className="bg-transparent flex-1 text-sm focus:outline-none text-gray-700 placeholder:text-gray-400"
+          <div className="flex items-center bg-white/90 rounded-full px-4 py-2 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
+            <Search className="text-gray-500 ml-2" size={18} />
+            <input
+              type="text"
+              placeholder="إبحث عن منتج..."
+              className="bg-transparent flex-1 text-sm focus:outline-none text-gray-700 placeholder:text-gray-400"
             />
-        </div>
-            </Link>
+          </div>
+        </Link>
       </div>
     </header>
   )
