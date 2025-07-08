@@ -3,32 +3,39 @@
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Container from "@/app/components/Container";
-import { BadgeCheck, User, Star } from "lucide-react";
+import { BadgeCheck, User, Star, ShoppingCart, DollarSign } from "lucide-react";
 import SmartNavbar from "@/app/components/ui/Navbar";
 import Link from "next/link";
+import { ApiResponse, Profile } from "@/app/lib/type";
+import toast from "react-hot-toast";
+import { BaseUrl, headers } from "@/app/components/Baseurl";
+import axios from "axios";
+import { LoginRequiredModal } from "@/app/components/ui/Pop-up-login";
 
 export default function ProfilePage() {
-  const [user, setUser] = useState({
-    name: "",
-    email: "",
-    type_name: "",
-    points: "0",
-  });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profile, setProfile] = useState<Profile>();
+  const url = `${BaseUrl}api/user/profile`;
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token = Cookies.get("access_token_login");
     if (!token) {
       setIsLoggedIn(false);
       return;
     }
 
-    const name = Cookies.get("name") || "";
-    const email = Cookies.get("email") || "";
-    const type_name = Cookies.get("type_name") || "غير محدد";
-    const points = Cookies.get("points") || "0";
+    const getProfile = async () => {
+      try {
+        const res = await axios.get(url, { headers });
+        console.log(res.data.data.name);
+        setProfile(res.data.data);
+      } catch (error) {
+        console.log(error);
+        toast.error("خطأ فى جلب المعلومات الخاصه بك");
+      }
+    };
 
-    setUser({ name, email, type_name, points });
+    getProfile();
     setIsLoggedIn(true);
   }, []);
 
@@ -37,37 +44,44 @@ export default function ProfilePage() {
       <SmartNavbar />
       <Container>
         {isLoggedIn ? (
-          <div className="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full mx-auto space-y-6 text-center pt-6 mt-12">
+          <div className="bg-white p-6 rounded-2xl shadow-lg max-w-xl w-full mx-auto space-y-6 text-center  pt-6 mt-12">
             <div className="flex flex-col items-center space-y-2 mt-4 pt-6">
               <User className="text-purple-600 w-12 h-12" />
-              <h2 className="text-xl font-bold text-purple-800">{user.name}</h2>
-              <p className="text-sm text-gray-600">{user.email}</p>
+              <h2 className="text-xl font-bold text-purple-800 ">{profile?.name}</h2>
+              <p className="text-sm text-gray-600">{profile?.email}</p>
             </div>
 
-            <div className="bg-purple-100 rounded-xl p-4 flex flex-col items-center">
-              <BadgeCheck className="text-purple-500 mb-2" />
-              <p className="text-sm text-gray-700">نوع الحساب</p>
-              <p className="text-md font-semibold text-purple-700">{user.type_name}</p>
-            </div>
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <div className="bg-purple-100 rounded-xl p-4">
+                <BadgeCheck className="text-purple-500 mb-2 mx-auto" />
+                <p className="text-sm text-gray-700">نوع الحساب</p>
+                <p className="text-md font-semibold text-purple-700">{profile?.type_name}</p>
+              </div>
 
-            <div className="bg-orange-100 rounded-xl p-4 flex flex-col items-center">
-              <Star className="text-orange-500 mb-2" />
-              <p className="text-sm text-gray-700">النقاط</p>
-              <p className="text-lg font-bold text-orange-600">{user.points}</p>
+              <div className="bg-orange-100 rounded-xl p-4">
+                <Star className="text-orange-500 mb-2 mx-auto" />
+                <p className="text-sm text-gray-700">النقاط</p>
+                <p className="text-lg font-bold text-orange-600">{profile?.points}</p>
+              </div>
+
+                <Link href={'/cart'} className="bg-blue-100 rounded-xl p-4">
+              <div >
+                <ShoppingCart className="text-blue-500 mb-2 mx-auto" />
+                <p className="text-sm text-gray-700">عدد السلع في السلة</p>
+                <p className="text-md font-semibold text-blue-700">{profile?.CartCount}</p>
+              </div>
+                </Link>
+
+              <div className="bg-green-100 rounded-xl p-4">
+                <DollarSign className="text-green-600 mb-2 mx-auto" />
+                <p className="text-sm text-gray-700">عدد النقاط المطلوبة لـ {profile?.pointsSettings?.price} ج.م</p>
+                <p className="text-md font-semibold text-green-700">{profile?.pointsSettings?.points} نقطة</p>
+                <p className="text-xs text-gray-600 mt-1">قيمة النقطة: {profile?.pointsSettings?.point_price} ج.م</p>
+              </div>
             </div>
           </div>
         ) : (
-          <div className="text-center mt-10 space-y-6">
-            <h2 className="text-xl font-bold text-purple-800">
-              يجب تسجيل الدخول أولاً
-            </h2>
-            <Link
-              href="/login"
-              className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition"
-            >
-              الذهاب لتسجيل الدخول
-            </Link>
-          </div>
+     <LoginRequiredModal show={!isLoggedIn} />
         )}
       </Container>
     </div>

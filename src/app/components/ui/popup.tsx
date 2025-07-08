@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useState } from "react";
+import Cookies from "js-cookie";
 
 type CommentPopupProps = {
   productId: number;
@@ -12,6 +13,7 @@ export default function CommentPopup({ productId, imageUrl, onClose }: CommentPo
   const [hover, setHover] = useState(0);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
+      const token = Cookies.get("access_token_login");
 
   const sendReview = async () => {
     if (rating === 0 || comment.trim() === "") {
@@ -27,7 +29,7 @@ export default function CommentPopup({ productId, imageUrl, onClose }: CommentPo
     };
 
     const headers = {
-      Authorization: 'Bearer 2933|ltpXK1MAsks0uUKpZoj06YCajJHRKAeTZo9JRKWf53cc8752',
+      Authorization: `Bearer ${token}`,
       userType: '2',
       fcmToken: 'fGS7RgUcR66lms505IQllc:APA91bF-AdXcn94TKHQ2eKEqTX22eQTxr6LRSwpHyzwWXjvwBFfLQ_yYWO0ZNfd9ScbxHjKBZaGLosJK2G1wfrKp6G4h3FeDfdNovPZD3PX8iV-ckfYf3ig',
       lang: 'ar',

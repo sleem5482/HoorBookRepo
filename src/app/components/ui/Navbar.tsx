@@ -29,12 +29,11 @@ const { cartCount, refreshCartCount } = useCartStore()
   return (
     <header
       dir="rtl"
-      className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${
+      className={`fixed top-0 left-0 w-full z-[100] transition-transform duration-300  ${
         visible ? 'translate-y-0' : '-translate-y-full'
       } bg-gradient-to-tr from-[#6B2B7A] via-[#844C9A] to-[#6B2B7A] shadow-lg backdrop-blur-md`}
     >
       <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        {/* شعار */}
         <Link href="/" className="flex items-center gap-2">
           <Image
             src={Logo}
@@ -44,7 +43,6 @@ const { cartCount, refreshCartCount } = useCartStore()
           />
         </Link>
 
-        {/* بحث */}
         <Link href="/Products" className="w-full flex justify-center items-center">
           <div className="w-full max-w-md hidden md:block">
             <div className="flex items-center bg-white/90 rounded-full px-4 py-2 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
@@ -58,7 +56,6 @@ const { cartCount, refreshCartCount } = useCartStore()
           </div>
         </Link>
 
-        {/* أيقونات */}
         <div className="flex items-center gap-4 text-white text-xs sm:text-sm">
           <Link href="/register" className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
             <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
@@ -80,7 +77,6 @@ const { cartCount, refreshCartCount } = useCartStore()
             <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
               <ShoppingCart size={20} />
             </div>
-            {/* ✅ عداد عدد المنتجات */}
             {cartCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] p-4 rounded-full font-bold">
                 {cartCount}

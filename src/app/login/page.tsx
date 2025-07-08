@@ -11,9 +11,11 @@ import { BaseUrl } from "../components/Baseurl";
 import { Postresponse } from "../lib/methodes";
 import Cookies from 'js-cookie'
 import toast, {Toaster} from 'react-hot-toast';
+import { usePathname, useRouter } from "next/navigation";
+
 export default function LoginPage() {
   const [login, setLogin] = useState<Record<string, any>>({});
-
+  const router=useRouter();
   const fields: FieldForm[] = [
     {
       label: "البريد الإلكتروني",
@@ -31,12 +33,10 @@ export default function LoginPage() {
 const url= `${BaseUrl}api/user/login`
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form Submitted:", login);
-    toast.success('تم تسجيل الدخول بنجاح 🎉')
     try{
       const res :ApiResponse<Login> = await Postresponse(url,login)
       const { access_token, user, token_type } = res.data;
-      Cookies.set("access_token_login", access_token, { expires: 1 }); // اسم مختلف
+      Cookies.set("access_token_login", access_token, { expires: 1 });
       Cookies.set("token_type_login", token_type);
       Cookies.set("login_user_id", user.id.toString());
       Cookies.set("login_user_name", user.name);
@@ -44,6 +44,8 @@ const url= `${BaseUrl}api/user/login`
       Cookies.set("login_user_type", user.type.toString());
       Cookies.set("login_user_type_name", user.type_name);
       Cookies.set("login_cart_count", user.CartCount.toString());
+      toast.success('تم تسجيل الدخول بنجاح 🎉')
+      router.push('/')
       
 if (user.pointsSettings) {
   Cookies.set("login_points", user.pointsSettings.points);
@@ -100,7 +102,7 @@ if (user.pointsSettings) {
               لا تمتلك حسابًا؟{" "}
               <Link
                 href="/register"
-                className="text-purple-700 hover:underline font-semibold"
+                className="text-purple-700 hover:underline font-semibold text-center flex justify-center" 
               >
                 إنشاء حساب جديد
               </Link>

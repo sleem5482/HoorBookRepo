@@ -21,11 +21,15 @@ import Link from "next/link";
 import { ApiResponse, Favorit } from "./lib/type";
 import { BaseUrl, headers } from "./components/Baseurl";
 import { CallApi } from "./lib/utilits";
+import Cookies from "js-cookie";
+import { LoginRequiredModal } from "./components/ui/Pop-up-login";
 
 export default function HomePage() {
    const { data, loadingdata, fetchHomeData } = HomeStore();
   const [show, setShow] = useState(true);
+  const [login,setlogin]=useState<boolean>(false)
 const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
+const token = Cookies.get("access_token_login");
 
 const url =`${BaseUrl}api/products/favourite`
 
@@ -62,12 +66,21 @@ fetchFavorites();
 
 const handelfavorit = async (id: number) => {
   try {
+    if(!token){
+      setlogin(true)
+      console.log(login);
+      
+     return;
+    }
+    setlogin(false)
     const dataToSend = { product_id: id };
     const res: ApiResponse<Favorit> = await CallApi("post", url, dataToSend, headers);
     console.log('Accepted', res);
-       setFavoriteIds((prev) =>
+    setFavoriteIds((prev) =>
       prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
-    );
+  );
+      
+  
   } catch (error) {
     console.log(error);
   }
@@ -354,7 +367,8 @@ const handelfavorit = async (id: number) => {
     
     </div>
     
-    
+    <LoginRequiredModal show={login} />
+
     </Container>
 <Footer/>
     </>

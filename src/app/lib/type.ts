@@ -367,3 +367,25 @@ export interface CartResponse {
   data: MainData;
   status: ResponseStatus;
 }
+
+//////////// Profile
+export interface PointsSettings {
+  points: string;
+  price: string;
+  point_price: string;
+}
+
+export interface Profile{
+    id: number;
+  name: string;
+  email: string;
+  email_verified_at: string | null;
+  type: number;
+  type_name: string;
+  libraryInformations: any | null;
+  CartCount: number;
+  points: number;
+  pointsSettings: PointsSettings;
+}
+
+//////////// Profile

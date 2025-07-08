@@ -11,6 +11,8 @@ import { CartItem, CartResponse } from '@/app/lib/type'
 import SmartNavbar from '@/app/components/ui/Navbar'
 import toast from 'react-hot-toast'
 import { useCartStore } from '@/app/store/cartStore'
+import Cookies from "js-cookie";
+import { LoginRequiredModal } from '@/app/components/ui/Pop-up-login'
 
 const EditModal = ({
   item,
@@ -76,6 +78,8 @@ const EditModal = ({
 }
 
 export default function Cart() {
+  const token = Cookies.get("access_token_login");
+  const [login,setlogin]=useState<boolean>(true);
   const [items, setItems] = useState<CartItem[]>([])
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState<boolean>(true)
@@ -84,6 +88,12 @@ export default function Cart() {
 
   const fetchData = async (pageNum: number) => {
     try {
+      if(!token){
+        setlogin(true);
+      }
+      else{
+        setlogin(false)
+      }
       const res = await axios.get<CartResponse>(
         `${BaseUrl}api/carts?page=${pageNum}`,
         { headers }
@@ -114,7 +124,7 @@ export default function Cart() {
     try {
       await axios.delete(`${BaseUrl}api/carts/${id}`, { headers })
       setItems(prev => prev.filter(item => item.id !== id))
-      refreshCartCount() // ✅ تحديث العداد بعد الحذف
+      refreshCartCount()
       toast.success('🗑️ تم حذف المنتج بنجاح')
     } catch (error) {
       console.error('فشل حذف العنصر:', error)
@@ -143,7 +153,7 @@ export default function Cart() {
         )
       )
 
-      refreshCartCount() // ✅ تحديث العداد بعد التعديل
+      refreshCartCount() 
       toast.success('🎉 تم تعديل المنتج بنجاح')
       setEditingItem(null)
     } catch (error) {
@@ -223,6 +233,7 @@ export default function Cart() {
           onSave={handleSaveEdit}
         />
       )}
+      <LoginRequiredModal show={login}/>
     </div>
   )
 }
