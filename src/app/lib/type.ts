@@ -389,3 +389,9 @@ export interface Profile{
 }
 
 //////////// Profile
+export interface Simpledash{
+          id: number,
+          name: string,
+          image: string,
+          products_count: number
+}

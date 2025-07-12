@@ -12,7 +12,8 @@ import SmartNavbar from '@/app/components/ui/Navbar'
 import toast from 'react-hot-toast'
 import { useCartStore } from '@/app/store/cartStore'
 import Cookies from "js-cookie";
-import { LoginRequiredModal } from '@/app/components/ui/Pop-up-login'
+import { LoginRequiredModal} from '@/app/components/ui/Pop-up-login'
+
 
 const EditModal = ({
   item,
