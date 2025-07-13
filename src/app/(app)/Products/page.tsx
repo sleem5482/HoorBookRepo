@@ -10,10 +10,13 @@ import Link from "next/link";
 import Logo from '../../../../public/asset/images/حورلوجو-1.png'
 import debounce from "lodash.debounce";
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSearchParams } from 'next/navigation'
 export default function ProductPage() {
   const [inputValue, setInputValue] = useState("");
   const [homeData, setHomeData] = useState<HomePageData | null>(null);
   const loaderRef = useRef<HTMLDivElement | null>(null);
+  const searchParams = useSearchParams()
+const category = searchParams.get('category')
   const [filters, setFilters] = useState({
   hasStock: "",
   hasColors: "",

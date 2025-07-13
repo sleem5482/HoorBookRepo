@@ -5,9 +5,8 @@ import axios from "axios";
 import Image from "next/image";
 import { Menu } from "lucide-react"; // لو هتستخدم أيقونة (npm install lucide-react)
 import SmartNavbar from "@/app/components/ui/Navbar";
-
-const BaseUrl = "https://hoorbookapp.com/";
-
+import { BaseUrl } from "@/app/components/Baseurl";
+import Link from "next/link";
 interface Category {
   id: number;
   name: string;
@@ -176,22 +175,25 @@ export default function CategoriesPage() {
           {products.map((product, index) => {
             const ref = index === products.length - 1 ? lastProductRef : undefined;
             return (
-              <div
-                key={product.id}
-                ref={ref}
-                className="bg-white rounded-lg p-4 flex flex-col items-center shadow hover:shadow-md transition"
-              >
-                <Image
-                  src={`${BaseUrl}${product.image}`}
-                  alt={product.name}
-                  width={80}
-                  height={80}
-                  className="object-contain mb-2"
-                  unoptimized
-                />
-                <div className="text-center text-sm font-medium text-gray-800">{product.name}</div>
-                <div className="text-xs text-gray-500 mt-1">{product.price} ج.م</div>
-              </div>
+        <div key={product.id} ref={ref}>
+      <Link
+        href={`/Categories/${product.id}`}
+        className=" bg-white rounded-lg p-4 flex flex-col items-center shadow hover:shadow-md transition"
+      >
+        <Image
+          src={`${BaseUrl}${product.image}`}
+          alt={product.name}
+          width={80}
+          height={80}
+          className="object-contain mb-2"
+          unoptimized
+        />
+        <div className="text-center text-sm font-medium text-gray-800">
+          {product.name}
+        </div>
+        <div className="text-xs text-gray-500 mt-1">{product.price} ج.م</div>
+      </Link>
+    </div>
             );
           })}
         </div>

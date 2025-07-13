@@ -191,6 +191,7 @@ export interface ProductsState {
     hasColors?: string;
     hasPacket?: string;
     hasOffer?: string;
+    category?:string
   }
   ) => Promise<void>;
 }

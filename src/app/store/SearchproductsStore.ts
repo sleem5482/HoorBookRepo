@@ -21,7 +21,8 @@ fetchProducts:async (reset = false, search = '',filter={
         hasStock: '',
     hasColors: '',
     hasPacket: '',
-    hasOffer: ''
+    hasOffer: '',
+    category:''
   }
 ) => {
   const {
@@ -40,16 +41,18 @@ fetchProducts:async (reset = false, search = '',filter={
     hasOffer: filter.hasOffer || '',
     hasStock: filter.hasStock || '',
     hasPacket: filter.hasPacket || '',
+    category:filter.category|| ''
     
   });
-
-
-    const params2 = new URLSearchParams({
+  
+  
+  const params2 = new URLSearchParams({
     page:currentPage.toString(),
     hasColors: filter.hasColors || '',
     hasOffer: filter.hasOffer || '',
     hasStock: filter.hasStock || '',
     hasPacket: filter.hasPacket || '',
+    category:filter.category|| ''
     
   });
   let url:string='';
