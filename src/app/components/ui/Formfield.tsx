@@ -4,6 +4,8 @@ import Container from "../Container";
 import {ApiResponse, type  FieldForm } from "@/app/lib/type";
 import { fetchData } from "@/app/lib/methodes";
 import InputField from "./Input";
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 type Props = {
 fields: FieldForm[];

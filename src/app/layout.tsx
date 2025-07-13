@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={`${tajawal.variable} font-sans antialiased`}>
+      <body className={`${tajawal.variable} font-sans antialiased`}> 
         <Toaster/>
         {children}
       </body>

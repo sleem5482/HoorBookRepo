@@ -35,7 +35,7 @@ const SmartNavbar = () => {
           <Image
             src={Logo}
             alt="شعار"
-            className="w-[46px] h-[46px] rounded-full "
+            className="md:w-[46px] md:h-[46px] rounded-full w-[70px] h-[36px]"
             unoptimized
           />
         </Link>

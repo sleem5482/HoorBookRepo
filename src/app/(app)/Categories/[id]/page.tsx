@@ -3,7 +3,7 @@ import Container from "@/app/components/Container";
 import { usePathname } from "next/navigation";
 export default function Categories(){
     const pathname = usePathname();
-    const categoryId = pathname.split("/").pop();
+    const categoryId = pathname.split("/").pop();// Get the last part of the path as category ID
 
     return (
         <Container>

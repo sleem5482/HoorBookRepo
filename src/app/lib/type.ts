@@ -17,7 +17,7 @@ export interface ApiResponse<T>{
 export interface FieldForm {
   name: string;
   label: string;
-  type: "text" | "number" | "email" | "select"|"password";
+  type: "text" | "number" | "email" | "select"|"password"| "tel" | "textarea";
   options?: { label: string; value: string | number }[];      
   fetchUrl?: string;
   placeholder?:string 
@@ -366,4 +366,10 @@ export interface ResponseStatus {
 export interface CartResponse {
   data: MainData;
   status: ResponseStatus;
+}
+
+export interface address {
+  id:number,
+  name: string,
+  name_ar: string
 }

@@ -13,7 +13,7 @@ import { BaseUrl } from '../Baseurl'
 import clsx from 'clsx'
 
 export const Slider:React.FC<SwiperSliderProps>=({
-  items ,
+  items ,//product item
   height = "h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[600px]",
   objectFit = "cover",
   showNavigation = true,

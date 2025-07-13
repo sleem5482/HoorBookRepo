@@ -14,6 +14,7 @@ import toast, {Toaster} from 'react-hot-toast';
 export default function LoginPage() {
   const [login, setLogin] = useState<Record<string, any>>({});
 
+  
   const fields: FieldForm[] = [
     {
       label: "البريد الإلكتروني",

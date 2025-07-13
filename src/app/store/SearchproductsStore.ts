@@ -63,6 +63,7 @@ else{
   set({ loading: true });
   try {
     const response: ApiResponse<any> = await fetchData(url);
+    console.log(response.data)
     const result = response.data;
 
     const newProducts = result.data;
