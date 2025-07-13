@@ -367,9 +367,3 @@ export interface CartResponse {
   data: MainData;
   status: ResponseStatus;
 }
-
-export interface address {
-  id:number,
-  name: string,
-  name_ar: string
-}
