@@ -161,7 +161,7 @@ const Location = () => {
         }
         try {
             const res = await axios.post(
-                "https://hoorbookapp.com/api/address",
+                `${API_BASE}/address`,
                 {
                     ...buildPayload(address),
                 },
