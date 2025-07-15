@@ -1,18 +1,8 @@
-import { useState, Fragment, ReactNode, useCallback } from "react";
+import { useState, Fragment, ReactNode, useCallback, useMemo } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { FaSearch } from "react-icons/fa";
 import debounce from "lodash.debounce";
-
-interface BottomSelectFieldProps {
-  title: string;
-  placeholder?: string;
-  selectedValue: string;
-  options: string[];
-  onSelect: (value: string) => void;
-  icon?: ReactNode;
-  canOpen?: boolean; // new prop
-  onBlockedOpen?: () => void; // new prop
-}
+import { BottomSelectFieldProps } from "@/app/lib/type";
 
 export default function BottomSelectField({
   title,
@@ -21,49 +11,74 @@ export default function BottomSelectField({
   options,
   onSelect,
   icon,
-  canOpen = true, // default to true for backward compatibility
+  canOpen = true,
   onBlockedOpen,
 }: BottomSelectFieldProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
-  // Create debounced search function
+  // Debounce search input
   const debouncedSetSearch = useCallback(
-    debounce((value: string) => {
-      setDebouncedSearch(value);
-    }, 300),
+    debounce((value: string) => setDebouncedSearch(value), 300),
     []
   );
 
-  const filteredOptions = options.filter((option) =>
-    option.toLowerCase().includes(debouncedSearch.toLowerCase())
+  // Filtered options memoized
+  const filteredOptions = useMemo(
+    () =>
+      options.filter((option) =>
+        option.toLowerCase().includes(debouncedSearch.toLowerCase())
+      ),
+    [options, debouncedSearch]
   );
+
+  // Handlers
+  const handleOpen = () => {
+    if (canOpen) {
+      setIsOpen(true);
+      setSearch("");
+      setDebouncedSearch("");
+    } else if (onBlockedOpen) {
+      onBlockedOpen();
+    }
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setSearch("");
+    setDebouncedSearch("");
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    debouncedSetSearch(e.target.value);
+  };
+
+  const handleSelect = (option: string) => {
+    onSelect(option);
+    handleClose();
+  };
+
   return (
     <>
-      {/* الزر الذي يشبه select */}
+      {/* Trigger Button */}
       <div className="relative mb-3">
         <button
-          onClick={() => {
-            if (canOpen) {
-              setIsOpen(true);
-            } else if (onBlockedOpen) {
-              onBlockedOpen();
-            }
-          }}
-          className="w-full border border-gray-400 shadow-md rounded-md p-3  bg-white text-right flex gap-5 items-center"
+          type="button"
+          onClick={handleOpen}
+          className="w-full border border-gray-400 shadow-md rounded-md p-3 bg-white text-right flex gap-5 items-center"
         >
           {icon && <span className="text-gray-400">{icon}</span>}
-       <span className={`text-sm ${!selectedValue ? "text-gray-950" : ""}`}>
-  {selectedValue || placeholder || `اختر ${title}`}
-</span>
+          <span className={`text-sm ${!selectedValue ? "text-gray-950" : ""}`}>
+            {selectedValue || placeholder || `اختر ${title}`}
+          </span>
         </button>
       </div>
 
-      {/* النافذة المنبثقة مع Animation */}
+      {/* Modal */}
       <Transition.Root show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-50" onClose={() => setIsOpen(false)}>
-          {/* الخلفية السوداء */}
+        <Dialog as="div" className="relative z-50" onClose={handleClose}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-200"
@@ -76,8 +91,7 @@ export default function BottomSelectField({
             <div className="fixed inset-0 bg-black/30" />
           </Transition.Child>
 
-          {/* المحتوى الذي يظهر من الأسفل */}
-          <div className="fixed inset-x-0 bottom-0 lg:w-1/2 mx-auto  ">
+          <div className="fixed inset-x-0 bottom-0 lg:w-1/2 mx-auto">
             <Transition.Child
               as={Fragment}
               enter="transform transition ease-out duration-300"
@@ -87,43 +101,42 @@ export default function BottomSelectField({
               leaveFrom="translate-y-0"
               leaveTo="translate-y-full"
             >
-              <Dialog.Panel className="bg-white rounded-t-2xl px-4  max-h-[70vh] overflow-y-auto">
+              <Dialog.Panel className="bg-white rounded-t-2xl px-4 max-h-[70vh] overflow-y-auto">
                 <div className="sticky top-0 bg-white z-10 p-3 border-b border-gray-200">
-                <Dialog.Title className="text-center font-bold text-xl mb-3 text-black">{title}</Dialog.Title>
-
-                {/* حقل البحث */}
-                <div className="relative mb-4 ">
-                  <input
-                    type="text"
-                    placeholder="بحث"
-                    className="w-full border border-black rounded-md p-2 pr-10 text-right outline-none text-gray-800"
-                    value={search}
-                    onChange={(e) => {
-                      setSearch(e.target.value);
-                      debouncedSetSearch(e.target.value);
-                    }}
-                  />
-                  <FaSearch className="absolute right-3 top-3 text-gray-900" />
+                  <Dialog.Title className="text-center font-bold text-xl mb-3 text-black">
+                    {title}
+                  </Dialog.Title>
+                  {/* Search Field */}
+                  <div className="relative mb-4">
+                    <input
+                      type="text"
+                      placeholder="بحث"
+                      className="w-full border border-black rounded-md p-2 pr-10 text-right outline-none text-gray-800"
+                      value={search}
+                      onChange={handleSearchChange}
+                      aria-label="بحث"
+                    />
+                    <FaSearch className="absolute right-3 top-3 text-gray-900" />
+                  </div>
                 </div>
-                </div>
-                {/* قائمة الخيارات */}
+                {/* Options List */}
                 <ul className="divide-y">
                   {filteredOptions.map((option, index) => (
                     <li
                       key={index}
                       className="py-3 px-2 text-right cursor-pointer hover:bg-gray-100 text-black"
-                      onClick={() => {
-                        onSelect(option);
-                        setIsOpen(false);
-                        setSearch("");
-                      }}
+                      onClick={() => handleSelect(option)}
+                      tabIndex={0}
+                      role="option"
+                      aria-selected={selectedValue === option}
                     >
                       {option}
                     </li>
                   ))}
-
                   {filteredOptions.length === 0 && (
-                    <li className="text-center text-gray-900 py-4">لا توجد نتائج</li>
+                    <li className="text-center text-gray-900 py-4">
+                      لا توجد نتائج
+                    </li>
                   )}
                 </ul>
               </Dialog.Panel>

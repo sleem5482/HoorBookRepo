@@ -7,7 +7,6 @@ import Cookies from "js-cookie";
 import BottomSelectField from "../components/ui/checkbox";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-// import { getCoordinates } from "../lib/mapApi";
 import {
     Building2,
     Landmark,
@@ -19,31 +18,28 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import { cookies } from "next/headers";
+import { address,addressNames } from "../lib/type";
+import { buildPayload } from "../lib/methodes";
 
 const API_BASE = `${BaseUrl}api`;
 // console.log(API_BASE);
 const Location = () => {
-    // Unified state for all fields
-    const [address, setAddress] = useState({
+    // Unified state for all fields (IDs only)
+    const [address, setAddress] = useState<address>({
         name: "",
         phone: "",
-        governorate: "", // will store name
-        city: "", // will store name
-        area: "", // will store name
-        details: "",
-    });
-
-    // State for IDs
-    const [selectedIds, setSelectedIds] = useState<{
-        governorateId: string;
-        cityId: string;
-        areaId: string;
-    }>({
         governorateId: "",
         cityId: "",
         areaId: "",
+        details: "",
     });
-    // console.log(selectedIds);
+    // Names state
+    const [addressNames, setAddressNames] = useState<addressNames>({
+        governorate: "",
+        city: "",
+        area: "",
+    });
+
     // Options state
     const [governorates, setGovernorates] = useState<any[]>([]);
     const [cities, setCities] = useState<any[]>([]);
@@ -51,6 +47,22 @@ const Location = () => {
     // Error modal
     const [modal, setModal] = useState({ show: false, message: "" });
     const [success, setSuccess] = useState("");
+
+        // Unified address change handler (for IDs)
+    const handleAddressChange = (field: keyof address, value: string) => {
+        setAddress((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
+    // Unified addressNames change handler (for names)
+    const handleAddressNamesChange = (field: keyof addressNames, value: string) => {
+        setAddressNames((prev) => ({
+            ...prev,
+            [field]: value,
+        }));
+    };
+
 
     // Fetch governorates on mount
     useEffect(() => {
@@ -66,114 +78,82 @@ const Location = () => {
 
     // Fetch cities when governorate changes
     useEffect(() => {
-        if (address.governorate === "") {
+        if (addressNames.governorate === "") {
             setCities([]);
             setAreas([]);
         }
         const id_governorate = governorates.find(
-            (g) => g.name_ar === address.governorate
+            (g) => g.name_ar === addressNames.governorate
         )?.id;
         axios
             .get(`${API_BASE}/cities?governorate_id=${id_governorate}`)
             .then((res) => setCities(res.data.data))
             .catch(() => setModal({ show: true, message: "فشل تحميل المدن" }));
-    }, [address.governorate]);
+    }, [addressNames.governorate]);
     // Fetch areas when city changes
     useEffect(() => {
-        if (!address.city) {
+        if (!addressNames.city) {
             setAreas([]);
-            setAddress((prev) => ({ ...prev, area: "" }));
+            handleAddressNamesChange("area", "");
             return;
         }
 
         axios
             .get(
                 `${API_BASE}/areas?city_id=${
-                    cities.find((c) => c.name_ar === address.city)?.id
+                    cities.find((c) => c.name_ar === addressNames.city)?.id
                 }`
             )
             .then((res) => setAreas(res.data.data))
             .catch(() =>
                 setModal({ show: true, message: "فشل تحميل المناطق" })
             );
-    }, [address.city, cities]);
+    }, [addressNames.city, cities]);
 
-    // Fetch coordinates when address details change
-    // useEffect(() => {
-    //     if ( address.area && address.city && address.governorate) {
-    //         getCoordinates(
-    //             `${address.area}, ${address.city}, ${address.governorate}`
-    //         )
-    //             .then((coords) => {
-    //                 console.log("Coordinates:", coords);
-    //                 // You can store or use coordinates as needed
-    //             })
-    //             .catch((error) => {
-    //                 console.error("Error fetching coordinates:", error);
-    //                 setModal({
-    //                     show: true,
-    //                     message: "فشل الحصول على الإحداثيات",
-    //                 });
-    //             });
-    //     }
-    // }, [
-    //     address.area,
-    //     address.city,
-    //     address.governorate
-    // ]);
 
-    // Handle select logic with error modal
-    console.log(address)
+
+    // Governorate select
     const handleGovSelect = (value: string) => {
         const selected = governorates.find((g) => g.name_ar === value);
-        setAddress((prev) => ({
-            ...prev,
-            governorate: value,
-            city: "",
-            area: "",
-        }));
-        setSelectedIds((prev) => ({
-            ...prev,
-            governorateId: selected ? selected.id : "",
-            cityId: "",
-            areaId: "",
-        }));
+        handleAddressNamesChange("governorate", value);
+        handleAddressNamesChange("city", "");
+        handleAddressNamesChange("area", "");
+        handleAddressChange("governorateId", selected ? selected.id : "");
+        handleAddressChange("cityId", "");
+        handleAddressChange("areaId", "");
     };
+    // City select
     const handleCitySelect = (value: string) => {
-        if (!selectedIds.governorateId) {
+        if (!address.governorateId) {
             setModal({ show: true, message: "اختر المحافظة أولاً" });
             return;
         }
         const selected = cities.find((c) => c.name_ar === value);
-        setAddress((prev) => ({ ...prev, city: value, area: "" }));
-        setSelectedIds((prev) => ({
-            ...prev,
-            cityId: selected ? selected.id : "",
-            areaId: "",
-        }));
+        handleAddressNamesChange("city", value);
+        handleAddressNamesChange("area", "");
+        handleAddressChange("cityId", selected ? selected.id : "");
+        handleAddressChange("areaId", "");
     };
+    // Area select
     const handleAreaSelect = (value: string) => {
-        if (!selectedIds.cityId) {
+        if (!address.cityId) {
             setModal({ show: true, message: "اختر المدينة أولاً" });
             return;
         }
         const selected = areas.find((a) => a.name_ar === value);
-        setAddress((prev) => ({ ...prev, area: value }));
-        setSelectedIds((prev) => ({
-            ...prev,
-            areaId: selected ? selected.id : "",
-        }));
+        handleAddressNamesChange("area", value);
+        handleAddressChange("areaId", selected ? selected.id : "");
     };
-    const tokent = Cookies.get("access_token_login");
+
     // Handle form submit
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (
             !address.name ||
             !address.phone ||
-            !address.governorate ||
-            !address.city ||
-            !address.area ||
+            !address.governorateId ||
+            !address.cityId ||
+            !address.areaId ||
             !address.details
         ) {
             setModal({ show: true, message: "يرجى ملء جميع الحقول المطلوبة" });
@@ -183,43 +163,32 @@ const Location = () => {
             const res = await axios.post(
                 "https://hoorbookapp.com/api/address",
                 {
-                    full_name: address.name,
-                    phone: address.phone,
-                    governorate_id: selectedIds.governorateId,
-                    city_id: selectedIds.cityId,
-                    area_id: selectedIds.areaId,
-                    address_details: address.details,
-                    latitude: "9.933468557950285",
-                    longitude: "31.8412072956562",
+                    ...buildPayload(address),
                 },
                 {
-                    headers: {
-                        Authorization: `Bearer ${tokent}`,
-                        userType: '2',
-                        fcmToken: 'fGS7RgUcR66lms505IQllc:APA91bF-AdXcn94TKHQ2eKEqTX22eQTxr6LRSwpHyzwWXjvwBFfLQ_yYWO0ZNfd9ScbxHjKBZaGLosJK2G1wfrKp6G4h3FeDfdNovPZD3PX8iV-ckfYf3ig',
-                        lang: 'ar',
-                        'Content-Type': 'application/json',
-  
-                    },
+                    headers: headers
                 }
             );
             if (res.data && res.status === 200) {
                 setSuccess("تم حفظ العنوان بنجاح!");
 
-                Cookies.set("login_governorate", address.governorate);
-                Cookies.set("login_city", address.city);
-                Cookies.set("login_area", address.area);
+                Cookies.set("login_governorate", addressNames.governorate);
+                Cookies.set("login_city", addressNames.city);
+                Cookies.set("login_area", addressNames.area);
                 Cookies.set("login_address_details", address.details);
-                console.log (address)
                 setAddress({
-        name: "",
-        phone: "",
-        governorate: "", 
-        city: "", 
-        area: "", 
-        details: "",
-    })
-            
+                    name: "",
+                    phone: "",
+                    governorateId: "",
+                    cityId: "",
+                    areaId: "",
+                    details: "",
+                });
+                setAddressNames({
+                    governorate: "",
+                    city: "",
+                    area: "",
+                });
             } else {
                 setModal({ show: true, message: "حدث خطأ أثناء حفظ العنوان" });
             }
@@ -227,11 +196,9 @@ const Location = () => {
             setModal({ show: true, message: "حدث خطأ أثناء حفظ العنوان" });
         }
     };
-    // console.log("Governorate:", Cookies.get("login_governorate"));
 
     return (
         <>
-           
             <div className="min-h-screen bg-gradient-to-br from-purple-100 to-orange-100 flex items-center justify-center py-10 px-4 ">
                 <Container>
                     <form
@@ -239,7 +206,6 @@ const Location = () => {
                         onSubmit={handleSubmit}>
                         {/* شعار */}
                         <div className="flex flex-col items-center space-y-2">
-                           
                             <h2 className="text-2xl font-bold text-purple-800 text-center flex items-center gap-1">
                                 <Sparkles className="w-5 h-5 text-orange-400 animate-bounce" />
                                 أضف عنوان جديد
@@ -260,15 +226,9 @@ const Location = () => {
                                     className="outline-none w-full border rounded-md p-3 pr-12 text-right text-black placeholder:text-gray-400 bg-white border-gray-400 shadow-md"
                                     placeholder="أدخل اسمك كاملًا"
                                     value={address.name}
-                                    onChange={(e) =>
-                                        setAddress((prev) => ({
-                                            ...prev,
-                                            name: e.target.value,
-                                        }))
-                                    }
+                                    onChange={(e) => handleAddressChange("name", e.target.value)}
                                     required
                                 />
-                                
                             </div>
                         </div>
                         {/* رقم الهاتف */}
@@ -283,12 +243,7 @@ const Location = () => {
                                     countryCodeEditable={false}
                                     country={"eg"}
                                     value={address.phone}
-                                    onChange={(value) =>
-                                        setAddress((prev) => ({
-                                            ...prev,
-                                            phone: value,
-                                        }))
-                                    }
+                                    onChange={(value) => handleAddressChange("phone", value)}
                                     placeholder="رقم الهاتف"
                                     enableSearch
                                     specialLabel=""
@@ -301,12 +256,10 @@ const Location = () => {
                                         outline: "none",
                                         padding: "0.5rem 1rem",
                                         paddingLeft: "2.5rem",
-                                        
                                     }}
                                     buttonStyle={{
                                         border: "none",
                                         background: "transparent",
-                                        
                                     }}
                                     containerStyle={{
                                         direction: "ltr",
@@ -326,7 +279,7 @@ const Location = () => {
                             <BottomSelectField
                                 title="المحافظة"
                                 placeholder="اختر المحافظة"
-                                selectedValue={address.governorate}
+                                selectedValue={addressNames.governorate}
                                 options={governorates.map((g) => g.name_ar)}
                                 onSelect={handleGovSelect}
                                 icon={<LandmarkIcon size={20} />}
@@ -340,13 +293,13 @@ const Location = () => {
                             <BottomSelectField
                                 title="المدينة"
                                 placeholder="اختر المدينة"
-                                selectedValue={address.city}
+                                selectedValue={addressNames.city}
                                 options={
                                     cities ? cities.map((c) => c.name_ar) : [""]
                                 }
                                 onSelect={handleCitySelect}
                                 icon={<Building2 size={20} />}
-                                canOpen={!!selectedIds.governorateId}
+                                canOpen={!!address.governorateId}
                                 onBlockedOpen={() => setModal({ show: true, message: "اختر المحافظة أولاً" })}
                             />
                         </div>
@@ -358,13 +311,13 @@ const Location = () => {
                             <BottomSelectField
                                 title="المنطقة"
                                 placeholder="اختر منطقتك او أقرب منطقة لك"
-                                selectedValue={address.area}
+                                selectedValue={addressNames.area}
                                 options={
                                     areas ? areas.map((a) => a.name_ar) : [""]
                                 }
                                 onSelect={handleAreaSelect}
                                 icon={<MapPin size={20} />}
-                                canOpen={!!selectedIds.cityId}
+                                canOpen={!!address.cityId}
                                 onBlockedOpen={() => setModal({ show: true, message: "اختر المدينة أولاً" })}
                             />
                         </div>
@@ -381,12 +334,7 @@ const Location = () => {
                                     className="w-full border rounded-md p-3 pr-12 text-right border-gray-400 shadow-md resize-none outline-none"
                                     placeholder="ادخل تفاصيل العنوان ( الشارع رقم المنزل ) وعلامة محددة"
                                     value={address.details}
-                                    onChange={(e) =>
-                                        setAddress((prev) => ({
-                                            ...prev,
-                                            details: e.target.value,
-                                        }))
-                                    }
+                                    onChange={(e) => handleAddressChange("details", e.target.value)}
                                     required
                                 />
                             </div>
@@ -398,14 +346,6 @@ const Location = () => {
                                 <span className="font-bold text-purple-700">
                                     الموقع
                                 </span>
-                                {/* <div className="text-sm  text-black">
-                                    {address.details &&
-                                    address.area &&
-                                    address.city &&
-                                    address.governorate
-                                        ? `${address.details}, ${address.area}, ${address.city}, ${address.governorate}`
-                                        : "لم يتم تحديد الموقع بعد"}
-                                </div> */}
                             </div>
                         </div>
                         {success && (

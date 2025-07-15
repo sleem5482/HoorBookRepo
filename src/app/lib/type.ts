@@ -1,369 +1,393 @@
 import { StaticImageData } from "next/image";
-export interface ApiResponse<T>{
+export interface ApiResponse<T> {
     statusCode: number;
     meta: string | null;
     succeeded: boolean;
     message: string;
     errors: string | null;
     data: T;
-  }
-
-
-
-
-
-////////// field form 
-
-export interface FieldForm {
-  name: string;
-  label: string;
-  type: "text" | "number" | "email" | "select"|"password"| "tel" | "textarea";
-  options?: { label: string; value: string | number }[];      
-  fetchUrl?: string;
-  placeholder?:string 
-  requierd?:boolean   
-      
 }
 
-////////// field form 
+////////// field form
 
+export interface FieldForm {
+    name: string;
+    label: string;
+    type:
+        | "text"
+        | "number"
+        | "email"
+        | "select"
+        | "password"
+        | "tel"
+        | "textarea";
+    options?: { label: string; value: string | number }[];
+    fetchUrl?: string;
+    placeholder?: string;
+    requierd?: boolean;
+}
+
+////////// field form
 
 ////login
-export interface Login{
+export interface Login {
     access_token: string;
-  token_type: string;
-  user: UserData;
+    token_type: string;
+    user: UserData;
 }
 ////login
 
 //// register
 
 export interface UserData {
-  id: number;
-  name: string;
-  email: string;
-  email_verified_at: string | null;
-  type: number;
-  type_name: string;
-  libraryInformations: any;
-  CartCount: number;
-  points: number | null;
-  pointsSettings?: {
-    points: string;
-    price: string;
-    point_price: string;
-  };
+    id: number;
+    name: string;
+    email: string;
+    email_verified_at: string | null;
+    type: number;
+    type_name: string;
+    libraryInformations: any;
+    CartCount: number;
+    points: number | null;
+    pointsSettings?: {
+        points: string;
+        price: string;
+        point_price: string;
+    };
 }
-export interface Register{
- token: string;
-  type: string;
-  user: UserData;
+export interface Register {
+    token: string;
+    type: string;
+    user: UserData;
 }
 
 //////card type
 export interface CardProps {
-  id: number
-  name: string
-  description: string
-  image: string | StaticImageData
-  price: string
-  originalPrice?: string
-  discount?: number
-  stock?: number
-  soldOut?: boolean
-  love?: boolean
-  handellove?: () => void
-  packet_pieces?: number
-  packet_price?: string
-  piece_price_after_offer?: string | null
-  packet_price_after_offer?: string | null
-  category?: Record<string, any> 
-  reviews_avg?: number
+    id: number;
+    name: string;
+    description: string;
+    image: string | StaticImageData;
+    price: string;
+    originalPrice?: string;
+    discount?: number;
+    stock?: number;
+    soldOut?: boolean;
+    love?: boolean;
+    handellove?: () => void;
+    packet_pieces?: number;
+    packet_price?: string;
+    piece_price_after_offer?: string | null;
+    packet_price_after_offer?: string | null;
+    category?: Record<string, any>;
+    reviews_avg?: number;
 }
 
-///card type 
+///card type
 
-
-
-
-///category type 
+///category type
 
 export interface CategoryProps {
-  id: number,
-  image: string | StaticImageData
-  name: string
-  products_count?: number
+    id: number;
+    image: string | StaticImageData;
+    name: string;
+    products_count?: number;
 }
-///category type 
-
+///category type
 
 ///// slider type
 export interface Product {
-  id: number;
-  category_id: number;
-  category: string;
-  offer: number;
+    id: number;
+    category_id: number;
+    category: string;
+    offer: number;
 }
 
 export interface ProductSliderItem {
-  id: number;
-  title: string;
-  image: string;
-  product_id: number;
-  product: Product;
+    id: number;
+    title: string;
+    image: string;
+    product_id: number;
+    product: Product;
 }
 
 export interface SwiperSliderProps {
-  items: ProductSliderItem[];
-  height?: string;
-  objectFit?: "cover" | "contain";
-  showNavigation?: boolean;
-  showPagination?: boolean;
-  autoPlayDelay?: number;
+    items: ProductSliderItem[];
+    height?: string;
+    objectFit?: "cover" | "contain";
+    showNavigation?: boolean;
+    showPagination?: boolean;
+    autoPlayDelay?: number;
 }
-
 
 ///// slider type
 
 ///CategoryWithProducts type
 export interface CategoryWithProducts {
-  id: number;
-  name: string;
-  image: string;
-  products_count: number;
-  products: CardProps[];
+    id: number;
+    name: string;
+    image: string;
+    products_count: number;
+    products: CardProps[];
 }
-
-
 
 ///CategoryWithProducts type
 
-
-
 // home type
-export interface HomePageData{
-sliders: ProductSliderItem[];
-  hotDeals: CardProps[];
-  topSelling: CardProps[];
-  categoriesWithProducts: CategoryWithProducts[];
-  categories: CategoryProps[];
-  data?:[]
+export interface HomePageData {
+    sliders: ProductSliderItem[];
+    hotDeals: CardProps[];
+    topSelling: CardProps[];
+    categoriesWithProducts: CategoryWithProducts[];
+    categories: CategoryProps[];
+    data?: [];
 }
 // home type
 
-export interface acesstoken{
-  accessToken: string;
-  expires: string;
-  tokenType: string;
-  scope: string;
-  idToken: string;
-  sessionState: string;
-  user: {
-    name: string;
-    email: string;
-    image?: string;
-    sub?: string;
-  };
+export interface acesstoken {
+    accessToken: string;
+    expires: string;
+    tokenType: string;
+    scope: string;
+    idToken: string;
+    sessionState: string;
+    user: {
+        name: string;
+        email: string;
+        image?: string;
+        sub?: string;
+    };
 }
-
 
 /// state managment
 export interface HomeDataState {
-  data: HomePageData;
-  loadingdata: boolean;
-  fetchHomeData: () => Promise<void>;
+    data: HomePageData;
+    loadingdata: boolean;
+    fetchHomeData: () => Promise<void>;
 }
 
-//// pagination 
+//// pagination
 export interface ProductsState {
-  products: CardProps[];
-  page: number;
-  lastPage: number;
-  loading: boolean;
-  hasMore: boolean;
-  searchTerm:string;
+    products: CardProps[];
+    page: number;
+    lastPage: number;
+    loading: boolean;
+    hasMore: boolean;
+    searchTerm: string;
 
-  setSearchTerm: (term: string) => void;
-  fetchProducts: (reset?: boolean, search?: string,
+    setSearchTerm: (term: string) => void;
+    fetchProducts: (
+        reset?: boolean,
+        search?: string,
 
-  filter?: {
-    hasStock?: string;
-    hasColors?: string;
-    hasPacket?: string;
-    hasOffer?: string;
-  }
-  ) => Promise<void>;
+        filter?: {
+            hasStock?: string;
+            hasColors?: string;
+            hasPacket?: string;
+            hasOffer?: string;
+        }
+    ) => Promise<void>;
 }
-
-
 
 /// details
-export interface user{
-  id:number,
-  name:string;
-  email:string;
+export interface user {
+    id: number;
+    name: string;
+    email: string;
 }
-export interface colors{
-  id:number;
-  code:string;
-  stock:number;
-  media?:number[];
+export interface colors {
+    id: number;
+    code: string;
+    stock: number;
+    media?: number[];
 }
-export interface media{
-  id:number;
-  image:string | StaticImageData;
-  color_id:number;
+export interface media {
+    id: number;
+    image: string | StaticImageData;
+    color_id: number;
 }
-export interface reviews{
-  id:number;
-  review:number;
-  comment:string;
-  created_at:string;
-  user:user;
+export interface reviews {
+    id: number;
+    review: number;
+    comment: string;
+    created_at: string;
+    user: user;
 }
 
-export interface Category{
-  id:number;
-  name:string;
-  image:string | StaticImageData;
-
+export interface Category {
+    id: number;
+    name: string;
+    image: string | StaticImageData;
 }
 
 export interface ProductDetails {
     id: number;
-  name: string;
-  desc: string;
-  image: string | StaticImageData;
-  stock: number;
-  packet_pieces: number;
-  piece_price: string;
-  packet_price: string;
-  piece_price_after_offer: string | null;
-  packet_price_after_offer: string | null;
-  offer: number;
-  user_favourite: boolean;
-  Category:Category,
-  reviews: reviews[];
-  reviews_avg: number;
-  media: media[];
-  colors: colors[];
+    name: string;
+    desc: string;
+    image: string | StaticImageData;
+    stock: number;
+    packet_pieces: number;
+    piece_price: string;
+    packet_price: string;
+    piece_price_after_offer: string | null;
+    packet_price_after_offer: string | null;
+    offer: number;
+    user_favourite: boolean;
+    Category: Category;
+    reviews: reviews[];
+    reviews_avg: number;
+    media: media[];
+    colors: colors[];
 }
 
 ///// add to chart
 export interface AddToChart {
-  product_id: number,
-  qty: number,
-   product_type: string,
-  color_id?: number
+    product_id: number;
+    qty: number;
+    product_type: string;
+    color_id?: number;
 }
-export interface Favorit{
-  product_id: number,
-
+export interface Favorit {
+    product_id: number;
 }
-export interface Comment{
-  reviewable_type:string,
-  reviewable_id:number,
-  review:string,
-  comment:string,
+export interface Comment {
+    reviewable_type: string;
+    reviewable_id: number;
+    review: string;
+    comment: string;
 }
 
 //// favorit
 export interface PaginatedResponse<T> {
-  data: T[];
-  links: {
+    data: T[];
+    links: {
+        first: string;
+        last: string;
+        prev: string | null;
+        next: string | null;
+    };
+    meta: {
+        current_page: number;
+        from: number;
+        last_page: number;
+        links: {
+            url: string | null;
+            label: string;
+            active: boolean;
+        }[];
+        path: string;
+        per_page: number;
+        to: number;
+        total: number;
+    };
+}
+
+export interface Product_Card {
+    id: number;
+    name: string;
+    desc: string;
+    image: string;
+    stock: number;
+    packet_pieces: number;
+    piece_price: string;
+    packet_price: string;
+    piece_price_after_offer: string;
+    packet_price_after_offer: string;
+}
+export interface CartItem {
+    id: number;
+    product_id: number;
+    color_id: number | null;
+    qty: number;
+    product_type: string;
+    price_before_discount: string;
+    price_after_discount: string;
+    created_at: string;
+    product: Product_Card;
+    color: colors;
+}
+export interface PaginationLinks {
     first: string;
     last: string;
     prev: string | null;
     next: string | null;
-  };
-  meta: {
+}
+export interface PageLink {
+    url: string | null;
+    label: string;
+    active: boolean;
+}
+export interface PaginationMeta {
     current_page: number;
     from: number;
     last_page: number;
-    links: {
-      url: string | null;
-      label: string;
-      active: boolean;
-    }[];
+    links: PageLink[];
     path: string;
     per_page: number;
     to: number;
     total: number;
-  };
 }
-
-
-export interface Product_Card{
-  id: number;
-  name: string;
-  desc: string;
-  image: string;
-  stock: number;
-  packet_pieces: number;
-  piece_price: string;
-  packet_price: string;
-  piece_price_after_offer: string;
-  packet_price_after_offer: string;
-}
-export interface CartItem {
-  id: number;
-  product_id: number;
-  color_id: number | null;
-  qty: number;
-  product_type: string;
-  price_before_discount: string;
-  price_after_discount: string;
-  created_at: string; 
-  product: Product_Card;
-  color: colors;
-}
-export interface PaginationLinks {
-  first: string;
-  last: string;
-  prev: string | null;
-  next: string | null;
-}
- export interface PageLink {
-  url: string | null;
-  label: string;
-  active: boolean;
-}
-export interface PaginationMeta {
-  current_page: number;
-  from: number;
-  last_page: number;
-  links: PageLink[];
-  path: string;
-  per_page: number;
-  to: number;
-  total: number;
-}
-export  interface Info {
-  total: string; 
-  delivery_discount: number;
-  points_settings: {
-    points: string;
-    price: string;
-    point_price: string;
-  };
+export interface Info {
+    total: string;
+    delivery_discount: number;
+    points_settings: {
+        points: string;
+        price: string;
+        point_price: string;
+    };
 }
 export interface CartData {
-  data: CartItem[];
-  links: PaginationLinks;
-  meta: PaginationMeta;
+    data: CartItem[];
+    links: PaginationLinks;
+    meta: PaginationMeta;
 }
 export interface MainData {
-  data: CartData;
-  info: Info;
+    data: CartData;
+    info: Info;
 }
 
 export interface ResponseStatus {
-  status: boolean;
-  code: number;
-  messages: string;
+    status: boolean;
+    code: number;
+    messages: string;
 }
 
 export interface CartResponse {
-  data: MainData;
-  status: ResponseStatus;
+    data: MainData;
+    status: ResponseStatus;
+}
+
+export interface postLocation {
+    full_name: string;
+    phone: string;
+    governorate_id: string;
+    city_id: string;
+    area_id: string;
+    address_details: string;
+    latitude: string;
+    longitude: string;
+}
+
+export interface address {
+       name: string,
+        phone: string,
+        governorateId: string,
+        cityId: string,
+        areaId: string,
+        details: string,
+}
+export interface addressNames{
+    governorate: string;
+    city: string;
+    area: string;
+}
+
+export interface BottomSelectFieldProps {
+  title: string;
+  placeholder?: string;
+  selectedValue: string;
+  options: string[];
+  onSelect: (value: string) => void;
+  icon?: ReactNode;
+  canOpen?: boolean; // new prop
+  onBlockedOpen?: () => void; // new prop
 }
