@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Searchproduct } from "@/app/store/SearchproductsStore";
 import { fetchData } from "@/app/lib/methodes";
-import { ApiResponse, HomePageData } from "@/app/lib/type";
+import { ApiResponse, Favorit, HomePageData } from "@/app/lib/type";
 import { Card } from "@/app/components/ui/Card";
 import Image from "next/image";
 import { ArrowRight, ChevronLeft, ChevronRight, Heart, Search, Settings2Icon, ShoppingCart, User2 } from "lucide-react";
@@ -11,12 +11,24 @@ import Logo from '../../../../../public/asset/images/حورلوجو-1.png'
 import debounce from "lodash.debounce";
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from "next/navigation";
+import { BaseUrl, headers } from "@/app/components/Baseurl";
+import { useCartStore } from "@/app/store/cartStore";
+import React from "react";
+import Cookies from "js-cookie";
+
+import { CallApi } from "@/app/lib/utilits";
 export default function ProductPage() {
     const pathname = usePathname();
     const categoryId = pathname.split("/").pop();
   const [inputValue, setInputValue] = useState("");
+const token = Cookies.get("access_token_login");
+
   const [homeData, setHomeData] = useState<HomePageData | null>(null);
   const loaderRef = useRef<HTMLDivElement | null>(null);
+  const { cartCount, refreshCartCount } = useCartStore()
+  const [login,setlogin]=useState<boolean>(false)
+const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
+
   const [filters, setFilters] = useState({
   hasStock: "",
   hasColors: "",
@@ -25,6 +37,42 @@ export default function ProductPage() {
   category:categoryId
   
 });
+const url =`${BaseUrl}api/products/favourite`
+
+const handelfavorit = async (id: number) => {
+  try {
+    if(!token){
+      setlogin(true)
+      console.log(login);
+      
+     return;
+    }
+    setlogin(false)
+    const dataToSend = { product_id: id };
+    const res: ApiResponse<Favorit> = await CallApi("post", url, dataToSend, headers);
+    console.log('Accepted', res);
+    setFavoriteIds((prev) =>
+      prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
+  );
+      
+  
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const [favoriteProducts, setFavoriteProducts] = useState<number[]>([]);
+
+const fetchFavorites = async () => {
+  try {
+    const res: any = await CallApi("get", `${BaseUrl}api/products?page=1&favourite=1`, {}, headers);
+    const favIds = res?.data?.data?.map((item: any) => item.id) || [];
+    setFavoriteProducts(favIds);
+  } catch (error) {
+    console.error("Error fetching favorites:", error);
+  }
+};
+
 const [showFilters,setShowFilters]=useState(false)
   const {
     products,
@@ -34,20 +82,11 @@ const [showFilters,setShowFilters]=useState(false)
     setSearchTerm,
   } = Searchproduct();
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response: ApiResponse<HomePageData> = await fetchData(
-          `https://hoorbookapp.com/api/products?&name=&category=${categoryId}`
-        );
-        setHomeData(response.data);
-      } catch (error) {
-        console.error("Home Data Error:", error);
-      }
-    };
+useEffect(() => {
+  fetchProducts(true, '', { ...filters, category: categoryId || '' });
+  fetchFavorites();
+}, []);
 
-    loadData();
-  }, []);
 
   useEffect(() => {
     if (inputValue === "") return; 
@@ -91,7 +130,8 @@ useEffect(() => {
 
   
   const isSearching = inputValue.trim().length > 0;
-  const renderProducts = isSearching ? products : homeData?.data ?? [];
+  const renderProducts = products;
+
 const [visible, setVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
 
@@ -135,69 +175,83 @@ const [visible, setVisible] = useState(true)
   }
 
   return (
+<>
+    <header
+      dir="rtl"
+      className={`fixed top-0 left-0 w-full z-[100] transition-transform duration-300  ${
+        visible ? 'translate-y-0' : '-translate-y-full'
+      } bg-gradient-to-tr from-[#6B2B7A] via-[#844C9A] to-[#6B2B7A] shadow-lg backdrop-blur-md`}
+    >
+      <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <Link href="/" className="flex items-center gap-2">
+          <Image
+            src={Logo}
+            alt="شعار"
+            className="w-[46px] h-[46px] rounded-full"
+            unoptimized
+          />
+        </Link>
 
-    <div className="p-4">
-      {/* Navbar */}
-      <header
-        dir="rtl"
-        className={`fixed top-0 left-0 w-full z-50 transition-transform duration-300 ${
-          visible ? 'translate-y-0' : '-translate-y-full'
-        } bg-gradient-to-tr from-[#6B2B7A] via-[#844C9A] to-[#6B2B7A] shadow-lg backdrop-blur-md`}
-      >
-        <div className="px-2 sm:px-4 py-2 flex items-center justify-between gap-2 sm:gap-[40px] shadow-sm flex-wrap sm:flex-nowrap">
-          {/* الشعار */}
-          <div className="text-white font-bold text-lg">
-            <Image
-              src={Logo}
-              alt="شعار الموقع"
-              className="h-[42px] w-[55px] rounded-[10px]"
-              unoptimized
-            />
-          </div>
-
-          {/* مربع البحث */}
-          <div className="flex flex-1 max-w-full sm:mx-4 sm:max-w-xl bg-white/90 backdrop-blur rounded-full overflow-hidden shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
-            <input
-              type="text"
-              name="search"
-              placeholder="بتدور على ايه؟"
+        <div className="w-full flex justify-center items-center">
+          <div className="w-full max-w-md hidden md:block">
+            <div className="flex items-center bg-white/90 rounded-full px-4 py-2 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
+              <Search className="text-gray-500 ml-2" size={18} />
+              <input
+                type="text"
+                placeholder="إبحث عن منتج..."
               onChange={(e) => setInputValue(e.target.value)}
-              className="w-full !bg-transparent text-black placeholder:text-gray-400 border-none outline-none focus:ring-0 px-4 py-2 text-sm"
-            />
-            <div className="px-4 py-2 font-bold text-sm flex items-center text-black">
-              <Search className="ml-1" size={18} />
+
+                className="bg-transparent flex-1 text-sm focus:outline-none text-gray-700 placeholder:text-gray-400"
+              />
             </div>
           </div>
-
-          {/* الأيقونات */}
-          <div className="flex items-center gap-3 text-white text-sm">
-            <Link href="/register">
-              <div className="flex items-center gap-1 cursor-pointer hover:text-yellow-400 transition transform hover:scale-110">
-                <User2 size={22} />
-                <span className="hidden sm:inline">تسجيل دخول</span>
-              </div>
-            </Link>
-
-            <div className="h-6 w-px bg-white/30 hidden sm:block"></div>
-
-            <Link href="/favorite">
-              <Heart
-                size={22}
-                className="cursor-pointer hover:text-pink-300 transition transform hover:scale-110"
-              />
-            </Link>
-
-            <div className="h-6 w-px bg-white/30 hidden sm:block"></div>
-
-            <Link href="/cart">
-              <ShoppingCart
-                size={22}
-                className="cursor-pointer hover:text-yellow-400 transition transform hover:scale-110"
-              />
-            </Link>
-          </div>
         </div>
-      </header>
+
+        <div className="flex items-center gap-4 text-white text-xs sm:text-sm">
+          <Link href="/register" className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
+            <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
+              <User2 size={20} />
+            </div>
+          </Link>
+
+          <div className="border-l border-white/30 h-6 mx-1" />
+
+          <Link href="/favorite" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
+            <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
+              <Heart size={20} />
+            </div>
+          </Link>
+
+          <div className="border-l border-white/30 h-6 mx-1" />
+
+          <Link href="/cart" className="relative flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
+            <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
+              <ShoppingCart size={20} />
+            </div>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] p-4 rounded-full font-bold">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+        </div>
+      </div>
+
+      {/* بحث موبايل */}
+      <div className="md:hidden px-4 pb-3">
+        <Link href="/Products" className="block">
+          <div className="flex items-center bg-white/90 rounded-full px-4 py-2 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
+            <Search className="text-gray-500 ml-2" size={18} />
+            <input
+              type="text"
+              placeholder="إبحث عن منتج..."
+              className="bg-transparent flex-1 text-sm focus:outline-none text-gray-700 placeholder:text-gray-400"
+            />
+          </div>
+        </Link>
+      </div>
+    </header>
+    <div className="p-4">
 
       {/* عرض المنتجات في شكل شبكة */}
       {renderProducts.length === 0 ? (
@@ -225,7 +279,7 @@ const [visible, setVisible] = useState(true)
                 originalPrice={image.originalPrice}
                 category={image.category}
                 discount={image.discount}
-                love={image.love}
+                love={favoriteProducts.includes(image.id)}
                 stock={image.stock}
                 soldOut={image.soldOut}
                 packet_pieces={image.packet_pieces}
@@ -233,7 +287,8 @@ const [visible, setVisible] = useState(true)
                 piece_price_after_offer={image.piece_price_after_offer}
                 packet_price_after_offer={image.packet_price_after_offer}
                 reviews_avg={image.reviews_avg}
-                handellove={() => console.log(`Liked product ${image.id}`)}
+                handellove={() => (handelfavorit(image.id))}
+                
               />
             </div>
           ))}
@@ -348,6 +403,7 @@ const [visible, setVisible] = useState(true)
 </AnimatePresence>
 
     </div>
+</>
   );
 
 }

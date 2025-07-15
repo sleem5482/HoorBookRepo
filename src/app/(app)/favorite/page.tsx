@@ -83,7 +83,7 @@ setProduct(prev => {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-4 ">
       {product.map((p, index) => (
         <Card key={`${p.id}-${index}`} {...p}   handellove={() => handellove(p.id) }
-      love={favorit.includes(p.id)} 
+      love={true} 
 
 />
       ))}

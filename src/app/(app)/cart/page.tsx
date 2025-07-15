@@ -103,8 +103,11 @@ export default function Cart() {
       const newItems = res.data.data.data.data
       const currentPage = res.data.data.data.meta.current_page
       const lastPage = res.data.data.data.meta.last_page
-
-      setItems(prev => [...prev, ...newItems])
+setItems(prev => {
+      const ids = new Set(prev.map(p => p.id));
+      const filtered = newItems.filter(p => !ids.has(p.id));
+      return [...prev, ...filtered];
+    });
       setHasMore(currentPage < lastPage)
     } catch (error) {
       console.error('حدث خطأ أثناء تحميل البيانات:', error)

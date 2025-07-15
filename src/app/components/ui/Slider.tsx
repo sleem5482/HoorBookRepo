@@ -35,22 +35,41 @@ export const Slider:React.FC<SwiperSliderProps>=({
       >
 {Array.isArray(items) && items.length > 0 && items.map((src, i) => (
   <SwiperSlide key={i}>
-    <Link href={`/Categories/${src.id}`} className="block w-full h-full">
+    {src.product.offer===0?
+    <Link href={`/Categories/${src.product.category_id}`} className="block w-full h-full">
       <div className={`relative w-full ${height}`}>
         <Image
           src={`${BaseUrl}${src.image}`} 
           alt={`Slide ${i + 1}`}
           fill
-              className={clsx("rounded-xl", {
-      "object-cover": objectFit === "cover",
-      "object-contain": objectFit === "contain"
-    })}
+          className={clsx("rounded-xl", {
+            "object-cover": objectFit === "cover",
+            "object-contain": objectFit === "contain"
+          })}
           sizes="100vw"
           priority={i === 0}
           unoptimized
-        />
+          />
       </div>
     </Link>
+        :(
+          <Link href={`/details/${src.product_id}`} className="block w-full h-full">
+      <div className={`relative w-full ${height}`}>
+        <Image
+          src={`${BaseUrl}${src.image}`} 
+          alt={`Slide ${i + 1}`}
+          fill
+          className={clsx("rounded-xl", {
+            "object-cover": objectFit === "cover",
+            "object-contain": objectFit === "contain"
+          })}
+          sizes="100vw"
+          priority={i === 0}
+          unoptimized
+          />
+      </div>
+    </Link>
+        )}
   </SwiperSlide>
 ))}
 

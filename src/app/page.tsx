@@ -137,6 +137,7 @@ const handelfavorit = async (id: number) => {
     showNavigation={true}
     showPagination={true}
     autoPlayDelay={3000}
+  
     />
     )}
     
@@ -168,11 +169,13 @@ const handelfavorit = async (id: number) => {
       key={index}
       style={{ width: 'auto' }}
     >
+      <Link href={`/Categories/${image.id}`}>
       <Circle
         id={image.id}
         image={image.image}
         name={image.name}
-      />
+        />
+        </Link>
     </SwiperSlide>
   ))}
 </Swiper>

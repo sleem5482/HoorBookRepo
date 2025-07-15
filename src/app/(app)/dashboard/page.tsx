@@ -140,7 +140,8 @@ export default function CategoriesPage() {
             const isSelected = selectedCategoryId === cat.id;
             return (
               <div
-                key={cat.id}
+              key={`${index}-${cat.id}`}
+
                 ref={ref}
                 className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer transition-all ${
                   isSelected ? "bg-blue-200 font-semibold shadow" : "hover:bg-blue-100"

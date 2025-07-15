@@ -10,6 +10,7 @@ import SmartNavbar from "@/app/components/ui/Navbar";
 import { CallApi } from "@/app/lib/utilits";
 import { Button } from "@/app/components/ui/Button";
 import CommentPopup from "@/app/components/ui/popup";
+import toast from "react-hot-toast";
 export default function Details() {
   const [showPopup, setShowPopup] = useState(false);
   const sendres = `${BaseUrl}api/carts`;
@@ -85,6 +86,12 @@ const imgcomment=`${BaseUrl}${details.image}`
 
       const res: ApiResponse<AddToChart> = await CallApi("post", sendres, payload, headers);
       console.log(res);
+      if(res.data===null){
+        toast.error("نفذت هذه الكميه برجاء اختيار كميه اقل")
+      }
+      if(res.status?.code===200 ){
+       toast.success("تمت الاضافه بنجاح")
+      }
       console.log(payload);
     } catch (error) {
       console.log(error);

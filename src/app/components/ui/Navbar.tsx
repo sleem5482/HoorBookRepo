@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, ShoppingCart, Heart, User2 } from 'lucide-react'
+import { Search, ShoppingCart, Heart, User2 , LayoutGrid } from 'lucide-react'
 import Logo from '../../../../public/asset/images/حورلوجو-1.png'
 import { getCartLength } from '@/app/lib/api/cart'
 import { useCartStore } from '@/app/store/cartStore'
@@ -68,6 +68,13 @@ const { cartCount, refreshCartCount } = useCartStore()
           <Link href="/favorite" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
             <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
               <Heart size={20} />
+            </div>
+          </Link>
+
+
+              <Link href="/dashboard" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
+            <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
+              <LayoutGrid  size={20} />
             </div>
           </Link>
 

@@ -3,6 +3,7 @@ import Image from 'next/image'
 import React from 'react'
 import Container from '../Container'
 import { BaseUrl } from '../Baseurl'
+import Link from 'next/link'
 export const Circle:React.FC<CategoryProps>=({
     id,
     image,
@@ -14,6 +15,7 @@ export const Circle:React.FC<CategoryProps>=({
 
 
 <div dir="rtl" className="flex flex-col items-center space-y-2">
+
       <div className="w-24 h-24 rounded-full bg-[linear-gradient(135deg,_#e8f3f0,_#f8f8f8)] flex items-center justify-center overflow-hidden">
         <Image
           src={`${BaseUrl}${image}`}
@@ -30,9 +32,7 @@ export const Circle:React.FC<CategoryProps>=({
     </div>
 
 
-  <div className="categories">
-    
-  </div>
+
             </Container>
     )
 }

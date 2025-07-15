@@ -6,6 +6,9 @@ export interface ApiResponse<T>{
     message: string;
     errors: string | null;
     data: T;
+    status?:{
+      code:number
+    };
   }
 
 
@@ -120,6 +123,8 @@ export interface SwiperSliderProps {
   showNavigation?: boolean;
   showPagination?: boolean;
   autoPlayDelay?: number;
+  offer?:number;
+  category_id?:number;
 }
 
 

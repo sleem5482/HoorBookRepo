@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import axios from 'axios'
 import { BaseUrl, headers } from '@/app/components/Baseurl'
 import { CartResponse } from '@/app/lib/type'
+import toast from 'react-hot-toast'
 
 type CartStore = {
   cartCount: number
@@ -18,7 +19,7 @@ export const useCartStore = create<CartStore>((set) => ({
       const count = res.data.data.data.data.length
       set({ cartCount: count })
     } catch (error) {
-      console.error('❌ فشل جلب عدد السلة:', error)
+      toast.error('❌ فشل جلب عدد السلة')
       set({ cartCount: 0 })
     }
   },
