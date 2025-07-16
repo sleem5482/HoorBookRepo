@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Container from "../components/Container";
 import { Sparkles } from "lucide-react";
 import { BaseUrl, headers } from "../components/Baseurl";
-import Cookies from "js-cookie";
+// import Cookies from "js-cookie";
 import BottomSelectField from "../components/ui/checkbox";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -17,9 +17,9 @@ import {
     LandmarkIcon,
 } from "lucide-react";
 import axios from "axios";
-import { cookies } from "next/headers";
 import { address,addressNames } from "../lib/type";
-import { buildPayload } from "../lib/methodes";
+import { buildPayload } from "../components/handleAddress";
+import toast, { Toaster } from "react-hot-toast";
 
 const API_BASE = `${BaseUrl}api`;
 // console.log(API_BASE);
@@ -46,7 +46,6 @@ const Location = () => {
     const [areas, setAreas] = useState<any[]>([]);
     // Error modal
     const [modal, setModal] = useState({ show: false, message: "" });
-    const [success, setSuccess] = useState("");
 
         // Unified address change handler (for IDs)
     const handleAddressChange = (field: keyof address, value: string) => {
@@ -170,12 +169,12 @@ const Location = () => {
                 }
             );
             if (res.data && res.status === 200) {
-                setSuccess("تم حفظ العنوان بنجاح!");
+                toast.success("تم حفظ العنوان بنجاح!");
 
-                Cookies.set("login_governorate", addressNames.governorate);
-                Cookies.set("login_city", addressNames.city);
-                Cookies.set("login_area", addressNames.area);
-                Cookies.set("login_address_details", address.details);
+                // Cookies.set("login_governorate", addressNames.governorate);
+                // Cookies.set("login_city", addressNames.city);
+                // Cookies.set("login_area", addressNames.area);
+                // Cookies.set("login_address_details", address.details);
                 setAddress({
                     name: "",
                     phone: "",
@@ -190,10 +189,10 @@ const Location = () => {
                     area: "",
                 });
             } else {
-                setModal({ show: true, message: "حدث خطأ أثناء حفظ العنوان" });
+                toast.error( "حدث خطأ أثناء حفظ العنوان");
             }
         } catch {
-            setModal({ show: true, message: "حدث خطأ أثناء حفظ العنوان" });
+            toast.error( "حدث خطأ أثناء حفظ العنوان");
         }
     };
 
@@ -348,11 +347,15 @@ const Location = () => {
                                 </span>
                             </div>
                         </div>
-                        {success && (
+                        {/* {success && (
                             <div className="text-green-600 text-center">
-                                {success}
+                                <Toaster/>
                             </div>
-                        )}
+                        )} */}
+                            <div >
+                                <Toaster/>
+                            </div>
+                        
                         <button
                             type="submit"
                             className="w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white font-bold py-2 rounded-lg shadow-lg hover:scale-[1.02] transition-all duration-300 mt-2">
