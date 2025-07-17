@@ -5,7 +5,7 @@ import { fetchData } from "@/app/lib/methodes";
 import { ApiResponse, Favorit, HomePageData } from "@/app/lib/type";
 import { Card } from "@/app/components/ui/Card";
 import Image from "next/image";
-import { ArrowRight, ChevronLeft, ChevronRight, Heart, Search, Settings2Icon, ShoppingCart, User2 } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Heart, LayoutGrid, Search, Settings2Icon, ShoppingCart, User2 } from "lucide-react";
 import Link from "next/link";
 import Logo from '../../../../../public/asset/images/حورلوجو-1.png'
 import debounce from "lodash.debounce";
@@ -88,10 +88,6 @@ useEffect(() => {
 }, []);
 
 
-  useEffect(() => {
-    if (inputValue === "") return; 
-    fetchProducts(true, inputValue);
-  }, []);
 
   // Debounce input
 
@@ -114,7 +110,7 @@ useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore && !loading) {
-          fetchProducts(false);
+           fetchProducts(false, inputValue, filters);
         }
       },
       { threshold: 1 }
@@ -221,7 +217,13 @@ const [visible, setVisible] = useState(true)
               <Heart size={20} />
             </div>
           </Link>
+   <div className="border-l border-white/30 h-6 mx-1" />
 
+              <Link href="/dashboard" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
+            <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
+              <LayoutGrid  size={20} />
+            </div>
+          </Link>
           <div className="border-l border-white/30 h-6 mx-1" />
 
           <Link href="/cart" className="relative flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
@@ -296,7 +298,7 @@ const [visible, setVisible] = useState(true)
       )}
 
       {/* Infinite Scroll Trigger */}
-      {isSearching && hasMore && (
+      { hasMore && (
         <div
           ref={loaderRef}
           className="h-10 w-full mt-6 flex justify-center items-center"

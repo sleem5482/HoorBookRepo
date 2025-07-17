@@ -5,7 +5,7 @@ import { fetchData } from "@/app/lib/methodes";
 import { ApiResponse, HomePageData } from "@/app/lib/type";
 import { Card } from "@/app/components/ui/Card";
 import Image from "next/image";
-import { ArrowRight, ChevronLeft, ChevronRight, Heart, Search, Settings2Icon, ShoppingCart, User2 } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Heart, LayoutGrid, Search, Settings2Icon, ShoppingCart, User2 } from "lucide-react";
 import Link from "next/link";
 import Logo from '../../../../public/asset/images/حورلوجو-1.png'
 import debounce from "lodash.debounce";
@@ -174,6 +174,14 @@ const [visible, setVisible] = useState(true)
             </div>
           </Link>
 
+
+   <div className="border-l border-white/30 h-6 mx-1" />
+
+              <Link href="/dashboard" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
+            <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
+              <LayoutGrid  size={20} />
+            </div>
+          </Link>
           <div className="border-l border-white/30 h-6 mx-1" />
 
           <Link href="/favorite" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">

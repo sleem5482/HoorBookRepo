@@ -71,13 +71,13 @@ const { cartCount, refreshCartCount } = useCartStore()
             </div>
           </Link>
 
+          <div className="border-l border-white/30 h-6 mx-1" />
 
               <Link href="/dashboard" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
             <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
               <LayoutGrid  size={20} />
             </div>
           </Link>
-
           <div className="border-l border-white/30 h-6 mx-1" />
 
           <Link href="/cart" className="relative flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">

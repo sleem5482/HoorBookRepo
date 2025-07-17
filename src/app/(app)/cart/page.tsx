@@ -114,9 +114,15 @@ setItems(prev => {
     }
   }
 
-  useEffect(() => {
-    fetchData(1)
-  }, [])
+useEffect(() => {
+  if (token) {
+    setlogin(false);
+    fetchData(1);
+  } else {
+    setlogin(true);
+  }
+}, [token]);
+
 
   const loadMore = () => {
     const nextPage = page + 1
