@@ -45,7 +45,7 @@ const url= `${BaseUrl}api/user/login`
       Cookies.set("login_user_type_name", user.type_name);
       Cookies.set("login_cart_count", user.CartCount.toString());
       toast.success('تم تسجيل الدخول بنجاح 🎉')
-      router.push('/')
+      window.window.location.href='/'
       
 if (user.pointsSettings) {
   Cookies.set("login_points", user.pointsSettings.points);

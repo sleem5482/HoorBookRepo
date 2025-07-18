@@ -1,4 +1,5 @@
 import { StaticImageData } from "next/image";
+import { ReactNode } from "react";
 export interface ApiResponse<T>{
     statusCode: number;
     meta: string | null;
@@ -8,6 +9,7 @@ export interface ApiResponse<T>{
     data: T;
     status?:{
       code:number
+      messages:string
     };
   }
 
@@ -372,7 +374,21 @@ export interface ResponseStatus {
 export interface CartResponse {
   data: MainData;
   status: ResponseStatus;
+  info:{
+    total:string,
+    delivery_discount:number,
+      points_settings: {
+                points: string,
+                price: string,
+                point_price: string
+            }
+  }
 }
+export interface code{
+
+  code:string
+}
+
 
 //////////// Profile
 export interface PointsSettings {
@@ -400,4 +416,84 @@ export interface Simpledash{
           name: string,
           image: string,
           products_count: number
+}
+
+export interface postLocation {
+    full_name: string;
+    phone: string;
+    governorate_id: string;
+    city_id: string;
+    area_id: string;
+    address_details: string;
+    latitude: string;
+    longitude: string;
+}
+
+export interface address {
+       name: string,
+        phone: string,
+        governorateId: string,
+        cityId: string,
+        areaId: string,
+        details: string,
+}
+export interface addressNames{
+    governorate: string;
+    city: string;
+    area: string;
+}
+
+export interface BottomSelectFieldProps {
+  title: string;
+  placeholder?: string;
+  selectedValue: string;
+  options: string[];
+  onSelect: (value: string) => void;
+  icon?: ReactNode;
+  canOpen?: boolean; // new prop
+  onBlockedOpen?: () => void; // new prop
+}
+
+export interface Checkout {
+  show: boolean;
+  id: number;
+  code?: string;
+  items: CartItem[];
+  use_points?: boolean;
+  oncheckout: (data: {
+    address_id: number;
+    payment_method: string;
+    items: CartItem[];
+    code?: string;
+    use_points?: boolean;
+  }) => void;
+  close: () => void;
+}
+
+
+
+export interface AddressData {
+  id: number;
+  governorate: {
+    id: number;
+    name: string;
+  };
+  city: {
+    id: number;
+    name: string;
+    delivery_discount_percentage: string;
+  };
+  area: {
+    id: number;
+    name: string;
+    cost: string;
+    final_cost: number;
+  };
+  address_details: string;
+  latitude: number;
+  longitude: number;
+  full_name: string;
+  phone: string;
+  phone_verified_at: string;
+  verification_code: number;
 }

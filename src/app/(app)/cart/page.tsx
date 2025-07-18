@@ -7,12 +7,14 @@ import Image from 'next/image'
 import { Trash2, Pencil } from 'lucide-react'
 import { BaseUrl, headers } from '@/app/components/Baseurl'
 import Container from '@/app/components/Container'
-import { CartItem, CartResponse } from '@/app/lib/type'
+import { ApiResponse, CartItem, CartResponse, code, FieldForm } from '@/app/lib/type'
 import SmartNavbar from '@/app/components/ui/Navbar'
 import toast from 'react-hot-toast'
 import { useCartStore } from '@/app/store/cartStore'
 import Cookies from "js-cookie";
 import { LoginRequiredModal} from '@/app/components/ui/Pop-up-login'
+import FormField from '@/app/components/ui/Formfield'
+import { Cash } from '@/app/components/FeatureComponent/Modelcash'
 
 
 const EditModal = ({
@@ -86,6 +88,19 @@ export default function Cart() {
   const [hasMore, setHasMore] = useState<boolean>(true)
   const [editingItem, setEditingItem] = useState<CartItem | null>(null)
   const { refreshCartCount } = useCartStore()
+  const [cartInfo, setCartInfo] = useState<any>(null)
+  const [code, setcode] = useState<Record<string, any>>({});
+  const [open,setopen]=useState<boolean>(false)
+  const discount=`${BaseUrl}api/check-valid-copoun`;
+  const fields:FieldForm[]=[
+    {
+      label: "كود الخصم ",
+      name: "code",
+      type: "text",
+      requierd: false,
+      placeholder:"ادخل كود الخصم"
+    },
+  ]
 
   const fetchData = async (pageNum: number) => {
     try {
@@ -101,8 +116,12 @@ export default function Cart() {
       )
 
       const newItems = res.data.data.data.data
+      const info=res.data.data.info
+      
+      
       const currentPage = res.data.data.data.meta.current_page
       const lastPage = res.data.data.data.meta.last_page
+      setCartInfo(info)
 setItems(prev => {
       const ids = new Set(prev.map(p => p.id));
       const filtered = newItems.filter(p => !ids.has(p.id));
@@ -136,6 +155,7 @@ useEffect(() => {
       setItems(prev => prev.filter(item => item.id !== id))
       refreshCartCount()
       toast.success('🗑️ تم حذف المنتج بنجاح')
+       fetchData(1)
     } catch (error) {
       console.error('فشل حذف العنصر:', error)
       toast.error('حدث خطأ أثناء حذف المنتج')
@@ -170,6 +190,52 @@ useEffect(() => {
       toast.error('❌ حدث خطأ أثناء التعديل')
     }
   }
+const handelcode = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    const res = await axios.post(discount, code, { headers });
+
+    const status = res.data.status;
+
+    if (status.status === false ) {
+      toast.error("❌ خطأ في الكود");
+      return;
+    }
+
+    toast.success("✅ تم تفعيل الكود بنجاح");
+
+    const discountData = res.data;
+  
+
+    if (!discountData) {
+      toast.error("حدث خطأ في قراءة بيانات الخصم");
+      return;
+    }
+
+    let updatedTotal = Number( (cartInfo.total));
+
+    if (discountData.data.type === 'percentage') {
+      updatedTotal = updatedTotal - (updatedTotal * (discountData.data.value / 100));
+    } else {
+      updatedTotal -=   discountData.data.value;
+      console.log(updatedTotal);
+      
+    }
+
+    updatedTotal = Math.max(0, updatedTotal);
+
+    // تحديث cartInfo مع السعر الجديد
+    setCartInfo((prev: any) => ({
+      ...prev,
+      total: String(updatedTotal),
+    }));
+
+  } catch (error: any) {
+    console.error(error);
+    toast.error("حدث خطأ أثناء التفعيل");
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
@@ -182,15 +248,58 @@ useEffect(() => {
           hasMore={hasMore}
           loader={<p className="text-center text-gray-600 mt-4 animate-pulse">جارٍ التحميل...</p>}
           endMessage={
-            <p className="text-center text-green-700 font-semibold mt-4">
-              ✅ تم تحميل كل العناصر
-            </p>
+            <>
+            </>
           }
         >
           <div className="text-center font-bold text-gray-800 text-3xl mt-24 mb-6">
             🛒 سلة المشتريات
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-10">
+
+
+          {cartInfo && (
+  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-center text-sm sm:text-base">
+    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+      <p className="text-gray-700 font-semibold mb-1">💰 السعر الإجمالي</p>
+      <p className="text-green-700 text-lg font-bold">{cartInfo.total} ج.م</p>
+    </div>
+
+    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+      <p className="text-gray-700 font-semibold mb-1">🚚 خصم التوصيل</p>
+      <p className="text-orange-600 text-lg font-bold">{cartInfo.delivery_discount}%</p>
+    </div>
+
+    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+      <p className="text-gray-700 font-semibold mb-1">⭐ نقاطك</p>
+      <p className="text-purple-700 text-lg font-bold">
+        {cartInfo.points_settings.points} نقطة = {cartInfo.points_settings.price} ج.م
+      </p>
+      <p className="text-gray-500 text-xs mt-1">سعر النقطة: {cartInfo.points_settings.point_price} ج.م</p>
+    </div>
+  </div>
+)}
+<div className="code mb-7">
+<form onSubmit={handelcode} className="w-full">
+  <div className="flex justify-center items-center gap-3 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow border border-gray-200">
+    
+    {/* حقل الإدخال (افتراضيًا داخل FormField) */}
+    <div className="flex-1">
+      <FormField fields={fields} data={code} onChange={setcode} />
+    </div>
+<div className='mt-11'>
+
+    <button
+      type="submit"
+      className="p-4  bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold rounded-lg shadow hover:opacity-90 transition"
+      >
+      تفعيل
+    </button>
+      </div>
+  </div>
+</form>
+
+</div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-10">
             {items.map(item => (
               <div
                 key={item.id}
@@ -232,9 +341,35 @@ useEffect(() => {
                 </div>
               </div>
             ))}
-          </div>
+      </div>
+
+
+<div className="sale">
+        <button
+      type="submit"
+      onClick={()=>{
+        setopen(true)
+      }}
+      className="p-4  w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold rounded-lg shadow hover:opacity-90 transition"
+      >
+      اتمام الشراء
+    </button>
+      </div>
         </InfiniteScroll>
-      </Container>
+
+<Cash
+  show={open}
+  id={1}
+  code={code.code}
+  items={items}
+  oncheckout={(payload) => {
+    console.log("🚀 بيانات الطلب:", payload);
+  }}
+  close={() => setopen(false)} 
+/>
+
+
+   </Container>
 
       {editingItem && (
         <EditModal
