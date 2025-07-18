@@ -34,14 +34,17 @@ const { cartCount, refreshCartCount } = useCartStore()
       } bg-gradient-to-tr from-[#6B2B7A] via-[#844C9A] to-[#6B2B7A] shadow-lg backdrop-blur-md`}
     >
       <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src={Logo}
-            alt="شعار"
-            className="w-[46px] h-[46px] rounded-full"
-            unoptimized
-          />
-        </Link>
+<Link href="/" className="flex items-center gap-2">
+  <Image
+    src={Logo}
+    alt="شعار"
+    width={200}
+    height={100}
+    className="w-[300px] h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 object-contain"
+    unoptimized
+  />
+</Link>
+
 
         <Link href="/Products" className="w-full flex justify-center items-center">
           <div className="w-full max-w-md hidden md:block">
