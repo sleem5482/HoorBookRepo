@@ -23,7 +23,7 @@ export default function Details() {
 
   const [chart, setchart] = useState<Partial<AddToChart>>({
     product_type: "Piece",
-    qty: 0,
+    qty: 1,
     product_id: Number(productid),
   });
 

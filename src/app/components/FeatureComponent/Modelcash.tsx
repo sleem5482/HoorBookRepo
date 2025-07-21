@@ -77,7 +77,7 @@ const handleConfirm = async () => {
   try {
     const res = await axios.post(order, finalSure, { headers });
 
-    if (res.data?.status === true || res.status === 200) {
+    if (res.data?.status === true ) {
       toast.success("✅ تم إنشاء الطلب بنجاح");
       
       if (res.data?.data?.order_number) {
