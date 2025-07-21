@@ -3,25 +3,32 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { CheckCircle2, MapPin, Plus, Wallet } from "lucide-react";
 import Image from "next/image";
-import { AddressData, Checkout } from "@/app/lib/type";
+import { AddressData, Checkout, surecash } from "@/app/lib/type";
 import { BaseUrl, headers } from "../Baseurl";
 import Link from "next/link";
 import cash from '../../../../public/asset/images/cash.png'
+import toast from "react-hot-toast";
 
 export const Cash = ({
   show,
   id,
   code,
   items,
-  use_points,
   oncheckout,
   close
 }: Checkout) => {
   const [addressList, setAddressList] = useState<AddressData[]>([]);
-  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
   const [paymentMethod, setPaymentMethod] = useState("cash");
-  const [usePoints, setUsePoints] = useState(use_points || false);
-
+  const [usePoints, setUsePoints] = useState<string>("0");
+  const [sure,setsure]=useState<surecash>({
+    user_address_id:0,
+    payment_type:"1",
+    notes:'',
+    code:code,
+    use_points:"",
+  })
+const [check,setcheck]=useState(false);
+const order=`${BaseUrl}api/orders`;
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
@@ -46,23 +53,55 @@ export const Cash = ({
     };
   }, [show]);
 
-  const handleConfirm = () => {
-    if (!selectedAddressId || !paymentMethod) {
-      alert("يرجى اختيار العنوان وطريقة الدفع");
-      return;
+const handelcheck=()=>{
+  if(check){
+    handelcash("use_points","0")
+    setcheck(false)
+  }
+  else{
+    setcheck(true)
+    handelcash("use_points","1")
     }
+}
+  const handelcash=(field:keyof surecash,value:any)=>{
+    setsure((prevsure)=>({...prevsure,[field]:value}));
+  }
+const handleConfirm = async () => {
+  const finalCode = code ?? ""; // تفادي undefined
 
-    oncheckout({
-      address_id: selectedAddressId,
-      payment_method: paymentMethod,
-      items,
-      code,
-      use_points: usePoints,
-    });
-    close();
+  const finalSure: surecash = {
+    ...sure,
+    code: finalCode,
   };
 
+  try {
+    const res = await axios.post(order, finalSure, { headers });
+
+    if (res.data?.status === true || res.status === 200) {
+      toast.success("✅ تم إنشاء الطلب بنجاح");
+      
+      if (res.data?.data?.order_number) {
+        toast(`📦 رقم الطلب: ${res.data.data.order_number}`, { icon: "🧾" });
+      }
+
+      close();        
+
+    } else {
+      toast.error("❌ فشل إنشاء الطلب، تأكد من البيانات");
+      console.log("🚨 الرد من السيرفر:", res.data);
+    }
+  } catch (error: any) {
+    toast.error("⚠️ حدث خطأ أثناء إرسال الطلب");
+    console.error("🛑 Error in order request:", error);
+  }
+
+  console.log("📦 الطلب المرسل:", finalSure);
+};
+
+
+
   if (!show) return null;
+
 
   return (
     <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4 overflow-y-auto">
@@ -85,14 +124,16 @@ export const Cash = ({
             {addressList.map((addr) => (
               <div
                 key={addr.id}
-                onClick={() => setSelectedAddressId(addr.id)}
+                // onClick={() => setSelectedAddressId(addr.id)}
+                onClick={()=>{handelcash("user_address_id",addr.id)}}
                 className={`p-3 rounded-xl cursor-pointer border-2 transition hover:shadow-md text-right ${
-                  selectedAddressId === addr.id
-                    ? "border-purple-700 bg-purple-50"
-                    : "border-gray-200 bg-gray-50"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-1">
+                  sure.user_address_id === addr.id
+                  ? "border-purple-700 bg-purple-50"
+                  : "border-gray-200 bg-gray-50"
+                  }`}
+                  >
+                <div className="flex items-center justify-between mb-1"
+                >
                   <span className="font-bold text-gray-800 flex items-center gap-1">
                     <MapPin size={16} />
                     {addr.full_name}
@@ -122,7 +163,7 @@ export const Cash = ({
           <label className="block mb-2 font-medium text-gray-700">💳 طريقة الدفع:</label>
           <div className="flex items-center gap-4">
             <button
-              onClick={() => setPaymentMethod("cash")}
+            onClick={()=>{handelcash("payment_type","1")}}
               className={`flex items-center gap-3 px-4 py-2 border rounded-lg transition ${
                 paymentMethod === "cash"
                   ? "bg-gradient-to-r from-purple-700 to-orange-400 text-white border-none"
@@ -148,8 +189,7 @@ export const Cash = ({
           <input
             id="usePoints"
             type="checkbox"
-            checked={usePoints}
-            onChange={() => setUsePoints(!usePoints)}
+            onClick={()=>{handelcheck()}}
             className="w-5 h-5 accent-purple-700"
           />
           <label htmlFor="usePoints" className="text-gray-700 font-medium">
@@ -175,8 +215,19 @@ export const Cash = ({
           <div className="text-right text-green-700 font-medium">
             🎁 كود الخصم المفعّل: <span className="underline">{code}</span>
           </div>
+          
         )}
-
+<div className="notes">
+  <label className="font-semibold text-gray-700 mb-1">ملاحظات
+    </label>
+    <textarea
+    id="notes"
+    className="w-full h-20 p-2 text-gray-700 border rounded-md focus:
+    border-purple-700"
+    onChange={(e)=>{handelcash("notes",e.target.value)}}
+    >
+    </textarea>
+</div>
         {/* ✅ زر التأكيد */}
         <div className="pt-3">
           <button

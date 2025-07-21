@@ -460,16 +460,18 @@ export interface Checkout {
   code?: string;
   items: CartItem[];
   use_points?: boolean;
-  oncheckout: (data: {
-    address_id: number;
-    payment_method: string;
-    items: CartItem[];
-    code?: string;
-    use_points?: boolean;
-  }) => void;
+  oncheckout: () => void;
   close: () => void;
 }
 
+export interface surecash{
+    
+    user_address_id: number;
+    payment_type: string;
+    notes:string;
+    code?: string;
+    use_points?: string;
+  }
 
 
 export interface AddressData {

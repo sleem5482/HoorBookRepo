@@ -111,12 +111,15 @@ const Location = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-orange-100 flex items-center justify-center py-10 px-4">
+<div className="min-h-screen bg-gradient-to-br from-purple-100 to-orange-100 flex items-center justify-center px-4 sm:px-6 md:px-8 py-10">
 
         <SmartNavbar/>
       <Container>
-        <form className="bg-white shadow-2xl rounded-3xl p-8 w-full max-w-md space-y-6 border border-purple-100 mt-20" onSubmit={handleSubmit}>
-          <div className="flex flex-col items-center space-y-2">
+      <form
+  className="bg-white shadow-2xl rounded-3xl p-6 sm:p-8 w-full max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl space-y-6 border border-purple-100 mt-20"
+  onSubmit={handleSubmit}
+>
+  <div className="flex flex-col items-center space-y-2">
             <h2 className="text-2xl font-bold text-purple-800 text-center flex items-center gap-1">
               <Sparkles className="w-5 h-5 text-orange-400 animate-bounce" /> أضف عنوان جديد
             </h2>
@@ -241,8 +244,8 @@ const Location = () => {
       {/* modal */}
       {modal.show && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-lg p-8 min-w-[300px] text-center">
-            <div className="mb-4 text-lg text-black">{modal.message}</div>
+        <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 w-[90%] max-w-sm text-center">
+ <div className="mb-4 text-lg text-black">{modal.message}</div>
             <button className="text-purple-700 font-bold mt-2" onClick={() => setModal({ show: false, message: "" })}>
               تأكيد
             </button>

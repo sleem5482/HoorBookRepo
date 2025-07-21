@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Searchproduct } from "@/app/store/SearchproductsStore";
 import { fetchData } from "@/app/lib/methodes";
-import { ApiResponse, HomePageData } from "@/app/lib/type";
+import { ApiResponse, Favorit, HomePageData } from "@/app/lib/type";
 import { Card } from "@/app/components/ui/Card";
 import Image from "next/image";
 import { ArrowRight, ChevronLeft, ChevronRight, Heart, LayoutGrid, Search, Settings2Icon, ShoppingCart, User2 } from "lucide-react";
@@ -11,7 +11,10 @@ import Logo from '../../../../public/asset/images/حورلوجو-1.png'
 import debounce from "lodash.debounce";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from "@/app/store/cartStore";
-import { BaseUrl } from "@/app/components/Baseurl";
+import { BaseUrl, headers } from "@/app/components/Baseurl";
+import Cookies from "js-cookie";
+import { CallApi } from "@/app/lib/utilits";
+
 export default function ProductPage() {
   const [inputValue, setInputValue] = useState("");
     const { cartCount, refreshCartCount } = useCartStore()
@@ -23,6 +26,8 @@ export default function ProductPage() {
   hasPacket: "",
   hasOffer: ""
 });
+  const [login,setlogin]=useState<boolean>(false)
+const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
 const [showFilters,setShowFilters]=useState(false)
   const {
     products,
@@ -31,7 +36,46 @@ const [showFilters,setShowFilters]=useState(false)
     loading,
     setSearchTerm,
   } = Searchproduct();
+const token = Cookies.get("access_token_login");
+const url =`${BaseUrl}api/products/favourite`
 
+const [favoriteProducts, setFavoriteProducts] = useState<number[]>([]);
+
+const fetchFavorites = async () => {
+  try {
+    const res: any = await CallApi("get", `${BaseUrl}api/products?page=1&favourite=1`, {}, headers);
+    const favIds = res?.data?.data?.map((item: any) => item.id) || [];
+    setFavoriteProducts(favIds);
+  } catch (error) {
+    console.error("Error fetching favorites:", error);
+  }
+};
+useEffect(() => {
+  fetchFavorites();
+}, []);
+
+
+const handelfavorit = async (id: number) => {
+  try {
+    if(!token){
+      setlogin(true)
+      console.log(login);
+      
+     return;
+    }
+    setlogin(false)
+    const dataToSend = { product_id: id };
+    const res: ApiResponse<Favorit> = await CallApi("post", url, dataToSend, headers);
+    console.log('Accepted', res);
+    setFavoriteIds((prev) =>
+      prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
+  );
+      
+  
+  } catch (error) {
+    console.log(error);
+  }
+};
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -50,6 +94,7 @@ const [showFilters,setShowFilters]=useState(false)
   useEffect(() => {
     if (inputValue === "") return; 
     fetchProducts(true, inputValue);
+
   }, []);
 
   // Debounce input
@@ -130,6 +175,7 @@ const [visible, setVisible] = useState(true)
     setFilters((prev) =>
       ({ ...prev, hasColors: filtered }));
     fetchProducts(true, inputValue, { ...filters, hasColors: filtered });
+  
   }
 
   return (
@@ -256,7 +302,8 @@ const [visible, setVisible] = useState(true)
                 piece_price_after_offer={image.piece_price_after_offer}
                 packet_price_after_offer={image.packet_price_after_offer}
                 reviews_avg={image.reviews_avg}
-                handellove={() => console.log(`Liked product ${image.id}`)}
+                handellove={() => (handelfavorit(image.id))}
+                
               />
             </div>
           ))}

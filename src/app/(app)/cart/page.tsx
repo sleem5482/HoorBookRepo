@@ -91,6 +91,7 @@ export default function Cart() {
   const [cartInfo, setCartInfo] = useState<any>(null)
   const [code, setcode] = useState<Record<string, any>>({});
   const [open,setopen]=useState<boolean>(false)
+  const [verificatio,setverification]=useState(false);
   const discount=`${BaseUrl}api/check-valid-copoun`;
   const fields:FieldForm[]=[
     {
@@ -199,11 +200,12 @@ const handelcode = async (e: React.FormEvent) => {
 
     if (status.status === false ) {
       toast.error("❌ خطأ في الكود");
+      setverification(false)
       return;
     }
-
+    
     toast.success("✅ تم تفعيل الكود بنجاح");
-
+    setverification(true)
     const discountData = res.data;
   
 
@@ -357,16 +359,18 @@ const handelcode = async (e: React.FormEvent) => {
       </div>
         </InfiniteScroll>
 
-<Cash
+  <Cash
   show={open}
   id={1}
-  code={code.code}
+  code={(verificatio)?code.code:undefined}
   items={items}
-  oncheckout={(payload) => {
-    console.log("🚀 بيانات الطلب:", payload);
+  oncheckout={() => {
+    console.log("🚀 بيانات الطلب:");
   }}
   close={() => setopen(false)} 
 />
+
+
 
 
    </Container>
