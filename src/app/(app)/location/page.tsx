@@ -110,22 +110,23 @@ const Location = () => {
     }
   };
 
-  return (
-<div className="min-h-screen bg-gradient-to-br from-purple-100 to-orange-100 flex items-center justify-center px-4 sm:px-6 md:px-8 py-10">
+ return (
+  <div className="min-h-screen bg-gradient-to-br from-purple-100 to-orange-100 px-4 py-10">
+    <SmartNavbar />
 
-        <SmartNavbar/>
+    <div className="flex justify-center">
       <Container>
-      <form
-  className="bg-white shadow-2xl rounded-3xl p-6 sm:p-8 w-full max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl space-y-6 border border-purple-100 mt-20"
-  onSubmit={handleSubmit}
->
-  <div className="flex flex-col items-center space-y-2">
+        <form
+          className="bg-white shadow-2xl rounded-3xl p-6 sm:p-8 w-full max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl space-y-6 border border-purple-100 mt-20 mx-auto"
+          onSubmit={handleSubmit}
+        >
+          <div className="flex flex-col items-center space-y-2">
             <h2 className="text-2xl font-bold text-purple-800 text-center flex items-center gap-1">
               <Sparkles className="w-5 h-5 text-orange-400 animate-bounce" /> أضف عنوان جديد
             </h2>
           </div>
 
-          {/* name */}
+          {/* الاسم */}
           <div>
             <label className="block font-bold mb-1 text-black">الاسم كاملًا</label>
             <div className="relative">
@@ -140,10 +141,10 @@ const Location = () => {
             </div>
           </div>
 
-          {/* phone */}
+          {/* الهاتف */}
           <div>
             <label className="block font-bold mb-1 text-black">رقم الهاتف</label>
-            <div className="w-full border rounded-md p-3 flex items-center bg-white border-gray-400 shadow-md" dir="rtl" >
+            <div className="w-full border rounded-md p-3 flex items-center bg-white border-gray-400 shadow-md" dir="rtl">
               <PhoneInput
                 countryCodeEditable={false}
                 country="eg"
@@ -168,7 +169,7 @@ const Location = () => {
             </div>
           </div>
 
-          {/* governorate */}
+          {/* المحافظة */}
           <div className="text-black">
             <label className="block font-bold mb-1">المحافظة</label>
             <BottomSelectField
@@ -181,7 +182,7 @@ const Location = () => {
             />
           </div>
 
-          {/* city */}
+          {/* المدينة */}
           <div className="text-black">
             <label className="block font-bold mb-1">المدينة</label>
             <BottomSelectField
@@ -196,7 +197,7 @@ const Location = () => {
             />
           </div>
 
-          {/* area */}
+          {/* المنطقة */}
           <div className="text-black">
             <label className="block font-bold mb-1">المنطقة</label>
             <BottomSelectField
@@ -211,21 +212,21 @@ const Location = () => {
             />
           </div>
 
-          {/* address details */}
+          {/* تفاصيل العنوان */}
           <div className="text-black">
             <label className="block font-bold mb-1">تفاصيل العنوان</label>
             <div className="relative">
               <MapPin className="absolute right-3 top-3 text-gray-400" size={20} />
               <textarea
-                className="w-full border rounded-md p-3 pr-12 text-right border-gray-400 shadow-md resize-none outline-none"
-                placeholder="ادخل تفاصيل العنوان ( الشارع رقم المنزل ) وعلامة محددة"
+                className="w-full border rounded-md p-3 pr-12 text-right border-gray-400 shadow-md resize-none outline-none min-h-[100px]"
+                placeholder="ادخل تفاصيل العنوان ( الشارع، رقم المنزل، علامة مميزة )"
                 value={formData.details}
                 onChange={(e) => updateField("details", e.target.value)}
               />
             </div>
           </div>
 
-          {/* summary */}
+          {/* ملخص */}
           <div className="flex items-center gap-2 border-t border-b border-gray-500 pt-4 py-4">
             <Map className="text-purple-600" size={22} />
             <div className="flex-1 text-right">
@@ -235,25 +236,34 @@ const Location = () => {
 
           <div><Toaster /></div>
 
-          <button type="submit" className="w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white font-bold py-2 rounded-lg shadow-lg hover:scale-[1.02] transition-all duration-300 mt-2">
+          {/* زر الحفظ */}
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white font-bold py-2 rounded-lg shadow-lg hover:scale-[1.02] transition-all duration-300 mt-2"
+          >
             حفظ
           </button>
         </form>
       </Container>
-
-      {/* modal */}
-      {modal.show && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-        <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 w-[90%] max-w-sm text-center">
- <div className="mb-4 text-lg text-black">{modal.message}</div>
-            <button className="text-purple-700 font-bold mt-2" onClick={() => setModal({ show: false, message: "" })}>
-              تأكيد
-            </button>
-          </div>
-        </div>
-      )}
     </div>
-  );
+
+    {/* المودال */}
+    {modal.show && (
+      <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+        <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 w-[90%] max-w-sm text-center">
+          <div className="mb-4 text-lg text-black">{modal.message}</div>
+          <button
+            className="text-purple-700 font-bold mt-2"
+            onClick={() => setModal({ show: false, message: "" })}
+          >
+            تأكيد
+          </button>
+        </div>
+      </div>
+    )}
+  </div>
+);
+
 };
 
 export default Location;
