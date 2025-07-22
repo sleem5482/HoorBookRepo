@@ -189,16 +189,18 @@ const [visible, setVisible] = useState(true)
       } bg-gradient-to-tr from-[#6B2B7A] via-[#844C9A] to-[#6B2B7A] shadow-lg backdrop-blur-md`}
     >
       <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-2">
-        <Image
-    src={Logo}
-    alt="شعار"
-    width={200}
-    height={100}
-    className="w-[300px] h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 object-contain"
-    unoptimized
-  />
-</Link>
+  <div className=" flex justify-center md:justify-start">
+    <Link href="/" className="block">
+      <Image
+        src={Logo}
+        alt="شعار"
+        width={70}
+        height={70}
+        className="w-[480px] sm:w-[360px] md:w-[70px] object-contain"
+        unoptimized
+      />
+    </Link>
+  </div>
 
         <div  className="w-full flex justify-center items-center">
           <div className="w-full max-w-md hidden md:block">
