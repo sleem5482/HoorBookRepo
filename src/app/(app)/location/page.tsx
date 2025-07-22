@@ -109,31 +109,30 @@ const Location = () => {
       toast.error("حدث خطأ أثناء حفظ العنوان");
     }
   };
-
- return (
-  <div className="min-h-screen bg-gradient-to-br from-purple-100 to-orange-100 px-4 py-10">
+return (
+  <div className="min-h-screen bg-gradient-to-br from-purple-100 to-orange-100 px-2 sm:px-4 py-6 sm:py-10">
     <SmartNavbar />
 
     <div className="flex justify-center">
       <Container>
         <form
-          className="bg-white shadow-2xl rounded-3xl p-6 sm:p-8 w-full max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl space-y-6 border border-purple-100 mt-20 mx-auto"
+          className="bg-white shadow-2xl rounded-3xl p-4 sm:p-6 md:p-8 w-full max-w-full space-y-6 border border-purple-100 mt-10 mx-auto"
           onSubmit={handleSubmit}
         >
           <div className="flex flex-col items-center space-y-2">
             <h2 className="text-2xl font-bold text-purple-800 text-center flex items-center gap-1">
-              <Sparkles className="w-5 h-5 text-orange-400 animate-bounce" /> أضف عنوان جديد
+              <Sparkles className="w-6 h-6 text-orange-400 animate-bounce" /> أضف عنوان جديد
             </h2>
           </div>
 
           {/* الاسم */}
           <div>
-            <label className="block font-bold mb-1 text-black">الاسم كاملًا</label>
+            <label className="block font-bold mb-1 text-black text-base">الاسم كاملًا</label>
             <div className="relative">
-              <User className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+              <User className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" size={22} />
               <input
                 type="text"
-                className="outline-none w-full border rounded-md p-3 pr-12 text-right text-black placeholder:text-gray-400 bg-white border-gray-400 shadow-md"
+                className="outline-none w-full border rounded-md p-3 pr-12 text-right text-black text-base placeholder:text-gray-400 bg-white border-gray-400 shadow-md"
                 placeholder="أدخل اسمك كاملًا"
                 value={formData.name}
                 onChange={(e) => updateField("name", e.target.value)}
@@ -143,7 +142,7 @@ const Location = () => {
 
           {/* الهاتف */}
           <div>
-            <label className="block font-bold mb-1 text-black">رقم الهاتف</label>
+            <label className="block font-bold mb-1 text-black text-base">رقم الهاتف</label>
             <div className="w-full border rounded-md p-3 flex items-center bg-white border-gray-400 shadow-md" dir="rtl">
               <PhoneInput
                 countryCodeEditable={false}
@@ -162,6 +161,7 @@ const Location = () => {
                   outline: "none",
                   padding: "0.5rem 1rem",
                   paddingLeft: "2.5rem",
+                  fontSize: "16px"
                 }}
                 buttonStyle={{ border: "none", background: "transparent" }}
                 containerStyle={{ direction: "ltr", display: "flex", alignItems: "center", color: "#000" }}
@@ -171,27 +171,27 @@ const Location = () => {
 
           {/* المحافظة */}
           <div className="text-black">
-            <label className="block font-bold mb-1">المحافظة</label>
+            <label className="block font-bold mb-1 text-base">المحافظة</label>
             <BottomSelectField
               title="المحافظة"
               placeholder="اختر المحافظة"
               selectedValue={formData.governorate}
               options={governorates.map(g => g.name_ar)}
               onSelect={handleGovSelect}
-              icon={<LandmarkIcon size={20} />}
+              icon={<LandmarkIcon size={22} />}
             />
           </div>
 
           {/* المدينة */}
           <div className="text-black">
-            <label className="block font-bold mb-1">المدينة</label>
+            <label className="block font-bold mb-1 text-base">المدينة</label>
             <BottomSelectField
               title="المدينة"
               placeholder="اختر المدينة"
               selectedValue={formData.city}
               options={cities.map(c => c.name_ar)}
               onSelect={handleCitySelect}
-              icon={<Building2 size={20} />}
+              icon={<Building2 size={22} />}
               canOpen={!!formData.governorateId}
               onBlockedOpen={() => setModal({ show: true, message: "اختر المحافظة أولاً" })}
             />
@@ -199,14 +199,14 @@ const Location = () => {
 
           {/* المنطقة */}
           <div className="text-black">
-            <label className="block font-bold mb-1">المنطقة</label>
+            <label className="block font-bold mb-1 text-base">المنطقة</label>
             <BottomSelectField
               title="المنطقة"
               placeholder="اختر منطقتك او أقرب منطقة لك"
               selectedValue={formData.area}
               options={areas.map(a => a.name_ar)}
               onSelect={handleAreaSelect}
-              icon={<MapPin size={20} />}
+              icon={<MapPin size={22} />}
               canOpen={!!formData.cityId}
               onBlockedOpen={() => setModal({ show: true, message: "اختر المدينة أولاً" })}
             />
@@ -214,11 +214,11 @@ const Location = () => {
 
           {/* تفاصيل العنوان */}
           <div className="text-black">
-            <label className="block font-bold mb-1">تفاصيل العنوان</label>
+            <label className="block font-bold mb-1 text-base">تفاصيل العنوان</label>
             <div className="relative">
-              <MapPin className="absolute right-3 top-3 text-gray-400" size={20} />
+              <MapPin className="absolute right-3 top-3 text-gray-400" size={22} />
               <textarea
-                className="w-full border rounded-md p-3 pr-12 text-right border-gray-400 shadow-md resize-none outline-none min-h-[100px]"
+                className="w-full border rounded-md p-3 pr-12 text-right border-gray-400 shadow-md resize-none outline-none min-h-[100px] text-base"
                 placeholder="ادخل تفاصيل العنوان ( الشارع، رقم المنزل، علامة مميزة )"
                 value={formData.details}
                 onChange={(e) => updateField("details", e.target.value)}
@@ -228,9 +228,9 @@ const Location = () => {
 
           {/* ملخص */}
           <div className="flex items-center gap-2 border-t border-b border-gray-500 pt-4 py-4">
-            <Map className="text-purple-600" size={22} />
+            <Map className="text-purple-600" size={24} />
             <div className="flex-1 text-right">
-              <span className="font-bold text-purple-700">الموقع</span>
+              <span className="font-bold text-purple-700 text-base">الموقع</span>
             </div>
           </div>
 
@@ -239,7 +239,7 @@ const Location = () => {
           {/* زر الحفظ */}
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white font-bold py-2 rounded-lg shadow-lg hover:scale-[1.02] transition-all duration-300 mt-2"
+            className="w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white font-bold py-3 text-lg rounded-lg shadow-lg hover:scale-[1.02] transition-all duration-300 mt-2"
           >
             حفظ
           </button>
@@ -263,6 +263,7 @@ const Location = () => {
     )}
   </div>
 );
+
 
 };
 
