@@ -29,6 +29,7 @@ export const Cash = ({
   })
 const [check,setcheck]=useState(false);
 const order=`${BaseUrl}api/orders`;
+const delete_address=`${BaseUrl}api/address/`;
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
@@ -99,6 +100,22 @@ const handleConfirm = async () => {
 };
 
 
+const handeldelete_address = (id: number) => {
+  axios.delete(`${delete_address}${id}`, { headers })
+    .then(res => {
+      if (res.data.status) {
+        toast.success("✅ تم حذف العنوان بنجاح");
+        setAddressList(prev => prev.filter(addr => addr.id !== id));
+      } else {
+        toast.error("❌ فشل حذف العنوان");
+      }
+    })
+    .catch(err => {
+      console.error("🚨 خطأ في حذف العنوان:", err);
+      toast.error("⚠️ حدث خطأ أثناء حذف العنوان");
+    });
+};
+
 
   if (!show) return null;
 
@@ -126,18 +143,25 @@ const handleConfirm = async () => {
                 key={addr.id}
                 // onClick={() => setSelectedAddressId(addr.id)}
                 onClick={()=>{handelcash("user_address_id",addr.id)}}
-                className={`p-3 rounded-xl cursor-pointer border-2 transition hover:shadow-md text-right ${
+                className={`p-3 rounded-xl relative cursor-pointer border-2 transition hover:shadow-md text-right ${
                   sure.user_address_id === addr.id
                   ? "border-purple-700 bg-purple-50"
                   : "border-gray-200 bg-gray-50"
                   }`}
                   >
+                      <button
+          className="absolute top-0 left-3 text-xl text-gray-500 hover:text-red-500"
+           onClick={()=>{handeldelete_address(addr.id)}}
+        >
+          ×
+        </button>
                 <div className="flex items-center justify-between mb-1"
                 >
                   <span className="font-bold text-gray-800 flex items-center gap-1">
                     <MapPin size={16} />
                     {addr.full_name}
                   </span>
+                 
                 </div>
                 <p className="text-sm text-gray-600">
                   {addr.address_details}, {addr.area.name}, {addr.city.name}

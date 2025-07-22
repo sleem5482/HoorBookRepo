@@ -113,7 +113,7 @@ return (
   <div className="min-h-screen bg-gradient-to-br from-purple-100 to-orange-100 px-2 sm:px-4 py-6 sm:py-10">
     <SmartNavbar />
 
-    <div className="flex justify-center">
+    <div className="flex justify-center mt-10 md:mt-5 ">
       <Container>
         <form
           className="bg-white shadow-2xl rounded-3xl p-4 sm:p-6 md:p-8 w-full max-w-full space-y-6 border border-purple-100 mt-10 mx-auto"

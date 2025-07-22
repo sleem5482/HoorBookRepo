@@ -39,8 +39,8 @@ const { cartCount, refreshCartCount } = useCartStore()
     src={Logo}
     alt="شعار"
     width={200}
-    height={100}
-    className="w-[300px] h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 object-contain"
+    height={200}
+    className="w-[300px] h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 "
     unoptimized
   />
 </Link>
