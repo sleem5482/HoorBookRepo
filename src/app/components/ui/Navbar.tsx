@@ -41,7 +41,7 @@ const { cartCount, refreshCartCount } = useCartStore()
         alt="شعار"
         width={70}
         height={70}
-        className="w-[280px] sm:w-[160px] md:w-[70px] object-contain"
+        className="w-[480px] sm:w-[360px] md:w-[70px] object-contain"
         unoptimized
       />
     </Link>
