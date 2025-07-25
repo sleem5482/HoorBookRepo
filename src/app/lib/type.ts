@@ -499,3 +499,88 @@ export interface AddressData {
   phone_verified_at: string;
   verification_code: number;
 }
+/////////// for orders 
+
+
+export interface Order {
+  id: number;
+  total: string;
+  discount: string;
+  discount_type: string;
+  delivery_fee: string;
+  sub_total: string;
+  points_discount: string;
+  status: string;
+  payment_type: string;
+  payment_status: string;
+  Cancel_reason: string | null;
+  notes: string;
+  created_at: string;
+  refund: boolean;
+  address: Address;
+  order_meta: OrderMeta[];
+}
+export interface OrderData {
+  id: number;
+  total: string;
+  discount: string;
+  discount_type: string;
+  delivery_fee: string;
+  sub_total: string;
+  points_discount: string;
+  status: string;
+  payment_type: string;
+  payment_status: string;
+  Cancel_reason: string;
+  notes: string;
+  created_at: string;
+  refund: boolean;
+  address: Address;
+  order_meta: OrderMeta[];
+}
+export interface Address {
+  id: number;
+  latitude: number;
+  longitude: number;
+  governorate: string;
+  city: string;
+  area: string;
+  full_name: string;
+  address_details: string;
+  phone: string;
+}
+
+export interface OrderMeta {
+  id: number;
+  product_id: number;
+  color_id: number | null;
+  qty: number;
+  product_type: string;
+  price_before_discount: string | null;
+  price_after_discount: string;
+  created_at: string;
+  product: Product_Order;
+  color: Color;
+}
+
+export interface Product_Order {
+  id: number;
+  name: string;
+  desc: string;
+  image: string;
+  stock: number;
+  packet_pieces: number;
+}
+
+export interface Color {
+  id: number | null;
+  code: string | null;
+}
+
+
+
+export interface PaginationLink {
+  url: string | null;
+  label: string;
+  active: boolean;
+}
