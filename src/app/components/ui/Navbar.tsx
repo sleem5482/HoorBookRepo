@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, ShoppingCart, Heart, User2 , LayoutGrid } from 'lucide-react'
+import { Search, ShoppingCart, Heart, User2 , LayoutGrid,Package  } from 'lucide-react'
 import Logo from '../../../../public/asset/images/حورلوجو-1.png'
 import { getCartLength } from '@/app/lib/api/cart'
 import { useCartStore } from '@/app/store/cartStore'
@@ -95,7 +95,18 @@ const { cartCount, refreshCartCount } = useCartStore()
             )}
           </Link>
         </div>
+      <div className="border-l border-white/30 h-6 mx-1" />
+
+<Link
+  href="/orders"
+  className="relative flex flex-col items-center hover:text-green-300 transition transform hover:scale-110"
+>
+  <div className="p-2 rounded-full text-white bg-white/10 hover:bg-green-300/20 transition">
+    <Package size={20} />
+  </div>
+</Link>
       </div>
+
 
       {/* بحث موبايل */}
       <div className="md:hidden px-4 pb-3">

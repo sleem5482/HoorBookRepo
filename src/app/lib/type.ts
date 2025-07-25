@@ -584,3 +584,11 @@ export interface PaginationLink {
   label: string;
   active: boolean;
 }
+export type moodel_order = {
+  reasons: string[];
+  reason: string;
+  status: string;
+  label:string;
+  cancelOrder?: (reason: string, status: string) => void;
+  setReason?: (reason: string) => void;
+};

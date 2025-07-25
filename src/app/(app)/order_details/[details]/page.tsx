@@ -8,13 +8,17 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Ban, RotateCcw } from "lucide-react";
 import SmartNavbar from "@/app/components/ui/Navbar";
+import { Moodel_Cancel } from "@/app/components/ui/Moodel_order";
+import toast from "react-hot-toast";
 
 export default function OrderDetails() {
   const pathname = usePathname();
   const order_id = pathname.split("/").pop();
   const get_order_by_id = `${BaseUrl}api/orders/${order_id}`;
   const [details, setDetails] = useState<OrderData>();
-
+  const [cancel, setCancelOrder] = useState<boolean>(false);
+  const [refundOrder, setrefundOrder] = useState<boolean>(false);
+  const [selectedReason, setSelectedReason] = useState("");
   useEffect(() => {
     const getDetails = async () => {
       try {
@@ -26,8 +30,51 @@ export default function OrderDetails() {
     };
     getDetails();
   }, []);
+  const cancelOrder = async (reason: string, status: string) => {
+    try{
+      const res=await axios.patch(get_order_by_id,{
+        reason:reason,
+        status:status
+      },{headers})
+      console.log(res);
+      if(res.status === 200) {
+        if (status === "cancel") {
+        toast.success("تم إلغاء الطلب بنجاح");
+        setCancelOrder(false);
+      } else if (status === "refund") {
+        toast.success("تم استرجاع الطلب بنجاح");
+        setrefundOrder(false);
+      } 
+    }
+  }
+    catch(error){
+      console.log(error);
+      
+    }
+  }
 
   if (!details) return <div className="p-6 text-center">جاري تحميل التفاصيل...</div>;
+  const reasonsList = [
+    "التأخر فى التسليم ",
+    "خدمه العملاء غير مرضية",
+    "قرار شخصى بعدم شراء المنتج",
+    "عدم وجود معلومات كافيه عن المنتج",
+    "توفر المنتج فى مكان اخر بسعر ارخص ",
+    "طلب المنتج عن طريق الخطأ",
+    "اسباب أخرى"
+  ];
+
+
+    const reasonsrefund = [
+    "المنتج وصندوق الشحن تالفان",
+    "المنتج لا يفى بلتوقعات",
+    "غير متوافق او غير مفيد",
+    "يتوفر بسعر افضل فى مكان أخر",
+    "لم اعد بحاجه اليه ",
+    "تم ارسال منتج خطأ",
+    "اريد ارجاع بعض من المنتجات",
+    "اسباب أخرى"
+  ];
 
 return (
   <section className="py-8 bg-gradient-to-br from-indigo-50 via-pink-50 to-yellow-50">
@@ -47,10 +94,10 @@ return (
 
         {/* Buttons */}
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-red-600 rounded-xl hover:bg-red-700 transition">
+          <button onClick={()=>{setCancelOrder(!cancel),setrefundOrder(false)}} className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-red-600 rounded-xl hover:bg-red-700 transition">
             <Ban size={18} /> إلغاء
           </button>
-          <button className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-yellow-500 rounded-xl hover:bg-yellow-600 transition">
+          <button onClick={()=>{setrefundOrder(!refundOrder),setCancelOrder(false)}} className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-yellow-500 rounded-xl hover:bg-yellow-600 transition">
             <RotateCcw size={18} /> استرجاع
           </button>
         </div>
@@ -110,6 +157,31 @@ return (
           ))}
         </div>
       </div>
+      {cancel && (
+
+        <Moodel_Cancel
+        reasons={reasonsList}
+        label={"الالغاء"}
+        reason={selectedReason}
+        status={"cancel"}
+        setReason={setSelectedReason}
+        cancelOrder={cancelOrder}
+          onClose={()=>{setCancelOrder(false)}}
+
+        />
+      )}
+      {refundOrder && (
+        <Moodel_Cancel
+          reasons={reasonsrefund}
+          reason={selectedReason}
+        label={"الارجاع"}
+
+          status={"refund"}
+          setReason={setSelectedReason}
+          cancelOrder={cancelOrder}
+          onClose={()=>{setrefundOrder(false)}}
+        />
+      )}
     </Container>
   </section>
 );
