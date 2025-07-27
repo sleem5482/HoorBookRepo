@@ -26,103 +26,103 @@ const { cartCount, refreshCartCount } = useCartStore()
   useEffect(() => {
     refreshCartCount()
   }, [])
-  return (
-    <header
-      dir="rtl"
-      className={`fixed top-0 left-0 w-full z-[100] transition-transform duration-300  ${
-        visible ? 'translate-y-0' : '-translate-y-full'
-      } bg-gradient-to-tr from-[#6B2B7A] via-[#844C9A] to-[#6B2B7A] shadow-lg backdrop-blur-md`}
-    >
-      <div className="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-  <div className=" flex justify-center md:justify-start">
+ return (
+    <>
+      <header
+        dir="rtl"
+        className={`fixed top-0 left-0 w-full z-[100] transition-transform duration-300 ${
+          visible ? 'translate-y-0' : '-translate-y-full'
+        } bg-gradient-to-tr from-[#6B2B7A] via-[#844C9A] to-[#6B2B7A] shadow-lg backdrop-blur-md`}
+      >
+        <div className="max-w-screen-xl mx-auto px-4 py-3 flex flex-row items-center justify-between gap-6">
+          {/* الشعار والبحث */}
+         <div className="flex flex-row md:justify-between items-center w-full md:gap-60 gap-4">
+  {/* الشعار */}
+  <div className="w-full md:w-36 flex justify-center md:justify-start">
     <Link href="/" className="block">
       <Image
         src={Logo}
         alt="شعار"
         width={90}
         height={90}
-        className="w-[480px] sm:w-[360px] md:w-[70px] object-contain"
+        className="w-[60px] md:w-[70px] object-contain transition-all duration-300"
         unoptimized
       />
     </Link>
   </div>
 
-        <Link href="/Products" className="w-full flex justify-center items-center">
-          <div className="w-full max-w-md hidden md:block">
-            <div className="flex items-center bg-white/90 rounded-full px-4 py-2 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
-              <Search className="text-gray-500 ml-2" size={18} />
-              <input
-                type="text"
-                placeholder="إبحث عن منتج..."
-                className="bg-transparent flex-1 text-sm focus:outline-none text-gray-700 placeholder:text-gray-400"
-              />
-            </div>
-          </div>
-        </Link>
-
-        <div className="flex items-center gap-4 text-white text-xs sm:text-sm">
-          <Link href="/register" className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
-            <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
-              <User2 size={18} />
-            </div>
-          </Link>
-
-          <div className="border-l border-white/30 h-6 mx-1" />
-
-          <Link href="/favorite" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
-            <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
-              <Heart size={18} />
-            </div>
-          </Link>
-
-          <div className="border-l border-white/30 h-6 mx-1" />
-
-              <Link href="/dashboard" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
-            <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
-              <LayoutGrid  size={18} />
-            </div>
-          </Link>
-          <div className="border-l border-white/30 h-6 mx-1" />
-
-          <Link href="/cart" className="relative flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
-            <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
-              <ShoppingCart size={18} />
-            </div>
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] p-4 rounded-full font-bold">
-                {cartCount}
-              </span>
-            )}
-          </Link>
+  {/* مربع البحث */}
+  <div className="w-full md:w-full flex justify-center items-center">
+    <Link href="/Products" className="w-full md:w-full flex justify-center items-center">
+      <div className="w-full max-w-md">
+        <div className="flex items-center justify-center bg-white/90 rounded-full px-4 py-2 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
+          <Search className="text-gray-500 ml-2" size={18} />
+          <input
+            type="text"
+            placeholder="إبحث عن منتج..."
+            className="bg-transparent flex-1 text-sm focus:outline-none text-gray-700 placeholder:text-gray-400"
+          />
         </div>
-      <div className="border-l border-white/30 h-6 mx-1" />
-
-<Link
-  href="/orders"
-  className="relative flex flex-col items-center hover:text-green-300 transition transform hover:scale-110"
->
-  <div className="p-2 rounded-full text-white bg-white/10 hover:bg-green-300/20 transition">
-    <Package size={18} />
+      </div>
+    </Link>
   </div>
-</Link>
-      </div>
+</div>
 
-
-      {/* بحث موبايل */}
-      <div className="md:hidden px-4 pb-3">
-        <Link href="/Products" className="block">
-          <div className="flex items-center bg-white/90 rounded-full px-4 py-2 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
-            <Search className="text-gray-500 ml-2" size={18} />
-            <input
-              type="text"
-              placeholder="إبحث عن منتج..."
-              className="bg-transparent flex-1 text-sm focus:outline-none text-gray-700 placeholder:text-gray-400"
-            />
+          <div className="hidden md:flex justify-center items-center gap-4 text-white text-xs sm:text-sm w-full md:w-auto">
+            {IconsBlock(cartCount)}
           </div>
-        </Link>
-      </div>
-    </header>
+        </div>
+      </header>
+
+<div
+  className={`fixed bottom-0 left-0 w-full z-[100] md:hidden transition-transform duration-300 ${
+    visible ? 'translate-y-0' : 'translate-y-full'
+  } bg-gradient-to-tr from-[#6B2B7A] via-[#844C9A] to-[#6B2B7A] shadow-inner px-6 py-2 flex justify-around items-center text-white text-xs`}
+>
+  {IconsBlock(cartCount)}
+</div>
+
+    </>
   )
 }
+
+const IconsBlock = (cartCount: number) => (
+  <>
+    <Link href="/register" className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
+      <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
+        <User2 size={18} />
+      </div>
+    </Link>
+
+    <Link href="/favorite" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
+      <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
+        <Heart size={18} />
+      </div>
+    </Link>
+
+    <Link href="/dashboard" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
+      <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
+        <LayoutGrid size={18} />
+      </div>
+    </Link>
+
+    <Link href="/cart" className="relative flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
+      <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
+        <ShoppingCart size={18} />
+      </div>
+      {cartCount > 0 && (
+        <span className="absolute -top-1 -right-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] rounded-full font-bold">
+          {cartCount}
+        </span>
+      )}
+    </Link>
+
+    <Link href="/orders" className="flex flex-col items-center hover:text-green-300 transition transform hover:scale-110">
+      <div className="p-2 rounded-full text-white bg-white/10 hover:bg-green-300/20 transition">
+        <Package size={18} />
+      </div>
+    </Link>
+  </>
+)
 
 export default SmartNavbar
