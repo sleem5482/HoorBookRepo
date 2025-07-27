@@ -39,8 +39,8 @@ const { cartCount, refreshCartCount } = useCartStore()
       <Image
         src={Logo}
         alt="شعار"
-        width={70}
-        height={70}
+        width={90}
+        height={90}
         className="w-[480px] sm:w-[360px] md:w-[70px] object-contain"
         unoptimized
       />
@@ -63,7 +63,7 @@ const { cartCount, refreshCartCount } = useCartStore()
         <div className="flex items-center gap-4 text-white text-xs sm:text-sm">
           <Link href="/register" className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
             <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
-              <User2 size={20} />
+              <User2 size={18} />
             </div>
           </Link>
 
@@ -71,7 +71,7 @@ const { cartCount, refreshCartCount } = useCartStore()
 
           <Link href="/favorite" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
             <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
-              <Heart size={20} />
+              <Heart size={18} />
             </div>
           </Link>
 
@@ -79,14 +79,14 @@ const { cartCount, refreshCartCount } = useCartStore()
 
               <Link href="/dashboard" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
             <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
-              <LayoutGrid  size={20} />
+              <LayoutGrid  size={18} />
             </div>
           </Link>
           <div className="border-l border-white/30 h-6 mx-1" />
 
           <Link href="/cart" className="relative flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
             <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
-              <ShoppingCart size={20} />
+              <ShoppingCart size={18} />
             </div>
             {cartCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] p-4 rounded-full font-bold">
@@ -102,7 +102,7 @@ const { cartCount, refreshCartCount } = useCartStore()
   className="relative flex flex-col items-center hover:text-green-300 transition transform hover:scale-110"
 >
   <div className="p-2 rounded-full text-white bg-white/10 hover:bg-green-300/20 transition">
-    <Package size={20} />
+    <Package size={18} />
   </div>
 </Link>
       </div>

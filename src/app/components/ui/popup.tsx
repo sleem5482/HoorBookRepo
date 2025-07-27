@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
 type CommentPopupProps = {
   productId: number;
@@ -46,13 +47,13 @@ export default function CommentPopup({ productId, imageUrl, onClose }: CommentPo
       const data = await res.json();
 
       if (res.ok && data.status.status === true) {
-        alert("✅ تم إضافة التعليق بنجاح");
+        toast.success("✅ تم إضافة التعليق بنجاح");
         onClose();
       } else {
-        alert(data.status.validation_message || "❌ حدث خطأ حاول مرة أخرى");
+        toast.error(data.status.validation_message || "❌ حدث خطأ حاول مرة أخرى");
       }
     } catch (error) {
-      alert("🚫 خطأ في الإرسال، حاول مرة أخرى");
+      toast.error("🚫 خطأ في الإرسال، حاول مرة أخرى");
     }
 
     setLoading(false);

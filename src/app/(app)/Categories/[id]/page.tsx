@@ -5,7 +5,7 @@ import { fetchData } from "@/app/lib/methodes";
 import { ApiResponse, Favorit, HomePageData } from "@/app/lib/type";
 import { Card } from "@/app/components/ui/Card";
 import Image from "next/image";
-import { ArrowRight, ChevronLeft, ChevronRight, Heart, LayoutGrid, Search, Settings2Icon, ShoppingCart, User2 } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Heart, LayoutGrid, Package, Search, Settings2Icon, ShoppingCart, User2 } from "lucide-react";
 import Link from "next/link";
 import Logo from '../../../../../public/asset/images/حورلوجو-1.png'
 import debounce from "lodash.debounce";
@@ -208,7 +208,7 @@ const [visible, setVisible] = useState(true)
         <div className="flex items-center gap-4 text-white text-xs sm:text-sm">
           <Link href="/register" className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
             <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
-              <User2 size={20} />
+              <User2 size={18} />
             </div>
           </Link>
 
@@ -216,21 +216,21 @@ const [visible, setVisible] = useState(true)
 
           <Link href="/favorite" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
             <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
-              <Heart size={20} />
+              <Heart size={18} />
             </div>
           </Link>
    <div className="border-l border-white/30 h-6 mx-1" />
 
               <Link href="/dashboard" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
             <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
-              <LayoutGrid  size={20} />
+              <LayoutGrid  size={18} />
             </div>
           </Link>
           <div className="border-l border-white/30 h-6 mx-1" />
 
           <Link href="/cart" className="relative flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
             <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
-              <ShoppingCart size={20} />
+              <ShoppingCart size={18} />
             </div>
             {cartCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] p-4 rounded-full font-bold">
@@ -238,6 +238,15 @@ const [visible, setVisible] = useState(true)
               </span>
             )}
           </Link>
+            <div className="border-l border-white/30 h-6 mx-1" />
+            <Link
+  href="/orders"
+  className="relative flex flex-col items-center hover:text-green-300 transition transform hover:scale-110"
+>
+  <div className="p-2 rounded-full text-white bg-white/10 hover:bg-green-300/20 transition">
+    <Package size={18} />
+  </div>
+</Link>
         </div>
       </div>
 
