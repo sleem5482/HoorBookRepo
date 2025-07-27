@@ -27,7 +27,7 @@ export default function BottomSelectField({
   // Filtered options memoized
   const filteredOptions = useMemo(
     () =>
-      options.filter((option) =>
+      options?.filter((option) =>
         option.toLowerCase().includes(debouncedSearch.toLowerCase())
       ),
     [options, debouncedSearch]
@@ -121,7 +121,7 @@ export default function BottomSelectField({
                 </div>
                 {/* Options List */}
                 <ul className="divide-y">
-                  {filteredOptions.map((option, index) => (
+                  {filteredOptions?.map((option, index) => (
                     <li
                       key={index}
                     
@@ -134,7 +134,7 @@ export default function BottomSelectField({
                       {option}
                     </li>
                   ))}
-                  {filteredOptions.length === 0 && (
+                  {filteredOptions?.length === 0 && (
                     <li className="text-center text-gray-900 py-4">
                       لا توجد نتائج
                     </li>

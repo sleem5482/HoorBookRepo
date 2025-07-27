@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { CheckCircle2, MapPin, Plus, Wallet } from "lucide-react";
+import { CheckCircle2, Edit, Edit2Icon, MapPin, Pencil, Plus, Wallet } from "lucide-react";
 import Image from "next/image";
 import { AddressData, Checkout } from "@/app/lib/type";
 import { BaseUrl, headers } from "../Baseurl";
@@ -97,6 +97,11 @@ export const Cash = ({
                     <MapPin size={16} />
                     {addr.full_name}
                   </span>
+                  {/* <span
+  className="font-bold text-gray-800 cursor-pointer"
+>
+  <Pencil size={16} />
+</span> */}
                 </div>
                 <p className="text-sm text-gray-600">
                   {addr.address_details}, {addr.area.name}, {addr.city.name}
@@ -114,6 +119,13 @@ export const Cash = ({
           >
             <Plus size={16} />
             إضافة عنوان جديد
+          </Link>
+            <Link
+          href={'/editLocation'}
+            className="mt-2 flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200"
+          >
+            <Pencil size={16} />
+            تعديل العنوان 
           </Link>
         </div>
 
