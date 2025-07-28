@@ -108,7 +108,7 @@ if (user.pointsSettings) {
       formData.append("provider_id", decoded.sub);
 
       const res = await axios.post(
-        `${BaseUrl}/api/user/social/google/login`,
+        `${BaseUrl}api/user/social/google/login`,
         formData,
         {
           headers: {
