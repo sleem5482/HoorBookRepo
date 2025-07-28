@@ -16,7 +16,7 @@ export const Circle:React.FC<CategoryProps>=({
 
 <div dir="rtl" className="flex flex-col items-center space-y-2">
 
-      <div className="w-24 h-24 rounded-full bg-[linear-gradient(135deg,_#e8f3f0,_#f8f8f8)] flex items-center justify-center overflow-hidden">
+      <div className="w-24 h-24 rounded-md bg-[linear-gradient(135deg,_#e8f3f0,_#f8f8f8)] flex items-center justify-center overflow-hidden">
         <Image
           src={`${BaseUrl}${image}`}
           alt={name}

@@ -82,6 +82,46 @@ export default function ProfilePage() {
                 <p className="text-xs text-gray-600 mt-1">قيمة النقطة: {profile?.pointsSettings?.point_price} ج.م</p>
               </div>
             </div>
+            {/* روابط إضافية تحت البروفايل */}
+<div className="grid grid-cols-3 gap-4 text-center mt-6">
+  <Link href="/orders" className="flex flex-col items-center bg-purple-50 p-4 rounded-xl hover:shadow transition">
+    <ShoppingCart className="text-purple-600 mb-1" size={24} />
+    <span className="text-sm text-purple-800 font-semibold">الطلبات</span>
+  </Link>
+
+  <Link href="/profile" className="flex flex-col items-center bg-purple-50 p-4 rounded-xl hover:shadow transition">
+    <User className="text-purple-600 mb-1" size={24} />
+    <span className="text-sm text-purple-800 font-semibold">الحساب</span>
+  </Link>
+
+  <Link href="/favorite" className="flex flex-col items-center bg-purple-50 p-4 rounded-xl hover:shadow transition">
+    <Star className="text-purple-600 mb-1" size={24} />
+    <span className="text-sm text-purple-800 font-semibold">المفضلة</span>
+  </Link>
+</div>
+
+{/* زر تسجيل الخروج */}
+<button
+  onClick={() => {
+    Cookies.remove("access_token_login")
+    Cookies.remove("token_type_login")
+    Cookies.remove("login_user_id")
+    Cookies.remove("login_user_name")
+    Cookies.remove("login_user_email")
+    Cookies.remove("login_user_type")
+    Cookies.remove("login_user_type_name")
+    Cookies.remove("login_cart_count")
+    Cookies.remove("login_points")
+    Cookies.remove("login_price")
+    Cookies.remove("login_point_price")
+    toast.success("تم تسجيل الخروج بنجاح")
+    window.location.href = "/login"
+  }}
+  className="w-full bg-gradient-to-r from-red-600 to-red-400 text-white mt-6 py-2 rounded-xl shadow hover:opacity-90 transition"
+>
+  تسجيل الخروج
+</button>
+
           </div>
         ) : (
      <LoginRequiredModal show={!isLoggedIn} />

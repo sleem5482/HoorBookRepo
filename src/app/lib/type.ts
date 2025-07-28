@@ -81,11 +81,13 @@ export interface CardProps {
   love?: boolean
   handellove?: () => void
   packet_pieces?: number
-  packet_price?: string
+  packet_price?: string,
+  piece_price?:string,
   piece_price_after_offer?: string | null
   packet_price_after_offer?: string | null
   category?: Record<string, any> 
-  reviews_avg?: number
+  reviews_avg?: number,
+  user_favourite?:boolean
 }
 
 ///card type 

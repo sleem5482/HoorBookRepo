@@ -14,6 +14,7 @@ import toast, {Toaster} from 'react-hot-toast';
 import { usePathname, useRouter } from "next/navigation";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 export default function LoginPage() {
   const [login, setLogin] = useState<Record<string, any>>({});
@@ -100,38 +101,52 @@ if (user.pointsSettings) {
       }
       const decoded: any = jwtDecode(credentialResponse.credential);
 
-      const payload = {
-        name: `${decoded.given_name} ${decoded.family_name}`,
-        email: decoded.email,
-        provider: "google",
-        provider_id: decoded.sub,
-      };
+      const formData = new FormData();
+      formData.append("name", `${decoded.given_name} ${decoded.family_name}`);
+      formData.append("email", decoded.email);
+      formData.append("provider", "google");
+      formData.append("provider_id", decoded.sub);
 
-      const res = await fetch(`${BaseUrl}user/social/google/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await axios.post(
+        `${BaseUrl}/api/user/social/google/login`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-      const data = await res.json();
+      const { access_token, token_type, user } = res.data.data;
 
-      if (res.ok) {
-        Cookies.set("access_token_login", data.token);
-        Cookies.set("email", data.user?.email || payload.email);
-        Cookies.set("name", data.user?.name || payload.name);
+      Cookies.set("access_token_login", access_token, { expires: 1 });
+      Cookies.set("token_type_login", token_type);
+      Cookies.set("login_user_id", user.id.toString());
+      Cookies.set("login_user_name", user.name);
+      Cookies.set("login_user_email", user.email);
+      Cookies.set("login_user_type", user.type.toString());
+      Cookies.set("login_user_type_name", user.type_name || "user");
+      Cookies.set("login_cart_count", user.CartCount?.toString() || "0");
 
-        toast.success("تم تسجيل الدخول بجوجل بنجاح 🎉");
-        // window.location.href = "/"; // أو أي توجيه آخر
-      } else {
-        toast.error(data.message || "فشل تسجيل الدخول بجوجل");
+      if (user.pointsSettings) {
+        Cookies.set("login_points", user.pointsSettings.points);
+        Cookies.set("login_price", user.pointsSettings.price);
+        Cookies.set("login_point_price", user.pointsSettings.point_price);
       }
-    } catch (err) {
-      console.error(err);
-      toast.error("حدث خطأ أثناء تسجيل الدخول بجوجل");
+
+      toast.success("تم تسجيل الدخول بجوجل بنجاح 🎉");
+      window.location.href = "/";
+
+    } catch (error: any) {
+      console.error("Google login error:", error);
+      const message = error?.response?.data?.message || "فشل تسجيل الدخول بجوجل";
+      toast.error(message);
     }
   }}
   onError={() => toast.error("فشل تسجيل الدخول بجوجل")}
 />
+
+
 
 </div>
 

@@ -12,7 +12,7 @@ export const Card: React.FC<CardProps> = ({
   price, discount, originalPrice,
   stock, soldOut = false, love = false, handellove = () => {},
   packet_pieces, packet_price, piece_price_after_offer,
-  packet_price_after_offer, reviews_avg
+  packet_price_after_offer, reviews_avg,piece_price
 }) => {
   const [loveit, setLove] = useState<boolean>(love)
 
@@ -100,11 +100,15 @@ export const Card: React.FC<CardProps> = ({
           <div className="flex items-center justify-end mt-2">
             <div className="space-x-1 rtl:space-x-reverse">
               <span className="font-bold text-lg text-black">
-                {piece_price_after_offer ?? price} ج.م
-              </span>
-              {originalPrice && (
-                <span className="text-gray-400 line-through">{originalPrice} ج.م</span>
+              {(piece_price_after_offer===null)?(
+                <span className='text-black' dir='rtl'>ج.م {packet_price} </span>
+              ):(
+                <span className='text-black ' dir='rtl'> {piece_price_after_offer}  <span className='text-gray-500 line-through'>{piece_price}</span></span>
+
               )}
+              
+              </span>
+            
             </div>
             {discount && (
               <span className="bg-pink-100 text-pink-700 px-2 py-0.5 rounded text-xs font-semibold">
@@ -113,11 +117,7 @@ export const Card: React.FC<CardProps> = ({
             )}
           </div>
 
-          {packet_price && packet_pieces !== undefined && (
-            <p className="text-xs text-gray-600">
-              السعر بالكرتونة: {packet_price_after_offer ?? packet_price} ج.م ({packet_pieces} قطعة)
-            </p>
-          )}
+      
 
           {typeof stock === 'number' && (
             <p className={`text-xs font-bold ${stock === 0 ? 'text-red-500' : stock <= 4 ? 'text-orange-300' : 'text-gray-600'}`}>

@@ -284,7 +284,6 @@ const handelcode = async (e: React.FormEvent) => {
 <form onSubmit={handelcode} className="w-full">
   <div className="flex justify-center items-center gap-3 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow border border-gray-200">
     
-    {/* حقل الإدخال (افتراضيًا داخل FormField) */}
     <div className="flex-1">
       <FormField fields={fields} data={code} onChange={setcode} />
     </div>
