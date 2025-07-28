@@ -11,6 +11,7 @@ import Logo from "../../../public/asset/images/حورلوجو.jpeg";
 import { Postresponse } from "../lib/methodes";
 import { BaseUrl } from "../components/Baseurl";
 import Cookies from 'js-cookie'
+import toast from "react-hot-toast";
 
 export default function RegisterPage() {
   const fields: FieldForm[] = [
@@ -33,28 +34,40 @@ const url = `${BaseUrl}api/user/register`
   const [formData, setFormData] = useState<Record<string, any>>({});
   const handleSubmit =async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("✅ بيانات التسجيل:", formData);
     try{
       const res:ApiResponse<Register>=await Postresponse(url,formData);
       console.log(res)
+         if(res.status?.status===Boolean(false)){
+        if(res.status.validation_message===String("The email has already been taken.")){
+          toast.error('البريد الالكتروني موجود مسبقا');
+          return;
+        }
+        else{
+          toast.error(res.status.validation_message);
+          return;
+        }
+      }
       const {token , user}=res.data;
-    Cookies.set("token", token, { expires: 1 });
-    Cookies.set("type", user.type.toString()); 
-    Cookies.set("type_name", user.type_name);
-    Cookies.set("email", user.email);
-    Cookies.set("name", user.name);
-    Cookies.set("user_id", user.id.toString());
-    Cookies.set("cart_count", user.CartCount.toString());
-     if (user.pointsSettings) {
-      Cookies.set("points", user.pointsSettings.points);
-      Cookies.set("point_price", user.pointsSettings.point_price);
-      Cookies.set("price", user.pointsSettings.price);
-    }  
-  }
+      Cookies.set("token", token, { expires: 1 });
+      Cookies.set("type", user.type.toString()); 
+      Cookies.set("type_name", user.type_name);
+      Cookies.set("email", user.email);
+      Cookies.set("name", user.name);
+      Cookies.set("user_id", user.id.toString());
+      Cookies.set("cart_count", user.CartCount.toString());
+      toast.success('تم انشاء الايميل بنجاح برجاء تسجيل الدخول')
+      if (user.pointsSettings) {
+        Cookies.set("points", user.pointsSettings.points);
+        Cookies.set("point_price", user.pointsSettings.point_price);
+        Cookies.set("price", user.pointsSettings.price);
+      }  
+   
+    }
     
     catch(error){
       console.log(error);
-      
+    
+    toast.error('خطأ فى اسم المستخدم او كلمه المرور ')
     }
   };
 

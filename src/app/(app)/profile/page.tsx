@@ -41,7 +41,10 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-orange-50 py-10 px-4">
+      <div className="pb-12 md:pb-4">
+
       <SmartNavbar />
+      </div>
       <Container>
         {isLoggedIn ? (
           <div className="bg-white p-6 rounded-2xl shadow-lg max-w-xl w-full mx-auto space-y-6 text-center  pt-6 mt-12">

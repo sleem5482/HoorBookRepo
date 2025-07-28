@@ -72,7 +72,7 @@ const handelchange=(field:string,value:any)=>{
 
 
 ) : (
-  <InputField
+  <input
     name={field.name}
     type={field.type}
     value={formData[field.name] || ""}

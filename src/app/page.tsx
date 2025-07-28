@@ -23,8 +23,10 @@ import { BaseUrl, headers } from "./components/Baseurl";
 import { CallApi } from "./lib/utilits";
 import Cookies from "js-cookie";
 import { LoginRequiredModal } from "./components/ui/Pop-up-login";
-
 export default function HomePage() {
+
+
+
    const { data, loadingdata, fetchHomeData } = HomeStore();
   const [show, setShow] = useState(true);
   const [login,setlogin]=useState<boolean>(false)

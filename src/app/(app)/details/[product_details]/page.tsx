@@ -52,17 +52,14 @@ const imgcomment=`${BaseUrl}${details.image}`
   const mainImage = selectedMedia?.image || details.image;
   const selectedColor = details.colors.find((color) => color.id === selectedColorId);
 
-  // حساب أقصى كمية ممكنة بناءً على الوحدة المختارة
   const maxQuantity = (() => {
     if (selectedUnit === "Packet") {
-      // لو الوحدة كرتونة
       if (details.colors.length > 0 && selectedColor) {
         return Math.floor(selectedColor.stock / (details.packet_pieces || 1));
       } else {
         return Math.floor(details.stock / (details.packet_pieces || 1));
       }
     } else {
-      // لو الوحدة قطعة
       if (details.colors.length > 0 && selectedColor) {
         return selectedColor.stock;
       } else {
@@ -116,12 +113,8 @@ const imgcomment=`${BaseUrl}${details.image}`
           </div>
         </div>
 
-        {/* التفاصيل الجانبية */}
         <div className="flex flex-col justify-center">
-          {/* عنوان المنتج */}
           <h1 className="text-2xl md:text-3xl font-bold mb-4 text-violet-900">{details.name}</h1>
-
-          {/* وحدة البيع */}
           <div className="flex gap-4 mb-4">
             <button
               className={`flex-1 px-4 py-2 border rounded-md transition text-sm md:text-base ${

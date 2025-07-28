@@ -8,8 +8,10 @@ export interface ApiResponse<T>{
     errors: string | null;
     data: T;
     status?:{
+      status:boolean
       code:number
       messages:string
+      validation_message:string
     };
   }
 

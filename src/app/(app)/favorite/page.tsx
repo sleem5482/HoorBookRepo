@@ -74,8 +74,11 @@ setProduct(prev => {
     }
   }
   return (
-    <div>
-<SmartNavbar/>
+    <section>
+    <div className="pb-12 md:pb-4">
+
+      <SmartNavbar />
+      </div>
     <Container>
       
       <h2 className="text-2xl font-bold mb-4 ">المفضلة</h2>
@@ -92,6 +95,6 @@ setProduct(prev => {
 
       {hasMore && <div ref={loaderRef} className="h-10" />}
     </Container>
-      </div>
+      </section>
   );
 }

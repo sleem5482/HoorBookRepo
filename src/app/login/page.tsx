@@ -12,6 +12,8 @@ import { Postresponse } from "../lib/methodes";
 import Cookies from 'js-cookie'
 import toast, {Toaster} from 'react-hot-toast';
 import { usePathname, useRouter } from "next/navigation";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
 export default function LoginPage() {
   const [login, setLogin] = useState<Record<string, any>>({});
@@ -88,15 +90,51 @@ if (user.pointsSettings) {
               <span className="bg-white px-3 z-10 text-sm">أو</span>
             </div>
 
-            <button
-              type="button"
-              
-              onClick={() => signIn("google", { callbackUrl: "/" })}
-              className="flex items-center p-4  justify-center gap-2 mt-2 w-full bg-white border border-gray-300 text-gray-700 font-semibold py-2 rounded-lg shadow-sm hover:bg-gray-100 transition"
-            >
-              <FcGoogle className="text-xl" />
-              تسجيل الدخول باستخدام Google
-            </button>
+       <div className="w-full flex justify-center mt-2">
+<GoogleLogin
+  onSuccess={async (credentialResponse) => {
+    try {
+      if (!credentialResponse.credential) {
+        toast.error("لم يتم استلام بيانات الاعتماد من جوجل");
+        return;
+      }
+      const decoded: any = jwtDecode(credentialResponse.credential);
+
+      const payload = {
+        name: `${decoded.given_name} ${decoded.family_name}`,
+        email: decoded.email,
+        provider: "google",
+        provider_id: decoded.sub,
+      };
+
+      const res = await fetch(`${BaseUrl}user/social/google/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        Cookies.set("access_token_login", data.token);
+        Cookies.set("email", data.user?.email || payload.email);
+        Cookies.set("name", data.user?.name || payload.name);
+
+        toast.success("تم تسجيل الدخول بجوجل بنجاح 🎉");
+        // window.location.href = "/"; // أو أي توجيه آخر
+      } else {
+        toast.error(data.message || "فشل تسجيل الدخول بجوجل");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("حدث خطأ أثناء تسجيل الدخول بجوجل");
+    }
+  }}
+  onError={() => toast.error("فشل تسجيل الدخول بجوجل")}
+/>
+
+</div>
+
 
             <p className="text-sm text-center mt-4">
               لا تمتلك حسابًا؟{" "}
