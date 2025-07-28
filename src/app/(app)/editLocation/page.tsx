@@ -6,6 +6,7 @@ import EditAddressPoppup from "../../components/ui/EditAddressPoppup";
 import { Sparkles, MapPin, Edit2 } from "lucide-react";
 import axios from "axios";
 import { BaseUrl, headers } from "../../components/Baseurl";
+import SmartNavbar from "@/app/components/ui/Navbar";
 const EditLocationPage = () => {
     const [editOpen, setEditOpen] = useState(false);
     const [selectedAddress, setSelectedAddress] = useState<AddressData | null>(
@@ -50,8 +51,9 @@ const EditLocationPage = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-purple-100 to-orange-100 flex items-center justify-center py-10 px-2">
+            <SmartNavbar />
             <Container>
-                <div className="bg-white shadow-2xl rounded-3xl p-8 w-full max-w-4xl space-y-6 border border-purple-100 mt-5">
+                <div className="bg-white shadow-2xl rounded-3xl p-8 w-full max-w-4xl space-y-6 border border-purple-100 mt-20">
                     <div className="flex flex-col items-center space-y-2">
                         <h2 className="text-2xl font-bold text-purple-800 text-center flex items-center gap-1">
                             <Sparkles className="w-5 h-5 text-orange-400 animate-bounce" />

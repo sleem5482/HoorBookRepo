@@ -158,9 +158,9 @@ const EditAddressPoppup: React.FC<EditAddressPoppupProps> = (props) => {
         <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 no_scrollbar"
             onClick={handleOverlayClick}>
-            <div className="bg-white rounded-3xl shadow-2xl p-4 sm:p-8 w-full max-w-md sm:max-w-lg md:max-w-xl space-y-6 border border-purple-100 relative mx-2 sm:mx-auto overflow-y-auto max-h-[95vh]">
+            <div className="bg-white rounded-3xl shadow-2xl p-4 sm:p-8 w-full max-w-md sm:max-w-lg md:max-w-xl space-y-6 border border-purple-100 relative mx-2 sm:mx-auto overflow-y-auto max-h-[70vh] md:max-h-[80vh] mt-20">
                 <button
-                    className="absolute top-3 right-3 p-2 rounded-full bg-gray-800 hover:bg-gray-600"
+                    className="absolute top-1 right-3 p-2 rounded-full bg-gray-800 hover:bg-gray-600"
                     onClick={onClose}
                     title="إغلاق">
                     <X size={20} />
