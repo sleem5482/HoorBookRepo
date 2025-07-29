@@ -11,6 +11,8 @@ import { CallApi } from "@/app/lib/utilits";
 import { Button } from "@/app/components/ui/Button";
 import CommentPopup from "@/app/components/ui/popup";
 import toast from "react-hot-toast";
+import Cookies from 'js-cookie'
+import { LoginRequiredModal } from "@/app/components/ui/Pop-up-login";
 export default function Details() {
   const [showPopup, setShowPopup] = useState(false);
   const sendres = `${BaseUrl}api/carts`;
@@ -20,12 +22,13 @@ export default function Details() {
   const [selectedColorId, setSelectedColorId] = useState<number | null>(null);
   const [selectedUnit, setSelectedUnit] = useState<"Piece" | "Packet">("Piece");
   const [quantity, setQuantity] = useState(1);
-
+  const [auth,setauth]=useState<boolean>(false)
   const [chart, setchart] = useState<Partial<AddToChart>>({
     product_type: "Piece",
     qty: 1,
     product_id: Number(productid),
   });
+  const token=Cookies.get("access_token_login");
 
   const handelchange = (field: keyof AddToChart, value: string | number) => {
     setchart((prev) => ({
@@ -75,24 +78,32 @@ const imgcomment=`${BaseUrl}${details.image}`
 
   const handelsupmit = async () => {
     try {
-      let payload = { ...chart };
 
-      if (details.colors.length === 0) {
-        delete payload.color_id;
+      if(token){
+        setauth(false)
+        let payload = { ...chart };
+        
+        if (details.colors.length === 0) {
+          delete payload.color_id;
+        }
+        
+        const res: ApiResponse<AddToChart> = await CallApi("post", sendres, payload, headers);
+        console.log(res);
+        if(res.data===null){
+          toast.error("نفذت هذه الكميه برجاء اختيار كميه اقل")
+        }
+        if(res.status?.code===200 ){
+          toast.success("تمت الاضافه بنجاح")
+        }
+        console.log(payload);
       }
-
-      const res: ApiResponse<AddToChart> = await CallApi("post", sendres, payload, headers);
-      console.log(res);
-      if(res.data===null){
-        toast.error("نفذت هذه الكميه برجاء اختيار كميه اقل")
+      else{
+        setauth(true)
       }
-      if(res.status?.code===200 ){
-       toast.success("تمت الاضافه بنجاح")
-      }
-      console.log(payload);
     } catch (error) {
       console.log(error);
     }
+
   };
 
   return (
@@ -286,7 +297,9 @@ const imgcomment=`${BaseUrl}${details.image}`
           </div>
 
 
-
+{auth&&(
+  <LoginRequiredModal show={auth}/>
+)}
         </div>
       </div>
     </Container>

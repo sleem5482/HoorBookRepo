@@ -20,11 +20,12 @@ import { Cash } from '@/app/components/FeatureComponent/Modelcash'
 const EditModal = ({
   item,
   onClose,
-  onSave
+  onSave,
 }: {
   item: CartItem
   onClose: () => void
-  onSave: (newQty: number) => void
+  onSave: (newQty: number) => void,
+  
 }) => {
   const [newQty, setNewQty] = useState(item.qty)
 
@@ -61,7 +62,7 @@ const EditModal = ({
             onChange={e => setNewQty(Number(e.target.value))}
             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
-            {[...Array(10)].map((_, i) => (
+            {[...Array(item.product.stock)].map((_, i) => (
               <option key={i + 1} value={i + 1}>
                 {i + 1}
               </option>
@@ -110,10 +111,9 @@ export default function Cart() {
       }
       else{
         setlogin(false)
-      }
-      const res = await axios.get<CartResponse>(
-        `${BaseUrl}api/carts?page=${pageNum}`,
-        { headers }
+        const res = await axios.get<CartResponse>(
+          `${BaseUrl}api/carts?page=${pageNum}`,
+          { headers }
       )
 
       const newItems = res.data.data.data.data
@@ -123,12 +123,13 @@ export default function Cart() {
       const currentPage = res.data.data.data.meta.current_page
       const lastPage = res.data.data.data.meta.last_page
       setCartInfo(info)
-setItems(prev => {
-      const ids = new Set(prev.map(p => p.id));
-      const filtered = newItems.filter(p => !ids.has(p.id));
-      return [...prev, ...filtered];
-    });
+      setItems(prev => {
+        const ids = new Set(prev.map(p => p.id));
+        const filtered = newItems.filter(p => !ids.has(p.id));
+        return [...prev, ...filtered];
+      });
       setHasMore(currentPage < lastPage)
+    }
     } catch (error) {
       console.error('حدث خطأ أثناء تحميل البيانات:', error)
     }
@@ -187,6 +188,7 @@ useEffect(() => {
       refreshCartCount() 
       toast.success('🎉 تم تعديل المنتج بنجاح')
       setEditingItem(null)
+      fetchData(1);
     } catch (error) {
       toast.error('❌ حدث خطأ أثناء التعديل')
     }
@@ -226,7 +228,6 @@ const handelcode = async (e: React.FormEvent) => {
 
     updatedTotal = Math.max(0, updatedTotal);
 
-    // تحديث cartInfo مع السعر الجديد
     setCartInfo((prev: any) => ({
       ...prev,
       total: String(updatedTotal),

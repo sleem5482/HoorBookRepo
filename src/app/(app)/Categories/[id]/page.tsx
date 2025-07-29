@@ -65,9 +65,12 @@ const [favoriteProducts, setFavoriteProducts] = useState<number[]>([]);
 
 const fetchFavorites = async () => {
   try {
-    const res: any = await CallApi("get", `${BaseUrl}api/products?page=1&favourite=1`, {}, headers);
-    const favIds = res?.data?.data?.map((item: any) => item.id) || [];
-    setFavoriteProducts(favIds);
+    if(token){
+
+      const res: any = await CallApi("get", `${BaseUrl}api/products?page=1&favourite=1`, {}, headers);
+      const favIds = res?.data?.data?.map((item: any) => item.id) || [];
+      setFavoriteProducts(favIds);
+    }
   } catch (error) {
     console.error("Error fetching favorites:", error);
   }

@@ -23,6 +23,7 @@ import { BaseUrl, headers } from "./components/Baseurl";
 import { CallApi } from "./lib/utilits";
 import Cookies from "js-cookie";
 import { LoginRequiredModal } from "./components/ui/Pop-up-login";
+import toast from "react-hot-toast";
 
 export default function HomePage() {
    const { data, loadingdata, fetchHomeData } = HomeStore();
@@ -38,9 +39,11 @@ const [favoriteProducts, setFavoriteProducts] = useState<number[]>([]);
 
 const fetchFavorites = async () => {
   try {
-    const res: any = await CallApi("get", `${BaseUrl}api/products?page=1&favourite=1`, {}, headers);
-    const favIds = res?.data?.data?.map((item: any) => item.id) || [];
-    setFavoriteProducts(favIds);
+    if(token){
+      const res: any = await CallApi("get", `${BaseUrl}api/products?page=1&favourite=1`, {}, headers);
+      const favIds = res?.data?.data?.map((item: any) => item.id) || [];
+      setFavoriteProducts(favIds);
+    }
   } catch (error) {
     console.error("Error fetching favorites:", error);
   }
@@ -76,12 +79,14 @@ const handelfavorit = async (id: number) => {
     const dataToSend = { product_id: id };
     const res: ApiResponse<Favorit> = await CallApi("post", url, dataToSend, headers);
     console.log('Accepted', res);
+    toast.success("تم اضافه منتج الى المفضله ");
     setFavoriteIds((prev) =>
       prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
   );
       
   
   } catch (error) {
+    toast.error("خطأ فى اضافه المنتج برجاء اعاده المحاوله")
     console.log(error);
   }
 };
