@@ -5,7 +5,7 @@ import { fetchData } from "@/app/lib/methodes";
 import { ApiResponse, Favorit, HomePageData } from "@/app/lib/type";
 import { Card } from "@/app/components/ui/Card";
 import Image from "next/image";
-import { ArrowRight, ChevronLeft, ChevronRight, Heart, LayoutGrid, Package, Search, Settings2Icon, ShoppingCart, User2 } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Heart, Home, LayoutGrid, Package, Search, Settings2Icon, ShoppingCart, User2 } from "lucide-react";
 import Link from "next/link";
 import Logo from '../../../../../public/asset/images/حورلوجو-1.png'
 import debounce from "lodash.debounce";
@@ -176,39 +176,51 @@ const [visible, setVisible] = useState(true)
 // Move IconsBlock outside of return
 const IconsBlock = (cartCount: number) => (
   <>
-    <Link href="/register" className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
-      <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
-        <User2 size={18} />
-      </div>
-    </Link>
 
-    <Link href="/favorite" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
+    <Link href="/" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
       <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
-        <Heart size={18} />
+        <Home size={18} />
       </div>
+        الرئيسيه 
     </Link>
 
     <Link href="/dashboard" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
       <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
         <LayoutGrid size={18} />
       </div>
+      الفئات
     </Link>
 
-    <Link href="/cart" className="relative flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
-      <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
-        <ShoppingCart size={18} />
-      </div>
-      {cartCount > 0 && (
-        <span className="absolute -top-1 -right-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] rounded-full font-bold">
-          {cartCount}
-        </span>
-      )}
-    </Link>
+<Link
+  href="/cart"
+  className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110"
+>
+  <div className="relative p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
+    <ShoppingCart size={18} />
+    
+    {cartCount > 0 && (
+      <span className="absolute -top-1 -right-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] rounded-full font-bold">
+        {cartCount}
+      </span>
+    )}
+  </div>
+
+  <span className="whitespace-nowrap">عربة التسوق</span>
+</Link>
+
+
 
     <Link href="/orders" className="flex flex-col items-center hover:text-green-300 transition transform hover:scale-110">
       <div className="p-2 rounded-full text-white bg-white/10 hover:bg-green-300/20 transition">
         <Package size={18} />
       </div>
+      الطلبات
+    </Link>
+    <Link href="/register" className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
+      <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
+        <User2 size={18} />
+      </div>
+        الحساب
     </Link>
   </>
 );
