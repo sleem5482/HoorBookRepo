@@ -14,10 +14,14 @@ import toast, {Toaster} from 'react-hot-toast';
 import { usePathname, useRouter } from "next/navigation";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import ForgotPasswordModal from "../components/ui/forgetPasswordModel";
 import axios from "axios";
+import { Button } from "@headlessui/react";
 
 export default function LoginPage() {
   const [login, setLogin] = useState<Record<string, any>>({});
+    const [showModal, setShowModal] = useState(false);
+       const [errorModal, setErrorModal] = useState(false);
   const router=useRouter();
   const fields: FieldForm[] = [
     {
@@ -33,6 +37,7 @@ export default function LoginPage() {
       requierd: true,
     },
   ];
+  console.log(Cookies.get('reset_pass_email'))
 const url= `${BaseUrl}api/user/login`
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,7 +83,12 @@ if (user.pointsSettings) {
             </div>
 
             <FormField fields={fields} data={login} onChange={setLogin} />
-
+          <Button
+              className="text-sm text-purple-900 font-bold hover:underline mt-3 block"
+              onClick={() => setShowModal(true)}
+            >
+             هل نسيت كلمة المرور؟
+            </Button>
             <button
               type="submit"
               className="w-full mt-2 bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition"
@@ -162,6 +172,25 @@ if (user.pointsSettings) {
             </p>
           </form>
         </Container>
+        <ForgotPasswordModal
+          show={showModal}
+          onClose={() => setShowModal(false)}
+          setErrorModal={setErrorModal}
+        />
+          {errorModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 w-[90%] max-w-sm text-center">
+                        <div className="mb-4 text-lg text-black">
+                            هذا الايميل غير موجود!
+                        </div>
+                        <button
+                            className="text-purple-700 font-bold mt-2"
+                            onClick={() => setErrorModal(false)}>
+                            تأكيد
+                        </button>
+                    </div>
+                </div>
+            )}
       </div>
     </>
   );
