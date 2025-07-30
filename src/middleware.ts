@@ -12,12 +12,12 @@ export function middleware(req: NextRequest) {
             return NextResponse.next();
         }
     }
-    if (pathname === "/login/verificationCode") {
+    if (pathname === "/verificationCode") {
         if (email_reset_pass) {
             return NextResponse.next();
         } else return NextResponse.redirect(new URL("/login", req.url));
     }
-    if (pathname === "/login/resetPassword") {
+    if (pathname === "/resetPassword") {
         if (email_reset_pass && resetCode) {
             return NextResponse.next();
         } else return NextResponse.redirect(new URL("/login", req.url));
@@ -27,7 +27,7 @@ export const config = {
     matcher: [
         "/register",
         "/login",
-        "/login/verificationCode",
-        "/login/resetPassword",
+        "/verificationCode",
+        "/resetPassword",
     ],
 };

@@ -59,7 +59,7 @@ export default function ForgotPasswordModal({
                 );
                 setEmail("");
                 Cookies.set('reset_pass_email',email)
-                router.push("/login/verificationCode");
+                router.push("/verificationCode");
                 onClose(); // إغلاق المودال بعد الإرسال الناجح
             } else {
                 onClose();

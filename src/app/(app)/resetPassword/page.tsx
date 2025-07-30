@@ -9,7 +9,6 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Cookies from "js-cookie";
-import { cookies } from 'next/headers';
 
 
 

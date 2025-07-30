@@ -85,7 +85,7 @@ const VerifyCodePage = () => {
 
       if (result.status.status == true) {
         Cookies.set('verifyCode',code)
-        router.push ('/login/resetPassword')
+        router.push ('/resetPassword')
       } else {
         setErrorModal(true)
       }
