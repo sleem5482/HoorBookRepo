@@ -7,6 +7,7 @@ import Container from "@/app/components/Container";
 import SmartNavbar from "@/app/components/ui/Navbar";
 import { useRouter } from 'next/navigation';
 import Cookies from "js-cookie";
+import ErrorPopUP from '@/app/components/ui/pop-up_show_message_error';
 
 
 const VerifyCodePage = () => {
@@ -14,7 +15,7 @@ const VerifyCodePage = () => {
   const [email, setEmail] = useState('');
   const [timer, setTimer] = useState(60);
   const [canResend, setCanResend] = useState(false);
-  const [errorModal, setErrorModal] = useState(false);
+  const [modal, setModal] = useState<{show:boolean,message:string}>({ show: false, message: "" });
     
         const router=useRouter()
 
@@ -47,15 +48,18 @@ const VerifyCodePage = () => {
   // إعادة إرسال الكود
   const handleResend = async () => {
     setTimer(60);//to rernder use effect
-    setCanResend(false);
 
+
+    setCanResend(false);
+     const params = new FormData();
+        params.append("email", email);
     try {
       await axios.post(
         `${BaseUrl}api/user/forget-password`,
-        new URLSearchParams({ email }),
+        params,
         {
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -64,18 +68,18 @@ const VerifyCodePage = () => {
     }
   };
 
-  // تأكيد الكود
+
   const handleConfirm = async () => {
+    const sendData=new FormData()
+    sendData.append("email", email)
+    sendData.append("verification_code",code)
     try {
       const response = await axios.post(
         `${BaseUrl}api/user/verify-code-forget-password`,
-        new URLSearchParams({
-          email,
-          verification_code: code,
-        }),
+      sendData,
         {
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+           "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -87,7 +91,7 @@ const VerifyCodePage = () => {
         Cookies.set('verifyCode',code)
         router.push ('/resetPassword')
       } else {
-        setErrorModal(true)
+        setModal({message:" كود التحقق غير صحيح" ,show:true})
       }
     } catch (err) {
       console.error('Error verifying code:', err);
@@ -121,7 +125,7 @@ const VerifyCodePage = () => {
       <div className="flex items-center gap-2 mb-4">
         <input
           type="text"
-          maxLength={6}
+          maxLength={5}
           value={code}
           onChange={handleCodeChange}
           placeholder="ادخل الرمز"
@@ -138,20 +142,9 @@ const VerifyCodePage = () => {
       </div>
         </Container>
           </div>
-        {errorModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 w-[90%] max-w-sm text-center">
-                        <div className="mb-4 text-lg text-black">
-                            كود التحقق غير صحيح
-                        </div>
-                        <button
-                            className="text-purple-700 font-bold mt-2"
-                            onClick={() => setErrorModal(false)}>
-                            تأكيد
-                        </button>
-                    </div>
-                </div>
-            )}
+    {modal.show && (
+      <ErrorPopUP message={modal.message} setClose={setModal}/>
+    )}
     </div>
   );
 };

@@ -17,11 +17,13 @@ import { jwtDecode } from "jwt-decode";
 import ForgotPasswordModal from "../components/ui/forgetPasswordModel";
 import axios from "axios";
 import { Button } from "@headlessui/react";
+import ErrorPopUP from "../components/ui/pop-up_show_message_error";
+
 
 export default function LoginPage() {
   const [login, setLogin] = useState<Record<string, any>>({});
-    const [showModal, setShowModal] = useState(false);
-       const [errorModal, setErrorModal] = useState(false);
+    const [showEmailModal, setShowEmailModal] = useState(false);
+  const [modal, setModal] = useState<{show:boolean,message:string}>({ show: false, message: "" });
   const router=useRouter();
   const fields: FieldForm[] = [
     {
@@ -83,9 +85,10 @@ if (user.pointsSettings) {
             </div>
 
             <FormField fields={fields} data={login} onChange={setLogin} />
-          <Button
+
+             <Button
               className="text-sm text-purple-900 font-bold hover:underline mt-3 block"
-              onClick={() => setShowModal(true)}
+              onClick={() => setShowEmailModal(true)}
             >
              هل نسيت كلمة المرور؟
             </Button>
@@ -159,9 +162,10 @@ if (user.pointsSettings) {
 
 
 </div>
+          </form>
+<div>
 
-
-            <p className="text-sm text-center mt-4">
+            <p className="text-sm text-center mt-4 text-gray-500">
               لا تمتلك حسابًا؟{" "}
               <Link
                 href="/register"
@@ -170,27 +174,18 @@ if (user.pointsSettings) {
                 إنشاء حساب جديد
               </Link>
             </p>
-          </form>
-        </Container>
-        <ForgotPasswordModal
-          show={showModal}
-          onClose={() => setShowModal(false)}
-          setErrorModal={setErrorModal}
+           <ForgotPasswordModal
+          show={showEmailModal}
+          onClose={() => setShowEmailModal(false)}
+          setErrorModal={setModal}
         />
-          {errorModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 w-[90%] max-w-sm text-center">
-                        <div className="mb-4 text-lg text-black">
-                            هذا الايميل غير موجود!
-                        </div>
-                        <button
-                            className="text-purple-700 font-bold mt-2"
-                            onClick={() => setErrorModal(false)}>
-                            تأكيد
-                        </button>
-                    </div>
-                </div>
-            )}
+        {/* المودال */}
+    {modal.show && (
+      <ErrorPopUP message={modal.message} setClose={setModal}/>
+    )}
+      </div>
+        </Container>
+
       </div>
     </>
   );

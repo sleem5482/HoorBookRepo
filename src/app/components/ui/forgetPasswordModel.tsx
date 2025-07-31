@@ -1,5 +1,5 @@
 "use client";
-import { Mail } from "lucide-react";
+import { Mail, X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { BaseUrl } from "../Baseurl";
 import axios from "axios";
@@ -14,7 +14,7 @@ export default function ForgotPasswordModal({
 }: {
     show: boolean;
     onClose: () => void;
-    setErrorModal: React.Dispatch<React.SetStateAction<boolean>>;
+    setErrorModal: (value:{show:boolean,message:string})=>void
 }) {
     const modalRef = useRef<HTMLDivElement>(null);
     const [email, setEmail] = useState<string>("");
@@ -37,11 +37,11 @@ export default function ForgotPasswordModal({
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [show, onClose]);
+    }, [show]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const params = new URLSearchParams();
+        const params = new FormData();
         params.append("email", email);
         try {
             const response = await axios.post(
@@ -49,7 +49,7 @@ export default function ForgotPasswordModal({
                 params,
                 {
                     headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
+                    "Content-Type": "multipart/form-data",
                     },
                 }
             );
@@ -65,7 +65,7 @@ export default function ForgotPasswordModal({
                 onClose();
                 toast.error("حدث خطأ أثناء إرسال الطلب.");
                 setEmail("");
-                setErrorModal(true); // عرض مودال الخطأ
+                setErrorModal({message:"هذا الايميل غير موجود!" ,show:true}); // عرض مودال الخطأ
             }
         } catch (error) {
             console.error("Error sending password reset request:", error);
@@ -79,6 +79,7 @@ export default function ForgotPasswordModal({
             <div
                 ref={modalRef}
                 className="bg-white p-6 rounded-xl w-full max-w-sm shadow-lg">
+                    <X className="text-black cursor-pointer" onClick={()=>onClose()}/>
                 <h2 className="text-xl font-bold mb-2 text-center text-black">
                     نسيت كلمة السر؟
                 </h2>

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, ShoppingCart, Heart, User2 , LayoutGrid,Package  } from 'lucide-react'
+import { Search, ShoppingCart, Heart, User2 , LayoutGrid,Package, Home  } from 'lucide-react'
 import Logo from '../../../../public/asset/images/حورلوجو-1.png'
 import { getCartLength } from '@/app/lib/api/cart'
 import { useCartStore } from '@/app/store/cartStore'
@@ -88,18 +88,12 @@ const { cartCount, refreshCartCount } = useCartStore()
 
 const IconsBlock = (cartCount: number) => (
   <>
-    <Link href="/register" className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
-      <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
-        <User2 size={18} />
-      </div>
-        الحساب
-    </Link>
 
-    <Link href="/favorite" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
+    <Link href="/" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
       <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
-        <Heart size={18} />
+        <Home size={18} />
       </div>
-        المفضله
+        الرئيسيه 
     </Link>
 
     <Link href="/dashboard" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
@@ -133,6 +127,12 @@ const IconsBlock = (cartCount: number) => (
         <Package size={18} />
       </div>
       الطلبات
+    </Link>
+    <Link href="/register" className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
+      <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
+        <User2 size={18} />
+      </div>
+        الحساب
     </Link>
   </>
 )

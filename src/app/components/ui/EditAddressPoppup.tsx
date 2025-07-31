@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { BaseUrl, headers } from "../../components/Baseurl";
 import { X } from "lucide-react";
 import { buildPayload } from "./handleAddress";
+import ErrorPopUP from "./pop-up_show_message_error";
 
 interface EditAddressPoppupProps {
     open: boolean;
@@ -309,22 +310,10 @@ const EditAddressPoppup: React.FC<EditAddressPoppupProps> = (props) => {
                 </form>
             </div>
             {/* modal */}
-                {modal.show && (
-                    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-                        <div className="bg-white rounded-xl shadow-lg p-8 min-w-[300px] text-center">
-                            <div className="mb-4 text-lg text-black">
-                                {modal.message}
-                            </div>
-                            <button
-                                className="text-purple-700 font-bold mt-2"
-                                onClick={() =>
-                                    setModal({ show: false, message: "" })
-                                }>
-                                تأكيد
-                            </button>
-                        </div>
-                    </div>
-                )}
+              {/* المودال */}
+    {modal.show && (
+      <ErrorPopUP message={modal.message} setClose={setModal}/>
+    )}
         </div>
     );
 };

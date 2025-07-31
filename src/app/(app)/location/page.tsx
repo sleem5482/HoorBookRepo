@@ -10,6 +10,7 @@ import { BaseUrl, headers } from "@/app/components/Baseurl";
 import toast, { Toaster } from "react-hot-toast";
 import { buildPayload } from "@/app/components/ui/handleAddress";
 import SmartNavbar from "@/app/components/ui/Navbar";
+import ErrorPopUP from "@/app/components/ui/pop-up_show_message_error";
 
 const API_BASE = `${BaseUrl}api`;
 
@@ -29,7 +30,7 @@ const Location = () => {
   const [governorates, setGovernorates] = useState<any[]>([]);
   const [cities, setCities] = useState<any[]>([]);
   const [areas, setAreas] = useState<any[]>([]);
-  const [modal, setModal] = useState({ show: false, message: "" });
+  const [modal, setModal] = useState<{show:boolean,message:string}>({ show: false, message: "" });
 
   const updateField = (field: keyof typeof formData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -249,17 +250,7 @@ return (
 
     {/* المودال */}
     {modal.show && (
-      <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-        <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 w-[90%] max-w-sm text-center">
-          <div className="mb-4 text-lg text-black">{modal.message}</div>
-          <button
-            className="text-purple-700 font-bold mt-2"
-            onClick={() => setModal({ show: false, message: "" })}
-          >
-            تأكيد
-          </button>
-        </div>
-      </div>
+      <ErrorPopUP message={modal.message} setClose={setModal}/>
     )}
   </div>
 );

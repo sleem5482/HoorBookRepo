@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Container from "../Container";
 import {ApiResponse, type  FieldForm } from "@/app/lib/type";
 import { fetchData } from "@/app/lib/methodes";
-import InputField from "./Input";
 
 type Props = {
 fields: FieldForm[];
@@ -18,13 +17,15 @@ type Option = {
 export default function FormField({ fields, data, onChange }: Props){
   const [formData, setFormData] = useState(data);
   const [dynamicOptions, setDynamicOptions] = useState<Record<string, Option[]>>({});
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+
 useEffect(()=>{
     fields.forEach(async(field)=>{
      if (field.type === "select" && field.fetchUrl) {
   const res: ApiResponse<any> = await fetchData(field.fetchUrl);
   const options = res.data.map((item: any) => ({
-    label: item.label, // تأكد السيرفر يرجع label
-    value: item.value, // تأكد السيرفر يرجع value
+    label: item.label, 
+    value: item.value, 
   }));
   setDynamicOptions((prev) => ({ ...prev, [field.name]: options }));
 }
@@ -71,7 +72,34 @@ const handelchange=(field:string,value:any)=>{
 </div>
 
 
-) : (
+) : field.type==="password" ? (
+  <>
+  <input
+    name={field.name}
+    type={field.type}
+    value={formData[field.name] || ""}
+    onChange={(e) =>{
+      handelchange(field.name, e.target.value)
+    }}
+
+    placeholder={field.placeholder}
+    minLength={8}
+    className="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-purple-600"
+        onBlur={(e) => {
+        const value = e.target.value;
+        if (value.length < 8) {
+          setPasswordError("كلمة المرور يجب أن تكون 8 أحرف أو أكثر");
+        } else {
+          setPasswordError(null);
+        }
+      }}
+    />
+   {passwordError && (
+      <p className="text-sm text-red-600 mt-1">{passwordError}</p>
+    )}
+      </>
+  
+): (
   <input
     name={field.name}
     type={field.type}

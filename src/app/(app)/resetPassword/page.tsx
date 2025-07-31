@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Cookies from "js-cookie";
+import ErrorPopUP from '@/app/components/ui/pop-up_show_message_error';
 
 
 
@@ -20,7 +21,7 @@ export default function ResetPasswordPage() {
 
   
 
-  const [error, setError] = useState<string>('');
+  const [modal, setModal] = useState<{show:boolean,message:string}>({ show: false, message: "" });
   const [loading, setLoading] = useState<boolean>(false);
 
   const [email, setEmail] = useState<string>('');
@@ -45,21 +46,21 @@ console.log(storedCode,storedEmail)
   // 📤 Submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setModal({message:'',show:false});
 
     const { password, confirmPassword } = formData;
 
     if (password.length < 8) {
-      setError('كلمة المرور يجب أن تكون 8 أحرف على الأقل');
+      setModal({message:'كلمة المرور يجب أن تكون 8 أحرف على الأقل' ,show:true});
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('كلمتا المرور غير متطابقتين');
+      setModal({message:'كلمتا المرور غير متطابقتين',show:true});
       return;
     }
 
-    const body = new URLSearchParams();
+    const body = new FormData();
     body.append('password', password);
     body.append('password_confirmation', confirmPassword);
     body.append('email', email);
@@ -72,7 +73,7 @@ console.log(storedCode,storedEmail)
          body,
           {
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -153,11 +154,11 @@ console.log(storedCode,storedEmail)
     </div>
         </div>
 
-        {error && <p className="text-red-600 text-sm">{error}</p>}
+        {modal.show && <p className="text-red-600 text-sm">{modal.message}</p>}
 
         <button
           type="submit"
-          className="w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white py-2 rounded font-bold"
+          className="w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white py-2 rounded font-bold shadow-lg hover:scale-[1.02] transition-all duration-300"
           disabled={loading}
         >
           {loading ? 'جاري التأكيد...' : 'تأكيد'}
@@ -166,18 +167,8 @@ console.log(storedCode,storedEmail)
        </Container>
     </div>
      {/* المودال */}
-    {error && (
-      <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-        <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 w-[90%] max-w-sm text-center">
-          <div className="mb-4 text-lg text-black">{error}</div>
-          <button
-            className="text-purple-700 font-bold mt-2"
-            onClick={() => setError('')}
-          >
-            تأكيد
-          </button>
-        </div>
-      </div>
+    {modal.show && (
+      <ErrorPopUP message={modal.message} setClose={setModal}/>
     )}
     </div>
   );
