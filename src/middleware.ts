@@ -17,7 +17,11 @@ if(pathname==='/register'||pathname==='/login'){
  if (pathname === "/verificationCode") {
         if (email_reset_pass) {
             return NextResponse.next();
-        } else return NextResponse.redirect(new URL("/login", req.url));
+        }
+        else{
+
+          return NextResponse.redirect(new URL("/login", req.url));
+        } 
     }
     if (pathname === "/resetPassword") {
         if (email_reset_pass && resetCode) {
