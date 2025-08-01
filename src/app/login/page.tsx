@@ -20,8 +20,8 @@ import ForgotPasswordModal from "../components/ui/forgetPasswordModel";
 
 export default function LoginPage() {
   const [login, setLogin] = useState<Record<string, any>>({});
-    const [showModal, setShowModal] = useState(false);
-       const [errorModal, setErrorModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [errorModal, setErrorModal] = useState<{ show: boolean; message: string }>({ show: false, message: "" });
   const router=useRouter();
   const fields: FieldForm[] = [
     {
@@ -175,15 +175,15 @@ if (user.pointsSettings) {
           onClose={() => setShowModal(false)}
           setErrorModal={setErrorModal}
         />
-          {errorModal && (
+          {errorModal.show && (
                 <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
                     <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 w-[90%] max-w-sm text-center">
                         <div className="mb-4 text-lg text-black">
-                            هذا الايميل غير موجود!
+                            {errorModal.message || "هذا الايميل غير موجود!"}
                         </div>
                         <button
                             className="text-purple-700 font-bold mt-2"
-                            onClick={() => setErrorModal(false)}>
+                            onClick={() => setErrorModal({ show: false, message: "" })}>
                             تأكيد
                         </button>
                     </div>
