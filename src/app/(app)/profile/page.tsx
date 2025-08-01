@@ -82,14 +82,13 @@ export default function ProfilePage() {
                 <p className="text-xs text-gray-600 mt-1">قيمة النقطة: {profile?.pointsSettings?.point_price} ج.م</p>
               </div>
             </div>
-            {/* روابط إضافية تحت البروفايل */}
 <div className="grid grid-cols-3 gap-4 text-center mt-6">
   <Link href="/orders" className="flex flex-col items-center bg-purple-50 p-4 rounded-xl hover:shadow transition">
     <ShoppingCart className="text-purple-600 mb-1" size={24} />
     <span className="text-sm text-purple-800 font-semibold">الطلبات</span>
   </Link>
 
-  <Link href="/profile" className="flex flex-col items-center bg-purple-50 p-4 rounded-xl hover:shadow transition">
+  <Link href="/account" className="flex flex-col items-center bg-purple-50 p-4 rounded-xl hover:shadow transition">
     <User className="text-purple-600 mb-1" size={24} />
     <span className="text-sm text-purple-800 font-semibold">الحساب</span>
   </Link>

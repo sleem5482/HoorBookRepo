@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Container from "../Container";
 import {ApiResponse, type  FieldForm } from "@/app/lib/type";
 import { fetchData } from "@/app/lib/methodes";
+import { Mail } from "lucide-react";
 
 type Props = {
 fields: FieldForm[];
@@ -99,7 +100,22 @@ const handelchange=(field:string,value:any)=>{
     )}
       </>
   
-): (
+)  : field.type === "email" ? (
+                            <div className="relative mb-4">
+                                <Mail className="w-5 h-5 text-gray-500 mb-2 mx-auto absolute right-3 top-3" />
+                                <input
+                                    name={field.name}
+                                    type={field.type}
+                                    value={formData[field.name] || ""}
+                                    onChange={(e) =>
+                                        handelchange(field.name, e.target.value)
+                                    }
+                                    placeholder={field.placeholder}
+                                    className="w-full p-2 mb-4 border-2 border-gray-500 rounded-lg pr-10 text-black outline-none"
+                                    required
+                                />
+                            </div>
+                        ): (
   <input
     name={field.name}
     type={field.type}

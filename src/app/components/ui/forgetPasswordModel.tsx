@@ -1,11 +1,14 @@
+
 "use client";
-import { Mail } from "lucide-react";
+import { Mail, X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { BaseUrl } from "../Baseurl";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { FieldForm } from "@/app/lib/type";
+import FormField from "./Formfield";
 
 export default function ForgotPasswordModal({
     show,
@@ -14,10 +17,21 @@ export default function ForgotPasswordModal({
 }: {
     show: boolean;
     onClose: () => void;
-    setErrorModal: React.Dispatch<React.SetStateAction<boolean>>;
+    setErrorModal: (value: { show: boolean; message: string }) => void;
 }) {
     const modalRef = useRef<HTMLDivElement>(null);
-    const [email, setEmail] = useState<string>("");
+    const [formData, setFormData] = useState<Record<string, any>>({
+        email: "",
+    });
+    const fields: FieldForm[] = [
+        {
+            
+            placeholder:"ادخل بريدك الالكتروني",
+            name: "email",
+            type: "email",
+            requierd: true,
+        },
+    ];
 
     const router = useRouter();
 
@@ -41,29 +55,34 @@ export default function ForgotPasswordModal({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const params = new URLSearchParams();
-        params.append("email", email);
+        const params = new FormData();
+        params.append("email", formData.email);
         try {
             const response = await axios.post(
                 `${BaseUrl}api/user/forget-password`,
                 params,
                 {
                     headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Content-Type": "multipart/form-data",
                     },
                 }
             );
             if (response.data.status.status == true) {
-                toast.success("تم إرسال رمز إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.");
-                setEmail("");
-                Cookies.set('reset_pass_email',email)
+                toast.success(
+                    "تم إرسال رمز إعادة تعيين كلمة المرور إلى بريدك الإلكتروني."
+                );
+                setFormData({ email: "" });
+                Cookies.set("reset_pass_email", formData.email);
                 router.push("/verificationCode");
-                onClose(); 
+                onClose(); // إغلاق المودال بعد الإرسال الناجح
             } else {
                 onClose();
                 toast.error("حدث خطأ أثناء إرسال الطلب.");
-                setEmail("");
-                setErrorModal(true);
+                setFormData({ email: "" });
+                setErrorModal({
+                    message: "هذا الايميل غير موجود!",
+                    show: true,
+                }); // عرض مودال الخطأ
             }
         } catch (error) {
             console.error("Error sending password reset request:", error);
@@ -77,6 +96,10 @@ export default function ForgotPasswordModal({
             <div
                 ref={modalRef}
                 className="bg-white p-6 rounded-xl w-full max-w-sm shadow-lg">
+                <X
+                    className="text-black cursor-pointer"
+                    onClick={() => onClose()}
+                />
                 <h2 className="text-xl font-bold mb-2 text-center text-black">
                     نسيت كلمة السر؟
                 </h2>
@@ -85,17 +108,12 @@ export default function ForgotPasswordModal({
                     جديدة
                 </p>
                 <form onSubmit={handleSubmit}>
-                    <div className="relative mb-4">
-                        <Mail className="w-5 h-5 text-gray-500 mb-2 mx-auto absolute right-3 top-3" />
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value.trim().toLowerCase())}
-                            placeholder="ادخل بريدك الإلكتروني"
-                            className="w-full p-2 mb-4 border-2 border-gray-500 rounded-lg pr-10 text-black outline-none"
-                            required
-                        />
-                    </div>
+                    <FormField
+                        fields={fields}
+                        data={formData}
+                        onChange={setFormData}
+                    />
+
                     <button
                         type="submit"
                         className="bg-gradient-to-r from-purple-900 to-orange-400 text-white w-full py-2 rounded-lg hover:opacity-90 transition duration-300 flex items-center justify-center shadow-lg">
