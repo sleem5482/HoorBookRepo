@@ -12,12 +12,22 @@ import Cookies from "js-cookie";
 import ErrorPopUP from "@/app/components/ui/pop-up_show_message_error";
 import { FieldForm } from "@/app/lib/type";
 import FormField from "@/app/components/ui/Formfield";
+import Loading from "@/app/components/ui/loading";
 
 export default function ResetPasswordPage() {
     const [formData, setFormData] = useState<Record<string, any>>({
         password: "",
         confirmPassword: "",
     });
+        const [modal, setModal] = useState<{ show: boolean; message: string }>({
+        show: false,
+        message: "",
+    });
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const [email, setEmail] = useState<string>("");
+    const [verificationCode, setVerificationCode] = useState<string>("");
+    const router = useRouter();
 
     const fields: FieldForm[] = [
         {
@@ -33,20 +43,7 @@ export default function ResetPasswordPage() {
             placeholder: "ادخل تأكيد كلمة السر",
         },
     ];
-    console.log(formData);
-    const [modal, setModal] = useState<{ show: boolean; message: string }>({
-        show: false,
-        message: "",
-    });
-    const [loading, setLoading] = useState<boolean>(false);
 
-    const [email, setEmail] = useState<string>("");
-    const [verificationCode, setVerificationCode] = useState<string>("");
-    const [showPassword, setShowPassword] = useState({
-        pass: false,
-        confirmPass: false,
-    });
-    const router = useRouter();
 
     //  Helper to update form fields
     const updateField = (field: keyof typeof formData, value: string) => {
@@ -110,11 +107,11 @@ export default function ResetPasswordPage() {
                 );
             }
 
-            toast.success("تم إعادة تعيين كلمة المرور بنجاح!");
             Cookies.remove("reset_pass_email");
             Cookies.remove("verifyCode");
-            router.push("/login");
             setFormData({ password: "", confirmPassword: "" });
+            router.push("/login");
+            toast.success("تم إعادة تعيين كلمة المرور بنجاح!");
         } catch (err: any) {
             console.error(err.message);
         } finally {
@@ -123,6 +120,7 @@ export default function ResetPasswordPage() {
     };
 
     return (
+
         <div className=" min-h-screen bg-gradient-to-br from-purple-100 to-orange-100 px-2 sm:px-4 py-6 sm:py-10">
             <SmartNavbar />
 
@@ -157,6 +155,9 @@ export default function ResetPasswordPage() {
             {modal.show && (
                 <ErrorPopUP message={modal.message} setClose={setModal} />
             )}
+                {loading?(<Loading/>):(<></>
+        )}
         </div>
+        
     );
 }

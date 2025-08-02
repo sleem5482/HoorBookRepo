@@ -10,6 +10,7 @@ import { BaseUrl, headers } from "../../components/Baseurl";
 import { X } from "lucide-react";
 import { buildPayload } from "./handleAddress";
 import ErrorPopUP from "./pop-up_show_message_error";
+import Loading from "./loading";
 
 interface EditAddressPoppupProps {
     open: boolean;
@@ -37,8 +38,9 @@ const EditAddressPoppup: React.FC<EditAddressPoppupProps> = (props) => {
         city: "",
         area: "",
     });
+    const [loading, setLoading] = useState<boolean>(false);
 
-        useEffect(() => {
+    useEffect(() => {
         axios
             .get(`${API_BASE}/governorates`)
             .then((res) => setGovernorates(res.data.data))
@@ -138,6 +140,7 @@ const EditAddressPoppup: React.FC<EditAddressPoppupProps> = (props) => {
             });
 
         try {
+            setLoading(true);
             const res = await axios.put(
                 `${API_BASE}/address/${address?.id}`,
                 buildPayload(form),
@@ -150,6 +153,8 @@ const EditAddressPoppup: React.FC<EditAddressPoppupProps> = (props) => {
             } else toast.error("حدث خطأ أثناء حفظ العنوان");
         } catch {
             toast.error("حدث خطأ أثناء حفظ العنوان");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -207,9 +212,20 @@ const EditAddressPoppup: React.FC<EditAddressPoppupProps> = (props) => {
                                 countryCodeEditable={false}
                                 country="eg"
                                 value={form.phone}
-                                onChange={(value) =>
-                                    updateField("phone", value)
-                                }
+                                onChange={(value) => {
+                                    // إزالة الصفر بعد كود الدولة (20) إن وجد
+                                    let cleanedValue = value;
+
+                                    if (
+                                        cleanedValue.startsWith("20") &&
+                                        cleanedValue[2] === "0"
+                                    ) {
+                                        cleanedValue =
+                                            "20" + cleanedValue.slice(3);
+                                    }
+
+                                    updateField("phone", cleanedValue);
+                                }}
                                 placeholder="رقم الهاتف"
                                 enableSearch
                                 specialLabel=""
@@ -222,6 +238,7 @@ const EditAddressPoppup: React.FC<EditAddressPoppupProps> = (props) => {
                                     outline: "none",
                                     padding: "0.5rem 1rem",
                                     paddingLeft: "2.5rem",
+                                    fontSize: "16px",
                                 }}
                                 buttonStyle={{
                                     border: "none",
@@ -247,42 +264,42 @@ const EditAddressPoppup: React.FC<EditAddressPoppupProps> = (props) => {
                             icon={<LandmarkIcon size={20} />}
                         />
                     </div>
-                     <div className="text-black">
-                                           <label className="block font-bold mb-1">المدينة</label>
-                                           <BottomSelectField
-                                               title="المدينة"
-                                               placeholder="اختر المدينة"
-                                               selectedValue={form.city}
-                                               options={cities?.map((c) => c.name_ar)}
-                                               onSelect={handleCitySelect}
-                                               icon={<Building2 size={20} />}
-                                               canOpen={!!form.governorateId}
-                                               onBlockedOpen={() =>
-                                                   setModal({
-                                                       show: true,
-                                                       message: "اختر المحافظة أولاً",
-                                                   })
-                                               }
-                                           />
-                                       </div>
                     <div className="text-black">
-                                           <label className="block font-bold mb-1">المنطقة</label>
-                                           <BottomSelectField
-                                               title="المنطقة"
-                                               placeholder="اختر منطقتك او أقرب منطقة لك"
-                                               selectedValue={form.area}
-                                               options={areas?.map((a) => a.name_ar)}
-                                               onSelect={handleAreaSelect}
-                                               icon={<MapPin size={20} />}
-                                               canOpen={!!form.cityId}
-                                               onBlockedOpen={() =>
-                                                   setModal({
-                                                       show: true,
-                                                       message: "اختر المدينة أولاً",
-                                                   })
-                                               }
-                                           />
-                                       </div>
+                        <label className="block font-bold mb-1">المدينة</label>
+                        <BottomSelectField
+                            title="المدينة"
+                            placeholder="اختر المدينة"
+                            selectedValue={form.city}
+                            options={cities?.map((c) => c.name_ar)}
+                            onSelect={handleCitySelect}
+                            icon={<Building2 size={20} />}
+                            canOpen={!!form.governorateId}
+                            onBlockedOpen={() =>
+                                setModal({
+                                    show: true,
+                                    message: "اختر المحافظة أولاً",
+                                })
+                            }
+                        />
+                    </div>
+                    <div className="text-black">
+                        <label className="block font-bold mb-1">المنطقة</label>
+                        <BottomSelectField
+                            title="المنطقة"
+                            placeholder="اختر منطقتك او أقرب منطقة لك"
+                            selectedValue={form.area}
+                            options={areas?.map((a) => a.name_ar)}
+                            onSelect={handleAreaSelect}
+                            icon={<MapPin size={20} />}
+                            canOpen={!!form.cityId}
+                            onBlockedOpen={() =>
+                                setModal({
+                                    show: true,
+                                    message: "اختر المدينة أولاً",
+                                })
+                            }
+                        />
+                    </div>
                     <div className="text-black">
                         <label className="block font-bold mb-1">
                             تفاصيل العنوان
@@ -310,10 +327,11 @@ const EditAddressPoppup: React.FC<EditAddressPoppupProps> = (props) => {
                 </form>
             </div>
             {/* modal */}
-              {/* المودال */}
-    {modal.show && (
-      <ErrorPopUP message={modal.message} setClose={setModal}/>
-    )}
+            {/* المودال */}
+            {modal.show && (
+                <ErrorPopUP message={modal.message} setClose={setModal} />
+            )}
+            {loading ? <Loading /> : <></>}
         </div>
     );
 };

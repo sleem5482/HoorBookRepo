@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { FieldForm } from "@/app/lib/type";
 import FormField from "./Formfield";
+import Loading from "@/app/components/ui/loading";
 
 export default function ForgotPasswordModal({
     show,
@@ -22,6 +23,7 @@ export default function ForgotPasswordModal({
     const [formData, setFormData] = useState<Record<string, any>>({
         email: "",
     });
+     const [loading, setLoading] = useState<boolean>(false);
     const fields: FieldForm[] = [
         {
             placeholder:"ادخل بريدك الالكتروني",
@@ -56,6 +58,7 @@ export default function ForgotPasswordModal({
         const params = new FormData();
         params.append("email", formData.email);
         try {
+            setLoading(true)
             const response = await axios.post(
                 `${BaseUrl}api/user/forget-password`,
                 params,
@@ -85,11 +88,16 @@ export default function ForgotPasswordModal({
         } catch (error) {
             console.error("Error sending password reset request:", error);
         }
+        finally{
+            setLoading(false)
+        }
     };
 
     if (!show) return null;
 
     return (
+        <>
+        {loading?(<Loading/>):(
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div
                 ref={modalRef}
@@ -118,7 +126,10 @@ export default function ForgotPasswordModal({
                         استمرار
                     </button>
                 </form>
+                
             </div>
         </div>
+        )}
+        </>
     );
 }
