@@ -164,10 +164,14 @@ const imgcomment=`${BaseUrl}${details.image}`
                 }}
               >
                 {(details.packet_price_after_offer === '') ? (
-                  `${details.packet_price} قطعة  دسته`
+                  <>
+                  دسته ({details.packet_pieces}قطع  )  
+           <br />
+           {details.packet_price} ج.م
+                  </>
                 ) : (
                   <div className="flex flex-col">
-                    <span> دسته ( {details.packet_pieces} قطع  )</span>
+                    <span> دسته ( {details.packet_pieces} قطع )</span>
                       <span className="text-black"> 
                         ({details.packet_price_after_offer} )ج.م   
                     <span className="line-through text-gray-500 text-sm pr-1">

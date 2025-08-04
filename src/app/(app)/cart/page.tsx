@@ -15,6 +15,7 @@ import Cookies from "js-cookie";
 import { LoginRequiredModal} from '@/app/components/ui/Pop-up-login'
 import FormField from '@/app/components/ui/Formfield'
 import { Cash } from '@/app/components/FeatureComponent/Modelcash'
+import Link from 'next/link'
 
 
 const EditModal = ({
@@ -307,7 +308,7 @@ const handelcode = async (e: React.FormEvent) => {
                 key={item.id}
                 className="flex flex-col sm:flex-row items-center gap-4 border border-gray-200 p-5 rounded-3xl shadow-xl bg-white/50 backdrop-blur-md transition-all duration-300"
               >
-                <div className="w-28 h-28 relative rounded-2xl overflow-hidden border-2 border-white shadow-md shrink-0">
+                <Link href={`/details/${item.product_id}`} className="w-28 h-28 relative rounded-2xl overflow-hidden border-2 border-white shadow-md shrink-0">
                   <Image
                     src={`${BaseUrl}${item.product.image}`}
                     alt={item.product.name}
@@ -315,15 +316,21 @@ const handelcode = async (e: React.FormEvent) => {
                     objectFit="cover"
                     unoptimized
                   />
-                </div>
+                </Link>
 
-                <div className="flex-1 text-center sm:text-right">
+                <Link href={`/details/${item.product_id}`} className="flex-1 text-center sm:text-right">
                   <h3 className="font-bold text-lg text-gray-800 mb-1">{item.product.name}</h3>
-                  <p className="text-sm text-gray-700 mb-1">الكمية: {item.qty}</p>
+                  { ((item.product_type)=== "Piece")?(
+
+                    <p className="text-sm text-gray-700 mb-1">الكمية: {item.qty}  قطعه</p>
+                  ):
+                  (
+                    <p className="text-sm text-gray-700 mb-1">الكمية: {item.qty} دسته</p>
+                  )}
                   <p className="text-sm text-green-700 font-semibold">
                     السعر بعد الخصم: {item.price_after_discount} ج.م
                   </p>
-                </div>
+                </Link>
 
                 <div className="flex flex-row sm:flex-col items-center justify-center gap-3">
                   <button

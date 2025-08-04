@@ -87,7 +87,8 @@ export interface CardProps {
   packet_price_after_offer?: string | null
   category?: Record<string, any> 
   reviews_avg?: number,
-  user_favourite?:boolean
+  user_favourite?:boolean,
+  offer?:string
 }
 
 ///card type 

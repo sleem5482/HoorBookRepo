@@ -12,7 +12,7 @@ export const Card: React.FC<CardProps> = ({
   price, discount, originalPrice,
   stock, soldOut = false, love = false, handellove = () => {},
   packet_pieces, packet_price, piece_price_after_offer,
-  packet_price_after_offer, reviews_avg,piece_price
+  packet_price_after_offer, reviews_avg,piece_price,offer
 }) => {
   const [loveit, setLove] = useState<boolean>(love)
 
@@ -101,9 +101,9 @@ export const Card: React.FC<CardProps> = ({
             <div className="space-x-1 rtl:space-x-reverse">
               <span className="font-bold text-lg text-black">
               {(piece_price_after_offer===null)?(
-                <span className='text-black' dir='rtl'>ج.م {packet_price} </span>
+                <span className='text-black' dir='rtl'>ج.م {piece_price} </span>
               ):(
-                <span className='text-black ' dir='rtl'> {piece_price_after_offer}  <span className='text-gray-500 line-through'>{piece_price}</span></span>
+                <span className='text-black ' dir='rtl'> {piece_price_after_offer} ج.م <span className='text-gray-500 line-through'>{piece_price} </span></span>
 
               )}
               
@@ -121,10 +121,14 @@ export const Card: React.FC<CardProps> = ({
 
           {typeof stock === 'number' && (
             <p className={`text-xs font-bold ${stock === 0 ? 'text-red-500' : stock <= 4 ? 'text-orange-300' : 'text-gray-600'}`}>
-              {stock === 0 ? 'غير متوفر في المخزن' : stock <= 4 ? `متبقى ${stock} قطعة` : `كمية: ${stock}`}
+              {stock === 0 ? 'نفذت الكمبه ' : stock <= 4 ? ` متبقى  ${stock} قطعة اطلبه الان `  : ``}
             </p>
           )}
-
+          {Number(offer)>0?(
+             <span className="inline-block absolute left-0 bottom-0 w-[100px] h-7 rounded-md bg-pink-100 text-black text-center leading-7">
+     {offer}% خصم   
+  </span>
+          ):('')}
           {soldOut && (
             <span className="text-red-600 font-bold text-xl">نفذت الكمية</span>
           )}

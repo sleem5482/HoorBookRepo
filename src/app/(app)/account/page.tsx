@@ -16,13 +16,17 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const url = `${BaseUrl}api/user/profile`;
-
-  useEffect(() => {
-    const token = Cookies.get("access_token_login");
+  const token = Cookies.get("access_token_login");
+useEffect(()=>{
     if (!token) {
-      setIsLoggedIn(false);
-      return;
+      setIsLoggedIn(true);
     }
+    else{
+      setIsLoggedIn(false)
+    }
+})
+  useEffect(() => {
+
 
     const getProfile = async () => {
       try {
@@ -46,7 +50,7 @@ export default function ProfilePage() {
     if (!profile) return;
     setIsSaving(true);
     try {
-      const res = await axios.put(`${BaseUrl}api/user/profile/update`, profile, {
+      const res = await axios.patch(`${BaseUrl}api/user/profile`, profile, {
         headers,
       });
       toast.success("تم حفظ التعديلات بنجاح");
@@ -96,6 +100,7 @@ export default function ProfilePage() {
         name={field.name}
         value={profile.email}
         onChange={(e) => handleProfileChange("email",e.target.value)}
+        readOnly
         placeholder={field.placeholder}
         className="border rounded-md p-2 focus:outline-none focus:ring-2 text-black focus:ring-purple-600"
         />
@@ -128,7 +133,7 @@ export default function ProfilePage() {
           <p className="text-center text-gray-500">جارٍ تحميل البيانات...</p>
         )}
       </section>
-         <LoginRequiredModal show={!isLoggedIn} />
+         <LoginRequiredModal show={isLoggedIn} />
     </Container>
   );
 }

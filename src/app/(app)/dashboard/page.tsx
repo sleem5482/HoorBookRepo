@@ -192,7 +192,7 @@ export default function CategoriesPage() {
         <div className="text-center text-sm font-medium text-gray-800">
           {product.name}
         </div>
-        <div className="text-xs text-gray-500 mt-1">{product.price} ج.م</div>
+        <div className="text-xs text-gray-500 mt-1">{product.price}</div>
       </Link>
     </div>
             );

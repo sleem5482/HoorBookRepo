@@ -261,7 +261,7 @@ return (
   <div className="w-full md:w-full flex justify-center items-center">
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center bg-white/90 rounded-full px-4 py-2 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
-             <Search className="text-gray-500 ml-2" size={18} />
+              <Search className="text-gray-500 ml-2" size={18} />
               <input
                 type="text"
                 placeholder="إبحث عن منتج..."
@@ -289,7 +289,6 @@ return (
 </div>
 
     </>
-      {/* عرض المنتجات في شكل شبكة */}
       {renderProducts.length === 0 ? (
         <div className="flex justify-center item-center flex-col">
 
@@ -324,7 +323,7 @@ return (
                 packet_price_after_offer={image.packet_price_after_offer}
                 reviews_avg={image.reviews_avg}
                 handellove={() => (handelfavorit(image.id))}
-                
+                offer={`${image.offer}`}
               />
             </div>
           ))}
