@@ -317,7 +317,7 @@ const IconsBlock = (cartCount: number) => (
                 packet_price_after_offer={image.packet_price_after_offer}
                 reviews_avg={image.reviews_avg}
                 handellove={() => (handelfavorit(image.id))}
-                
+                offer={image.offer}
               />
             </div>
           ))}

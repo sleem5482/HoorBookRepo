@@ -99,6 +99,7 @@ const fetchFavorit = async () => {
       {product.map((p, index) => (
         <Card key={`${p.id}-${index}`} {...p}   handellove={() => handellove(p.id) }
       love={true} 
+      offer={p.offer}
 
 />
       ))}

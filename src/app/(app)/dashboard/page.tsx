@@ -72,7 +72,6 @@ export default function CategoriesPage() {
         setCategories(prev => [...prev, ...newCategories]);
         setHasMoreCategories(res.data.data.meta.current_page < res.data.data.meta.last_page);
 
-        // أول مرة فقط
         if (categoryPage === 1 && newCategories.length > 0) {
           handleCategoryClick(newCategories[0].id);
         }
@@ -84,6 +83,17 @@ export default function CategoriesPage() {
 
     fetchCategories();
   }, [categoryPage]);
+
+  const handleCategoryClick = (categoryId: number) => {
+      if (categoryId === selectedCategoryId) return;
+    setSelectedCategoryId(categoryId);
+    setProducts([]);
+    setProductPage(1);
+    setHasMoreProducts(true);
+    setSidebarOpen(false);   
+    console.log(categoryId);
+     
+  };
 
   useEffect(() => {
     if (selectedCategoryId === null) return;
@@ -103,14 +113,6 @@ export default function CategoriesPage() {
 
     fetchProducts();
   }, [productPage, selectedCategoryId]);
-
-  const handleCategoryClick = (categoryId: number) => {
-    setSelectedCategoryId(categoryId);
-    setProducts([]);
-    setProductPage(1);
-    setHasMoreProducts(true);
-    setSidebarOpen(false); // close on mobile
-  };
 
   return (
       <div className="flex h-screen overflow-hidden bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">

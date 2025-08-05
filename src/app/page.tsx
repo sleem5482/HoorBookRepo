@@ -37,17 +37,7 @@ const url =`${BaseUrl}api/products/favourite`
 
 const [favoriteProducts, setFavoriteProducts] = useState<number[]>([]);
 
-const fetchFavorites = async () => {
-  try {
-    if(token){
-      const res: any = await CallApi("get", `${BaseUrl}api/products?page=1&favourite=1`, {}, headers);
-      const favIds = res?.data?.data?.map((item: any) => item.id) || [];
-      setFavoriteProducts(favIds);
-    }
-  } catch (error) {
-    console.error("Error fetching favorites:", error);
-  }
-};
+
 
   useEffect(() => {
 
@@ -63,7 +53,6 @@ const fetchFavorites = async () => {
   if (!data || data.sliders?.length === 0) {
     fetchHomeData();
   }
-fetchFavorites();
 
   }, []);
 
@@ -233,8 +222,9 @@ const handelfavorit = async (id: number) => {
   >
 <Card 
   {...image} 
-  love={favoriteProducts.includes(image.id)} 
+  love={(image.user_favourite)} 
   handellove={() => handelfavorit(image.id)} 
+  
 />
 
   </div>

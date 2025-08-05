@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { Trash2, Pencil } from 'lucide-react'
 import { BaseUrl, headers } from '@/app/components/Baseurl'
 import Container from '@/app/components/Container'
-import { ApiResponse, CartItem, CartResponse, code, FieldForm } from '@/app/lib/type'
+import {  CartItem, CartResponse, FieldForm } from '@/app/lib/type'
 import SmartNavbar from '@/app/components/ui/Navbar'
 import toast from 'react-hot-toast'
 import { useCartStore } from '@/app/store/cartStore'
@@ -15,9 +15,7 @@ import Cookies from "js-cookie";
 import { LoginRequiredModal} from '@/app/components/ui/Pop-up-login'
 import FormField from '@/app/components/ui/Formfield'
 import { Cash } from '@/app/components/FeatureComponent/Modelcash'
-import Link from 'next/link'
-
-
+import Link from 'next/link';
 const EditModal = ({
   item,
   onClose,
@@ -26,10 +24,8 @@ const EditModal = ({
   item: CartItem
   onClose: () => void
   onSave: (newQty: number) => void,
-  
 }) => {
-  const [newQty, setNewQty] = useState(item.qty)
-
+  const [newQty, setNewQty] = useState(item.qty);
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative animate-fadeIn">
@@ -40,7 +36,6 @@ const EditModal = ({
         >
           ×
         </button>
-
         <div className="w-32 h-32 relative mx-auto mb-4 rounded-xl overflow-hidden shadow-md">
           <Image
             src={`${BaseUrl}${item.product.image}`}
@@ -50,12 +45,10 @@ const EditModal = ({
             unoptimized
           />
         </div>
-
         <h2 className="text-center font-bold text-xl text-gray-800 mb-1">{item.product.name}</h2>
         <p className="text-center text-green-700 font-semibold text-sm mb-4">
-          السعر بعد الخصم: {item.price_after_discount} ج.م
+          السعر بعد الخصم: {item.price_after_discount} ج.م <span className='text-gray-400 text-sm'>{item.price_before_discount}</span>
         </p>
-
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">اختر الكمية:</label>
           <select
@@ -70,7 +63,6 @@ const EditModal = ({
             ))}
           </select>
         </div>
-
         <button
           onClick={() => onSave(newQty)}
           className="w-full mt-2 bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition"

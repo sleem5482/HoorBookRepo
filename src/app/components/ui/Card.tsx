@@ -121,7 +121,7 @@ export const Card: React.FC<CardProps> = ({
 
           {typeof stock === 'number' && (
             <p className={`text-xs font-bold ${stock === 0 ? 'text-red-500' : stock <= 4 ? 'text-orange-300' : 'text-gray-600'}`}>
-              {stock === 0 ? 'نفذت الكمبه ' : stock <= 4 ? ` متبقى  ${stock} قطعة اطلبه الان `  : ``}
+              {stock === 0 ? 'نفذت الكميه ' : stock <= 4 ? ` متبقى  ${stock} قطعة اطلبه الان `  : ``}
             </p>
           )}
           {Number(offer)>0?(
