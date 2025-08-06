@@ -232,7 +232,7 @@ const handeldelete_address = (id: number) => {
         {/* ✅ المنتجات */}
         <div className="bg-gray-50 rounded-xl p-3 border text-right">
           <h3 className="font-semibold text-gray-700 mb-1">🛍️ المنتجات:</h3>
-          <ul className="space-y-1 text-sm">
+          <ul className="space-y-1 text-sm text-black">
             {items.map((item) => (
               <li key={item.id} className="flex justify-between border-b pb-1">
                 <span>{item.product.name}</span>

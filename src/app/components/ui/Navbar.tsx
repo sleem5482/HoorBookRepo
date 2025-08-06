@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Search, ShoppingCart, Heart, User2 , LayoutGrid,Package, Home  } from 'lucide-react'
+import { Search, ShoppingCart, Heart, User2 , LayoutGrid,Package, Home, ScanBarcode  } from 'lucide-react'
 import Logo from '../../../../public/asset/images/حورلوجو-1.png'
 import { getCartLength } from '@/app/lib/api/cart'
 import { useCartStore } from '@/app/store/cartStore'
@@ -66,6 +66,16 @@ const { cartCount, refreshCartCount } = useCartStore()
       </div>
     </Link>
   </div>
+
+
+    <Link href={''} className='flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110'>
+     <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
+        <ScanBarcode size={18} />
+      </div>
+      <span  className='hidden md:block'>
+    باركود
+      </span>
+    </Link>
 </div>
 
           <div className="hidden md:flex justify-center items-center gap-4 text-white text-xs sm:text-sm w-full md:w-auto">

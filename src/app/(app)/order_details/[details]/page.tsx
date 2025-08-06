@@ -10,6 +10,7 @@ import { Ban, RotateCcw } from "lucide-react";
 import SmartNavbar from "@/app/components/ui/Navbar";
 import { Moodel_Cancel } from "@/app/components/ui/Moodel_order";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 export default function OrderDetails() {
   const pathname = usePathname();
@@ -136,7 +137,8 @@ return (
         <h2 className="text-lg font-semibold text-gray-700 mb-4">المنتجات</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {details.order_meta.map((item) => (
-            <div
+            <Link 
+            href={`/details/${item.product_id}`}
               key={item.id}
               className="border border-pink-200 rounded-xl p-4 shadow-md flex flex-col bg-gradient-to-br from-white via-pink-50 to-pink-100 hover:shadow-lg transition"
             >
@@ -153,7 +155,7 @@ return (
                 <p><strong>السعر:</strong> {item.price_after_discount} جنيه</p>
                 <p><strong>النوع:</strong> {item.product_type}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

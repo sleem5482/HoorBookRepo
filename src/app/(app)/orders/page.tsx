@@ -86,6 +86,12 @@ return (
                 ))}
               </ul>
             </div>
+            <div className="text-center flex justify-center items-center mt-3"> 
+
+            <button className="bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold rounded-lg shadow hover:opacity-90 transition p-2 ">
+              عرض تفاصيل الاوردر
+            </button>
+            </div>
           </Link>
         ))}
       </div>
@@ -100,8 +106,8 @@ return (
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-indigo-600 hover:bg-indigo-700"
           }`}
-        >
-          ⬅ السابق
+        >➡
+           السابق 
         </button>
         <span className="text-gray-800 font-semibold text-md">
           صفحة <span className="text-indigo-600 font-bold">{page}</span> من <span className="font-bold">{lastPage}</span>
@@ -115,7 +121,7 @@ return (
               : "bg-indigo-600 hover:bg-indigo-700"
           }`}
         >
-          التالي ➡
+          التالي ⬅
         </button>
       </div>
     </Container>
