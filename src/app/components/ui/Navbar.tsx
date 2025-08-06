@@ -36,7 +36,7 @@ const { cartCount, refreshCartCount } = useCartStore()
       >
         <div className="max-w-screen-xl mx-auto px-4 py-3 flex flex-row items-center justify-between gap-6">
           {/* الشعار والبحث */}
-         <div className="flex flex-row md:justify-between items-center w-full md:gap-60 gap-4">
+         <div className="flex flex-row md:justify-between items-center w-full md:gap-60 ">
   {/* الشعار */}
   <div className="w-full md:w-36 flex justify-center md:justify-start">
     <Link href="/" className="block">
