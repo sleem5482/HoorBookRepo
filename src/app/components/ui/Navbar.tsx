@@ -36,7 +36,7 @@ const { cartCount, refreshCartCount } = useCartStore()
       >
         <div className="max-w-screen-xl mx-auto px-4 py-3 flex flex-row items-center justify-between gap-6">
           {/* الشعار والبحث */}
-         <div className="flex flex-row md:justify-between items-center w-full md:gap-60 ">
+         <div className="flex flex-row md:justify-between items-center w-full md:gap-60 gap-2a ">
   {/* الشعار */}
   <div className="w-full md:w-36 flex justify-center md:justify-start">
     <Link href="/" className="block">
@@ -68,7 +68,7 @@ const { cartCount, refreshCartCount } = useCartStore()
   </div>
 
 
-    <Link href={'/scanner'} className='flex text-white flex-col items-center hover:text-pink-300 transition transform hover:scale-110'>
+    <Link href={'/scanner'} className='flex text-white  mr-3 flex-col items-center hover:text-pink-300 transition transform hover:scale-110'>
      <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
         <ScanBarcode size={18} />
       </div>
@@ -78,7 +78,7 @@ const { cartCount, refreshCartCount } = useCartStore()
     </Link>
 </div>
 
-          <div className="hidden md:flex justify-center items-center gap-4 text-white text-xs sm:text-sm w-full md:w-auto">
+          <div className="hidden md:flex justify-center items-center gap-4 text-white text-xs sm:text-sm w-full md:w-auto ">
             {IconsBlock(cartCount)}
           </div>
         </div>
@@ -99,7 +99,7 @@ const { cartCount, refreshCartCount } = useCartStore()
 const IconsBlock = (cartCount: number) => (
   <>
 
-    <Link href="/" className="flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
+    <Link href="/" className="  flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110">
       <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
         <Home size={18} />
       </div>

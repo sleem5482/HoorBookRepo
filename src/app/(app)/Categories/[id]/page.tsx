@@ -5,7 +5,7 @@ import { fetchData } from "@/app/lib/methodes";
 import { ApiResponse, Favorit, HomePageData } from "@/app/lib/type";
 import { Card } from "@/app/components/ui/Card";
 import Image from "next/image";
-import { ArrowRight, ChevronLeft, ChevronRight, Heart, Home, LayoutGrid, Package, Search, Settings2Icon, ShoppingCart, User2 } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Heart, Home, LayoutGrid, Package, ScanBarcode, Search, Settings2Icon, ShoppingCart, User2 } from "lucide-react";
 import Link from "next/link";
 import Logo from '../../../../../public/asset/images/حورلوجو-1.png'
 import debounce from "lodash.debounce";
@@ -264,6 +264,14 @@ const IconsBlock = (cartCount: number) => (
         </div>
       </div>
   </div>
+      <Link href={'/scanner'} className='flex text-white  mr-3 flex-col items-center hover:text-pink-300 transition transform hover:scale-110'>
+     <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
+        <ScanBarcode size={18} />
+      </div>
+      <span  className='hidden md:block'>
+    باركود
+      </span>
+    </Link>
 </div>
 
           <div className="hidden md:flex justify-center items-center gap-4 text-white text-xs sm:text-sm w-full md:w-auto">
@@ -280,7 +288,7 @@ const IconsBlock = (cartCount: number) => (
 >
   {IconsBlock(cartCount)}
 </div>
-    <div className="p-4">
+    <div className="p-4 mb-4">
 
       {/* عرض المنتجات في شكل شبكة */}
       {renderProducts.length === 0 ? (
@@ -337,7 +345,7 @@ const IconsBlock = (cartCount: number) => (
       {/* زر الفلاتر */}
       <button
         onClick={() => setShowFilters(!showFilters)}
-        className={`fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-[999] w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-2xl flex items-center justify-center text-white text-xl sm:text-2xl transition-transform duration-500 hover:rotate-12 ${
+        className={`fixed bottom-20 left-4 sm:bottom-6 sm:left-6 z-[999] w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-2xl flex items-center justify-center text-white text-xl sm:text-2xl transition-transform duration-500 hover:rotate-12 ${
           showFilters
             ? 'bg-gradient-to-br from-yellow-500 to-red-400 rotate-180'
             : 'bg-btn-color'
