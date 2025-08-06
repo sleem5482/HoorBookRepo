@@ -68,7 +68,7 @@ const { cartCount, refreshCartCount } = useCartStore()
   </div>
 
 
-    <Link href={''} className='flex flex-col items-center hover:text-pink-300 transition transform hover:scale-110'>
+    <Link href={'/scanner'} className='flex text-white flex-col items-center hover:text-pink-300 transition transform hover:scale-110'>
      <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
         <ScanBarcode size={18} />
       </div>

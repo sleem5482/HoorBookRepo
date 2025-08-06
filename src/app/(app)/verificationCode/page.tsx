@@ -8,6 +8,7 @@ import SmartNavbar from "@/app/components/ui/Navbar";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import ErrorPopUP from "@/app/components/ui/pop-up_show_message_error";
+import Loading from "@/app/components/ui/loading";
 
 const VerifyCodePage = () => {
     const [code, setCode] = useState("");
@@ -18,6 +19,8 @@ const VerifyCodePage = () => {
         show: false,
         message: "",
     });
+         const [loading, setLoading] = useState<boolean>(false);
+    
 
     const router = useRouter();
 
@@ -55,6 +58,7 @@ const VerifyCodePage = () => {
         const params = new FormData();
         params.append("email", email);
         try {
+            setLoading(true)
             await axios.post(`${BaseUrl}api/user/forget-password`, params, {
                 headers: {
                     "Content-Type": "multipart/form-data",
@@ -63,6 +67,9 @@ const VerifyCodePage = () => {
         } catch (err) {
             console.error("Error resending code:", err);
         }
+        finally{
+            setLoading(false)
+        }
     };
 
     const handleConfirm = async () => {
@@ -70,6 +77,7 @@ const VerifyCodePage = () => {
         sendData.append("email", email);
         sendData.append("verification_code", code);
         try {
+            setLoading(true)
             const response = await axios.post(
                 `${BaseUrl}api/user/verify-code-forget-password`,
                 sendData,
@@ -92,9 +100,14 @@ const VerifyCodePage = () => {
         } catch (err) {
             console.error("Error verifying code:", err);
         }
+        finally{
+            setLoading(false)
+        }
     };
 
     return (
+             
+       
         <div className="min-h-screen bg-gradient-to-br from-purple-100 to-orange-100 px-2 sm:px-4 py-6 sm:py-10">
             <SmartNavbar />
 
@@ -141,7 +154,10 @@ const VerifyCodePage = () => {
             {modal.show && (
                 <ErrorPopUP message={modal.message} setClose={setModal} />
             )}
+             {loading?(<Loading/>):( <></>)}
+        
         </div>
+       
     );
 };
 

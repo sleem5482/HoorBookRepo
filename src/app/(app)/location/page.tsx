@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Container from "@/app/components/Container";
-import { Sparkles, Building2, LandmarkIcon, MapPin, Map, User, Phone } from "lucide-react";
+import { Sparkles, Building2, LandmarkIcon, MapPin, Map, User } from "lucide-react";
 import axios from "axios";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -10,7 +10,9 @@ import { BaseUrl, headers } from "@/app/components/Baseurl";
 import toast, { Toaster } from "react-hot-toast";
 import { buildPayload } from "@/app/components/ui/handleAddress";
 import SmartNavbar from "@/app/components/ui/Navbar";
-
+import ErrorPopUP from "@/app/components/ui/pop-up_show_message_error";
+import Loading from "@/app/components/ui/loading";
+import { useRouter } from 'next/navigation';
 const API_BASE = `${BaseUrl}api`;
 
 const Location = () => {
@@ -29,7 +31,9 @@ const Location = () => {
   const [governorates, setGovernorates] = useState<any[]>([]);
   const [cities, setCities] = useState<any[]>([]);
   const [areas, setAreas] = useState<any[]>([]);
-  const [modal, setModal] = useState({ show: false, message: "" });
+  const [modal, setModal] = useState<{show:boolean,message:string}>({ show: false, message: "" });
+   const [loading, setLoading] = useState<boolean>(false);
+   const router = useRouter();
 
   const updateField = (field: keyof typeof formData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -90,9 +94,11 @@ const Location = () => {
     if (!valid) return setModal({ show: true, message: "يرجى ملء جميع الحقول المطلوبة" });
 
     try {
+      setLoading(true)
       const res = await axios.post(`${API_BASE}/address`, buildPayload(formData), { headers });
       if (res.status === 200) {
         toast.success("تم حفظ العنوان بنجاح!");
+        router.push("/cart")
         setFormData({
           name: "",
           phone: "",
@@ -107,6 +113,9 @@ const Location = () => {
       } else toast.error("حدث خطأ أثناء حفظ العنوان");
     } catch {
       toast.error("حدث خطأ أثناء حفظ العنوان");
+    }
+    finally{
+      setLoading(false)
     }
   };
 return (
@@ -144,29 +153,38 @@ return (
           <div>
             <label className="block font-bold mb-1 text-black text-base">رقم الهاتف</label>
             <div className="w-full border rounded-md p-3 flex items-center bg-white border-gray-400 shadow-md" dir="rtl">
-              <PhoneInput
-                countryCodeEditable={false}
-                country="eg"
-                value={formData.phone}
-                onChange={(value) => updateField("phone", value)}
-                placeholder="رقم الهاتف"
-                enableSearch
-                specialLabel=""
-                inputStyle={{
-                  direction: "ltr",
-                  textAlign: "left",
-                  color: "#000",
-                  background: "transparent",
-                  border: "none",
-                  outline: "none",
-                  padding: "0.5rem 1rem",
-                  paddingLeft: "2.5rem",
-                  fontSize: "16px"
-                }}
-                buttonStyle={{ border: "none", background: "transparent" }}
-                containerStyle={{ direction: "ltr", display: "flex", alignItems: "center", color: "#000" }}
-              />
-            </div>
+  <PhoneInput
+    countryCodeEditable={false}
+    country="eg"
+    value={formData.phone}
+    onChange={(value) => {
+      // إزالة الصفر بعد كود الدولة (20) إن وجد
+      let cleanedValue = value;
+
+      if (cleanedValue.startsWith('20') && cleanedValue[2] === '0') {
+        cleanedValue = '20' + cleanedValue.slice(3);
+      }
+
+      updateField("phone", cleanedValue);
+    }}
+    placeholder="رقم الهاتف"
+    enableSearch
+    specialLabel=""
+    inputStyle={{
+      direction: "ltr",
+      textAlign: "left",
+      color: "#000",
+      background: "transparent",
+      border: "none",
+      outline: "none",
+      padding: "0.5rem 1rem",
+      paddingLeft: "2.5rem",
+      fontSize: "16px"
+    }}
+    buttonStyle={{ border: "none", background: "transparent" }}
+    containerStyle={{ direction: "ltr", display: "flex", alignItems: "center", color: "#000" }}
+  />
+</div>
           </div>
 
           {/* المحافظة */}
@@ -249,18 +267,9 @@ return (
 
     {/* المودال */}
     {modal.show && (
-      <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-        <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8 w-[90%] max-w-sm text-center">
-          <div className="mb-4 text-lg text-black">{modal.message}</div>
-          <button
-            className="text-purple-700 font-bold mt-2"
-            onClick={() => setModal({ show: false, message: "" })}
-          >
-            تأكيد
-          </button>
-        </div>
-      </div>
+      <ErrorPopUP message={modal.message} setClose={setModal}/>
     )}
+    {loading?(<Loading/>):( <></>)}
   </div>
 );
 

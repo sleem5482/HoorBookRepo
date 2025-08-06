@@ -7,6 +7,7 @@ import { Sparkles, MapPin, Edit2, Trash } from "lucide-react";
 import axios from "axios";
 import { BaseUrl, headers } from "../../components/Baseurl";
 import SmartNavbar from "@/app/components/ui/Navbar";
+import Loading from "@/app/components/ui/loading";
 import toast from "react-hot-toast";
 const EditLocationPage = () => {
     const [editOpen, setEditOpen] = useState(false);
@@ -15,8 +16,6 @@ const EditLocationPage = () => {
     );
     const [address, setAddress] = useState<AddressData[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
-  const [addressList, setAddressList] = useState<AddressData[]>([]);
 const delete_address=`${BaseUrl}api/address/`;
 
     useEffect(() => {
@@ -51,13 +50,16 @@ const delete_address=`${BaseUrl}api/address/`;
             .catch(() => setLoading(false));
     };
 const handeldelete_address = (id: number) => {
+    setLoading(true)
   axios.delete(`${delete_address}${id}`, { headers })
     .then(res => {
       if (res.data.status) {
         toast.success("✅ تم حذف العنوان بنجاح");
         setAddress(prev => prev.filter(addr => addr.id !== id));
+        setLoading(false)
       } else {
         toast.error("❌ فشل حذف العنوان");
+        setLoading(false)
       }
     })
     .catch(err => {
@@ -84,9 +86,7 @@ const handeldelete_address = (id: number) => {
                         <div className="text-center text-gray-600">
                             جاري التحميل...
                         </div>
-                    ) : error ? (
-                        <div className="text-center text-red-600">{error}</div>
-                    ) : address.length === 0 ? (
+                    )  : address.length === 0 ? (
                         <div className="text-center text-gray-600">
                             لا توجد عناوين محفوظة
                         </div>
@@ -150,6 +150,7 @@ const handeldelete_address = (id: number) => {
                 onClose={() => setEditOpen(false)}
                 onSave={handleSave}
             />
+            {loading?(<Loading/>):( <></>)}
         </div>
     );
 };
