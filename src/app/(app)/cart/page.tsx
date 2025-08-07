@@ -319,13 +319,28 @@ const handelcode = async (e: React.FormEvent) => {
                   (
                     <p className="text-sm text-gray-700 mb-1">الكمية: {item.qty} دسته</p>
                   )}
-                  <div className='flex items-center'>
+                  <div className='flex items-center justify-center'>
 
                   <p className="text-sm text-green-700 font-semibold">
-                    السعر بعد الخصم: {item.price_after_discount} ج.م
+                    السعر : {item.price_after_discount} ج.م
                   </p>
+                  {(item.price_before_discount!=null)?(
                     <p className='text-gray-400 text-sm line-through mr-4'> {item.price_before_discount} ج .م</p>
+                  ):('')}
                   </div>
+                 <div className="flex items-center justify-center gap-2">
+                  {(item.color.code!=null)?(
+<>
+                    <span className='text-gray-500' > اللون:</span>
+  <span
+  className="w-4 h-4 rounded border"
+  style={{ backgroundColor: item.color?.code }}
+  ></span>
+  </>
+):('')}
+</div>
+
+
                 </Link>
 
                 <div className="flex flex-row sm:flex-col items-center justify-center gap-3">

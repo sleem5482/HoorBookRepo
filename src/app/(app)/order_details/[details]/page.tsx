@@ -155,6 +155,19 @@ return (
                 <p><strong>السعر:</strong> {item.price_after_discount} جنيه</p>
                 <p><strong>النوع:</strong> {item.product_type}</p>
               </div>
+
+  <div className="flex items-center gap-2">
+{(item.color.code!=null)?(
+<>
+  <span className='text-gray-500' > اللون:</span>
+  <span
+  className="w-4 h-4 rounded border"
+  style={{ backgroundColor: `#${item.color.code}` }}
+  ></span>
+  </>
+):('')}
+  </div>
+
             </Link>
           ))}
         </div>

@@ -140,7 +140,7 @@ const IconsBlock = (cartCount: number) => (
       </div>
       الطلبات
     </Link>
-    <Link href="/register" className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
+    <Link href="/login" className="flex flex-col items-center hover:text-yellow-400 transition transform hover:scale-110">
       <div className="p-2 rounded-full bg-white/10 hover:bg-yellow-400/20 transition">
         <User2 size={18} />
       </div>

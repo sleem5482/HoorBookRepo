@@ -73,19 +73,6 @@ return (
               </div>
             </div>
 
-            <div className="mt-4">
-              <h3 className="text-sm font-semibold text-gray-800 mb-2 flex items-center gap-1">
-                <FaBoxOpen className="text-blue-500" />
-                المنتجات:
-              </h3>
-              <ul className="space-y-1 bg-gray-50 rounded-xl px-4 py-2">
-                {order.order_meta.map((item) => (
-                  <li key={item.id} className="flex justify-between text-sm text-gray-800 border-b last:border-none pb-1">
-                    <span>x{item.qty} - {item.price_after_discount} جنيه</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
             <div className="text-center flex justify-center items-center mt-3"> 
 
             <button className="bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold rounded-lg shadow hover:opacity-90 transition p-2 ">
