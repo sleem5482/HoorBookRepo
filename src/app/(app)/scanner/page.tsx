@@ -1,16 +1,20 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Container from "@/app/components/Container";
 
-import "react-phone-input-2/lib/style.css";
-import { BaseUrl, headers } from "@/app/components/Baseurl";
+
 import SmartNavbar from "@/app/components/ui/Navbar";
 import Loading from "@/app/components/ui/loading";
+import { useRouter } from "next/navigation";
 
 const Location = () => {
-    const API_BASE = `${BaseUrl}api`;
     const [code, setCode] = useState("");
     const [loading, setLoading] = useState<boolean>(false);
+    const router = useRouter();
+     const handleNavigate = (e: React.FormEvent, path: string) => {
+    e.preventDefault();
+    router.push(path); 
+  };
 
     const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCode(e.target.value.replace(/[^0-9]/g, ""));
@@ -41,10 +45,11 @@ const Location = () => {
                             />
                         </div>
 
-                        
+                 
 
                         <div className="flex flex-col justify-center items-center gap-4">
                             <button
+                            onClick={(e) => handleNavigate(e, `/details/${code}`)}
                                 className="
       w-full 
       bg-gradient-to-r from-purple-700 to-orange-400 
@@ -54,6 +59,7 @@ const Location = () => {
                                 إفحص المنتج
                             </button>
                             <button
+                            onClick={(e) => handleNavigate(e, `/details/${code}`)}
                                 className="
       w-full
       bg-gradient-to-r from-purple-700 to-orange-400 

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Container from "@/app/components/Container";
-import { BadgeCheck, User, Star, ShoppingCart, DollarSign } from "lucide-react";
+import { BadgeCheck, User, Star, ShoppingCart, DollarSign, MapPin  } from "lucide-react";
 import SmartNavbar from "@/app/components/ui/Navbar";
 import Link from "next/link";
 import { ApiResponse, Profile } from "@/app/lib/type";
@@ -75,12 +75,10 @@ export default function ProfilePage() {
               </div>
                 </Link>
 
-              <div className="bg-green-100 rounded-xl p-4">
-                <DollarSign className="text-green-600 mb-2 mx-auto" />
-                <p className="text-sm text-gray-700">عدد النقاط المطلوبة لـ {profile?.pointsSettings?.price} ج.م</p>
-                <p className="text-md font-semibold text-green-700">{profile?.pointsSettings?.points} نقطة</p>
-                <p className="text-xs text-gray-600 mt-1">قيمة النقطة: {profile?.pointsSettings?.point_price} ج.م</p>
-              </div>
+              <Link href={'/editLocation'} className="bg-green-100 rounded-xl p-4">
+                <MapPin  className="text-green-600 mb-2 mx-auto" />
+                <p className="text-sm text-gray-700">العنواين الخاصه بك </p>
+              </Link>
             </div>
 <div className="grid grid-cols-3 gap-4 text-center mt-6">
   <Link href="/orders" className="flex flex-col items-center bg-purple-50 p-4 rounded-xl hover:shadow transition">

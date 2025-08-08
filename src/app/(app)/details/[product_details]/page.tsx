@@ -13,6 +13,7 @@ import CommentPopup from "@/app/components/ui/popup";
 import toast from "react-hot-toast";
 import Cookies from 'js-cookie'
 import { LoginRequiredModal } from "@/app/components/ui/Pop-up-login";
+import ErrorPopUP from "@/app/components/ui/pop-up_show_message_error";
 export default function Details() {
   const [showPopup, setShowPopup] = useState(false);
   const sendres = `${BaseUrl}api/carts`;
@@ -23,6 +24,12 @@ export default function Details() {
   const [selectedUnit, setSelectedUnit] = useState<"Piece" | "Packet">("Piece");
   const [quantity, setQuantity] = useState(1);
   const [auth,setauth]=useState<boolean>(false)
+          const [modal, setModal] = useState<{ show: boolean; message: string }>({
+        show: false,
+        message: "",
+    });
+    const [check,setcheck]=useState<boolean>(false);
+       
   const [chart, setchart] = useState<Partial<AddToChart>>({
     product_type: "Piece",
     qty: 1,
@@ -42,14 +49,31 @@ export default function Details() {
       try {
         const res: ApiResponse<ProductDetails> = await fetchData(`${BaseUrl}api/products/${productid}`);
         setDetails(res.data);
-      } catch (error) {
+      } catch (error:any) {
         console.log(error);
+          setModal({
+    message: "لا يوجد منتج بهذا الكود",
+    show: true
+  });
       }
     };
     getDetails();
   }, [productid,showPopup]);
 
-  if (!details) return <div className="text-center p-10">جار التحميل...</div>;
+if (!details) {
+  return (
+    <>
+      {modal.show && (
+        <ErrorPopUP
+          message={modal.message || "لا يوجد منتج بهذا الكود"}
+          setClose={setModal}
+        />
+      )}
+      <div className="text-center p-10">جار التحميل...</div>
+    </>
+  );
+}
+
 const imgcomment=`${BaseUrl}${details.image}`
   const selectedMedia = details.media.find((img) => img.color_id === selectedColorId);
   const mainImage = selectedMedia?.image || details.image;
@@ -186,7 +210,9 @@ const imgcomment=`${BaseUrl}${details.image}`
 
           {/* الألوان */}
           <div className="mb-4">
-            <p className="text-sm text-gray-700 mb-2">اختر اللون:</p>
+            {(details.colors.length>0)?(
+              <>
+              <p className="text-sm text-gray-700 mb-2">اختر اللون:</p>
             <div className="flex gap-3 flex-wrap">
               {details.colors.map((color) => (
                 <div
@@ -204,6 +230,8 @@ const imgcomment=`${BaseUrl}${details.image}`
                 ></div>
               ))}
             </div>
+              </>
+            ):('')}
           </div>
 
           {/* عرض حالة المخزون */}
@@ -219,7 +247,41 @@ const imgcomment=`${BaseUrl}${details.image}`
             <span className="text-2xl font-bold text-orange-600">{price} ج.م</span>
 
             {/* تحديد الكمية من select */}
+            {((selectedColor && selectedColor.stock === 0) || (!selectedColor && details.stock === 0)) ? (
+
             <div className="flex items-center gap-2">
+              <select
+                value={quantity}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  setQuantity(val);
+                  handelchange("qty", val);
+                }}
+                className="p-2 border rounded-md text-sm"
+                disabled={maxQuantity === 0}
+              >
+                <option value={0} disabled>مفذت الكمية</option>
+                {Array.from({ length: 1 }, (_, i) => i + 1).map((num) => (
+                  <option key={num} value={num}>
+                    0
+                  </option>
+                ))}
+              </select>
+
+              {/* عرض المتاح */}
+              <span className="text-sm text-gray-600">
+                {selectedUnit === "Packet"
+                  ? `(متاح ${maxQuantity} ${maxQuantity > 1 ? "دسته" : "كرتونة"})`
+                  : selectedUnit === "Piece"
+                    ? selectedColor
+                      ? `(متاح ${selectedColor.stock} قطعة)`
+                      : `(متاح ${details.stock} قطعة)`
+                    : ""}
+              </span>
+            </div>
+            ):(
+
+               <div className="flex items-center gap-2">
               <select
                 value={quantity}
                 onChange={(e) => {
@@ -241,7 +303,7 @@ const imgcomment=`${BaseUrl}${details.image}`
               {/* عرض المتاح */}
               <span className="text-sm text-gray-600">
                 {selectedUnit === "Packet"
-                  ? `(متاح ${maxQuantity} ${maxQuantity > 1 ? "كرتونات" : "كرتونة"})`
+                  ? `(متاح ${maxQuantity} ${maxQuantity > 1 ? "دسته" : "كرتونة"})`
                   : selectedUnit === "Piece"
                     ? selectedColor
                       ? `(متاح ${selectedColor.stock} قطعة)`
@@ -249,6 +311,7 @@ const imgcomment=`${BaseUrl}${details.image}`
                     : ""}
               </span>
             </div>
+            )}
           </div>
 
           {/* زر الإضافة للسلة */}
@@ -307,6 +370,9 @@ const imgcomment=`${BaseUrl}${details.image}`
 {auth&&(
   <LoginRequiredModal show={auth}/>
 )}
+
+
+
         </div>
       </div>
     </Container>

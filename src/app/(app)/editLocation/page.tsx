@@ -150,7 +150,6 @@ const handeldelete_address = (id: number) => {
                 onClose={() => setEditOpen(false)}
                 onSave={handleSave}
             />
-            {loading?(<Loading/>):( <></>)}
         </div>
     );
 };

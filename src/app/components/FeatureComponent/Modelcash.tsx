@@ -15,7 +15,8 @@ export const Cash = ({
   code,
   items,
   oncheckout,
-  close
+  close,
+  // color_id,
 }: Checkout) => {
   const [addressList, setAddressList] = useState<AddressData[]>([]);
   const [paymentMethod, setPaymentMethod] = useState("cash");

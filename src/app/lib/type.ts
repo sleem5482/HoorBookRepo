@@ -466,6 +466,7 @@ export interface Checkout {
   items: CartItem[];
   use_points?: boolean;
   oncheckout: () => void;
+  // color_id:number|null
   close: () => void;
 }
 
@@ -476,6 +477,7 @@ export interface surecash{
     notes:string;
     code?: string;
     use_points?: string;
+    color_id?:number;
   }
 
 

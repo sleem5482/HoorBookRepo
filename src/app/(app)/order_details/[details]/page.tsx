@@ -11,6 +11,7 @@ import SmartNavbar from "@/app/components/ui/Navbar";
 import { Moodel_Cancel } from "@/app/components/ui/Moodel_order";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import ErrorPopUP from "@/app/components/ui/pop-up_show_message_error";
 
 export default function OrderDetails() {
   const pathname = usePathname();
@@ -20,6 +21,7 @@ export default function OrderDetails() {
   const [cancel, setCancelOrder] = useState<boolean>(false);
   const [refundOrder, setrefundOrder] = useState<boolean>(false);
   const [selectedReason, setSelectedReason] = useState("");
+  
   useEffect(() => {
     const getDetails = async () => {
       try {
@@ -46,10 +48,11 @@ export default function OrderDetails() {
         toast.success("تم استرجاع الطلب بنجاح");
         setrefundOrder(false);
       } 
-    }
+ 0   }
   }
     catch(error){
       console.log(error);
+     
       
     }
   }
@@ -162,7 +165,7 @@ return (
   <span className='text-gray-500' > اللون:</span>
   <span
   className="w-4 h-4 rounded border"
-  style={{ backgroundColor: `#${item.color.code}` }}
+  style={{ backgroundColor: `${item.color?.code}` }}
   ></span>
   </>
 ):('')}
@@ -197,6 +200,7 @@ return (
           onClose={()=>{setrefundOrder(false)}}
         />
       )}
+   
     </Container>
   </section>
 );
