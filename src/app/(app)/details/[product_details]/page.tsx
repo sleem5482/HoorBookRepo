@@ -28,7 +28,6 @@ export default function Details() {
         show: false,
         message: "",
     });
-    const [check,setcheck]=useState<boolean>(false);
        
   const [chart, setchart] = useState<Partial<AddToChart>>({
     product_type: "Piece",
@@ -50,9 +49,9 @@ export default function Details() {
         const res: ApiResponse<ProductDetails> = await fetchData(`${BaseUrl}api/products/${productid}`);
         setDetails(res.data);
       } catch (error:any) {
-        console.log(error);
+        console.log( error?.response?.data?.status?.messages);
           setModal({
-    message: "لا يوجد منتج بهذا الكود",
+    message:'هذا الاوردر غير متوفر تفاصيله في الوقت الحالي',
     show: true
   });
       }
@@ -65,7 +64,7 @@ if (!details) {
     <>
       {modal.show && (
         <ErrorPopUP
-          message={modal.message || "لا يوجد منتج بهذا الكود"}
+          message={modal.message }
           setClose={setModal}
         />
       )}
