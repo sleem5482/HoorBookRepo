@@ -105,6 +105,7 @@ const imgcomment=`${BaseUrl}${details.image}`
       if(token){
         setauth(false)
         let payload = { ...chart };
+        payload.product_id=details.id;
         
         if (details.colors.length === 0) {
           delete payload.color_id;
