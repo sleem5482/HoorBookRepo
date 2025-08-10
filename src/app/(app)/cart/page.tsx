@@ -256,21 +256,23 @@ const handelcode = async (e: React.FormEvent) => {
           {cartInfo && (
   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-center text-sm sm:text-base">
     <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">💰 السعر الإجمالي</p>
+      <p className="text-gray-700 font-semibold mb-1">💰 المجموع الفرعى</p>
       <p className="text-green-700 text-lg font-bold">{cartInfo.total} ج.م</p>
     </div>
 
     <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">🚚 خصم التوصيل</p>
+      <p className="text-gray-700 font-semibold mb-1">🚚 رسوم التوصيل</p>
       <p className="text-orange-600 text-lg font-bold">{cartInfo.delivery_discount}%</p>
     </div>
-
+    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+      <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
+      <p className="text-orange-600 text-lg font-bold">{cartInfo.total}ج.م</p>
+    </div>
     <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
       <p className="text-gray-700 font-semibold mb-1">⭐ نقاطك</p>
       <p className="text-purple-700 text-lg font-bold">
         {cartInfo.points_settings.points} نقطة = {cartInfo.points_settings.price} ج.م
       </p>
-      <p className="text-gray-500 text-xs mt-1">سعر النقطة: {cartInfo.points_settings.point_price} ج.م</p>
     </div>
   </div>
 )}

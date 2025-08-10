@@ -1,19 +1,29 @@
+
 "use client";
 import React, { useState } from "react";
 import Container from "@/app/components/Container";
+import ErrorPopUP from "@/app/components/ui/pop-up_show_message_error";
 
 
+// import { BaseUrl, headers } from "@/app/components/Baseurl";
+import toast, { Toaster } from "react-hot-toast";
 import SmartNavbar from "@/app/components/ui/Navbar";
 import Loading from "@/app/components/ui/loading";
 import { useRouter } from "next/navigation";
-
-const Location = () => {
+// const API_BASE = `${BaseUrl}api`;
+const Scanner = () => {
+    const [modal, setModal] = useState({ show: false, message: "" });
     const [code, setCode] = useState("");
     const [loading, setLoading] = useState<boolean>(false);
     const router = useRouter();
      const handleNavigate = (e: React.FormEvent, path: string) => {
     e.preventDefault();
+    if (code)
     router.push(path); 
+else
+    setModal({ show: true, message: "الرجاء ادخال كود المنتج" });
+
+
   };
 
     const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +47,8 @@ const Location = () => {
                         </div>
                         <div className="w-full">
                             <input
+                            inputMode="numeric"
+                            required
                                 type="text"
                                 value={code}
                                 onChange={handleCodeChange}
@@ -45,7 +57,9 @@ const Location = () => {
                             />
                         </div>
 
-                 
+                        <div>
+                            <Toaster />
+                        </div>
 
                         <div className="flex flex-col justify-center items-center gap-4">
                             <button
@@ -59,7 +73,7 @@ const Location = () => {
                                 إفحص المنتج
                             </button>
                             <button
-                            onClick={(e) => handleNavigate(e, `/details/${code}`)}
+                            onClick={(e) => handleNavigate(e, '/cart')}
                                 className="
       w-full
       bg-gradient-to-r from-purple-700 to-orange-400 
@@ -74,8 +88,11 @@ const Location = () => {
             </div>
 
             {loading ? <Loading /> : <></>}
+            {modal.show && (
+                <ErrorPopUP message={modal.message} setClose={setModal} />
+            )}
         </div>
     );
 };
 
-export default Location;
+export default Scanner;
