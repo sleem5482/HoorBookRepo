@@ -149,7 +149,7 @@ Checkout) => {
                                 onClick={() => {
                                     handelcash("user_address_id", addr.id);
                                 }}
-                                className={`p-3 min-w-[250px] rounded-xl relative cursor-pointer border-2 transition hover:shadow-md text-right ${
+                                className={`p-3 min-w-[250px] whitespace-normal break-words rounded-xl relative cursor-pointer border-2 transition hover:shadow-md text-right ${
                                     sure.user_address_id === addr.id
                                         ? "border-purple-700 bg-purple-50"
                                         : "border-gray-200 bg-gray-50"
