@@ -65,7 +65,7 @@ export default function ProfilePage() {
                 <Star className="text-orange-500 mb-2 mx-auto" />
                 <p className="text-sm text-gray-700">النقاط</p>
  <p className="text-lg font-bold text-orange-600">
-  {(profile?.points ?? 0) * Number(profile?.pointsSettings?.point_price ?? 0)}
+  {(profile?.points ?? 0) * Number(profile?.pointsSettings?.point_price  ?? 0)}
 </p>
 
               </div>
