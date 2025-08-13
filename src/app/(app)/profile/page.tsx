@@ -86,7 +86,7 @@ export default function ProfilePage() {
 <div className="grid grid-cols-3 gap-4 text-center mt-6">
   <Link href="/orders" className="flex flex-col items-center bg-purple-50 p-4 rounded-xl hover:shadow transition">
     <ShoppingCart className="text-purple-600 mb-1" size={24} />
-    <span className="text-sm text-purple-800 font-semibold">الطلبات</span>
+    <span className="text-sm text-purple-800 font-semibold">الطلبات </span>
   </Link>
 
   <Link href="/account" className="flex flex-col items-center bg-purple-50 p-4 rounded-xl hover:shadow transition">
