@@ -73,7 +73,7 @@ export default function ProfilePage() {
                 <Link href={'/cart'} className="bg-blue-100 rounded-xl p-4">
               <div >
                 <ShoppingCart className="text-blue-500 mb-2 mx-auto" />
-                <p className="text-sm text-gray-700">عدد السلع في السلة</p>
+                <p className="text-sm text-gray-700">عدد السلع في السلة </p>
                 <p className="text-md font-semibold text-blue-700">{profile?.CartCount}</p>
               </div>
                 </Link>
