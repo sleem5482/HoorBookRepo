@@ -236,7 +236,7 @@ const handelcode = async (e: React.FormEvent) => {
 
   } catch (error: any) {
     console.error(error);
-    toast.error("حدث خطأ أثناء التفعيل");
+    toast.error(" حدث خطأ أثناء التفعيل");
   }
 };
 
