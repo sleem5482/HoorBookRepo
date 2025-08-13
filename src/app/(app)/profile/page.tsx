@@ -91,7 +91,9 @@ export default function ProfilePage() {
 
   <Link href="/account" className="flex flex-col items-center bg-purple-50 p-4 rounded-xl hover:shadow transition">
     <User className="text-purple-600 mb-1" size={24} />
-    <span className="text-sm text-purple-800 font-semibold">الحساب</span>
+    <span className="text-sm text-purple-800 font-semibold">الحساب
+      
+    </span>
   </Link>
 
   <Link href="/favorite" className="flex flex-col items-center bg-purple-50 p-4 rounded-xl hover:shadow transition">
