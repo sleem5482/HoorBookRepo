@@ -599,3 +599,9 @@ export type moodel_order = {
   cancelOrder?: (reason: string, status: string) => void;
   setReason?: (reason: string) => void;
 };
+
+
+export interface Coupoun{
+  type:string,
+  value:number;
+}

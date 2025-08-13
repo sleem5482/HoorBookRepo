@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { Trash2, Pencil } from 'lucide-react'
 import { BaseUrl, headers } from '@/app/components/Baseurl'
 import Container from '@/app/components/Container'
-import {  CartItem, CartResponse, FieldForm } from '@/app/lib/type'
+import {  CartItem, CartResponse, Coupoun, FieldForm } from '@/app/lib/type'
 import SmartNavbar from '@/app/components/ui/Navbar'
 import toast from 'react-hot-toast'
 import { useCartStore } from '@/app/store/cartStore'
@@ -86,6 +86,10 @@ export default function Cart() {
   const [code, setcode] = useState<Record<string, any>>({});
   const [open,setopen]=useState<boolean>(false)
   const [verificatio,setverification]=useState(false);
+  const [discount_copoun,setdescount]=useState<Coupoun>({
+    type:'',
+    value:0
+  });
   const discount=`${BaseUrl}api/check-valid-copoun`;
   const fields:FieldForm[]=[
     {
@@ -213,9 +217,13 @@ const handelcode = async (e: React.FormEvent) => {
 
     if (discountData.data.type === 'percentage') {
       updatedTotal = updatedTotal - (updatedTotal * (discountData.data.value / 100));
+      setdescount((prev) => ({ ...prev, type: 'percentage' }));
+      setdescount((prev) => ({ ...prev, value: discountData.data.value}));
     } else {
       updatedTotal -=   discountData.data.value;
       console.log(updatedTotal);
+       setdescount((prev) => ({ ...prev, type: 'fixed' }));
+      setdescount((prev) => ({ ...prev, value: discountData.data.value}));
       
     }
 
@@ -223,7 +231,7 @@ const handelcode = async (e: React.FormEvent) => {
 
     setCartInfo((prev: any) => ({
       ...prev,
-      total: String(updatedTotal),
+      total: String(updatedTotal.toFixed(2)),
     }));
 
   } catch (error: any) {
@@ -272,6 +280,18 @@ const handelcode = async (e: React.FormEvent) => {
       <p className="text-gray-700 font-semibold mb-1">⭐ نقاطك</p>
       <p className="text-purple-700 text-lg font-bold">
         {cartInfo.points_settings.points} نقطة = {cartInfo.points_settings.price} ج.م
+      </p>
+    </div>
+
+       <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+      <p className="text-gray-700 font-semibold mb-1">الخصم</p>
+      <p className="text-gray-700 text-lg font-bold">
+        {(discount_copoun.type==='percentage')?(
+          `${discount_copoun.value} %` 
+        ):(
+          `${discount_copoun.value} ج.م` 
+
+        )}
       </p>
     </div>
   </div>
