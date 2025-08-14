@@ -5,7 +5,6 @@ import toast from 'react-hot-toast'
 import { BaseUrl } from '@/app/components/Baseurl'
 import { CartResponse } from '@/app/lib/type'
 
-// دالة headers ديناميكية حسب التوكن
 const getAuthHeaders = () => {
   const token = Cookies.get('access_token_login')
   return {
@@ -29,7 +28,6 @@ export const useCartStore = create<CartStore>((set) => ({
     const token = Cookies.get('access_token_login')
 
     if (!token) {
-      // المستخدم مش مسجل دخول، خلي العداد بصفر وارجع
       set({ cartCount: 0 })
       return
     }

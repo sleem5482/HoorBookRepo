@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { CheckCircle2, MapPin, Pencil, Plus, Wallet } from "lucide-react";
 import Image from "next/image";
-import { AddressData, Checkout, surecash } from "@/app/lib/type";
+import { AddressData, Checkout, Profile, surecash } from "@/app/lib/type";
 import { BaseUrl, headers } from "../Baseurl";
 import Link from "next/link";
 import cash from "../../../../public/asset/images/cash.png";
@@ -21,6 +21,8 @@ Checkout) => {
     const [addressList, setAddressList] = useState<AddressData[]>([]);
     const [paymentMethod, setPaymentMethod] = useState("cash");
     const [usePoints, setUsePoints] = useState<string>("0");
+      const [profile, setProfile] = useState<Profile>();
+      const [delivery,setdelivery]=useState(0)
     const [sure, setsure] = useState<surecash>({
         user_address_id: 0,
         payment_type: "1",
@@ -31,6 +33,8 @@ Checkout) => {
     const [check, setcheck] = useState(false);
     const order = `${BaseUrl}api/orders`;
     const delete_address = `${BaseUrl}api/address/`;
+  const url = `${BaseUrl}api/user/profile`;
+
     useEffect(() => {
         const fetchAddresses = async () => {
             try {
@@ -46,8 +50,19 @@ Checkout) => {
                 console.error("فشل تحميل العناوين:", err);
             }
         };
+         const getProfile = async () => {
+      try {
+        const res = await axios.get(url, { headers });
+        console.log(res.data.data.name);
+        setProfile(res.data.data);
+      } catch (error) {
+        console.log(error);
+        toast.error("خطأ فى جلب المعلومات الخاصه بك");
+      }
+    };
 
         fetchAddresses();
+        getProfile();
     }, []);
 
     useEffect(() => {
@@ -69,6 +84,9 @@ Checkout) => {
     const handelcash = (field: keyof surecash, value: any) => {
         setsure((prevsure) => ({ ...prevsure, [field]: value }));
     };
+    const handel_delivery_cost=(cost:number)=>{
+        setdelivery(cost);
+    }
     const handleConfirm = async () => {
         const finalCode = code ?? ""; // تفادي undefined
 
@@ -136,7 +154,6 @@ Checkout) => {
                     🧾 تفاصيل الدفع
                 </h2>
 
-                {/* ✅ كروت العناوين */}
                 <div className="space-y-2">
                     <h3 className="text-right font-semibold text-gray-700">
                         📍 اختر العنوان:
@@ -145,9 +162,9 @@ Checkout) => {
                         {addressList.map((addr) => (
                             <div
                                 key={addr.id}
-                                // onClick={() => setSelectedAddressId(addr.id)}
                                 onClick={() => {
-                                    handelcash("user_address_id", addr.id);
+                                    handelcash("user_address_id", addr.id),
+                                    handel_delivery_cost(addr.area.final_cost)
                                 }}
                                 className={`p-3 min-w-[250px] whitespace-normal break-words rounded-xl relative cursor-pointer border-2 transition hover:shadow-md text-right ${
                                     sure.user_address_id === addr.id
@@ -222,7 +239,6 @@ Checkout) => {
                     </div>
                 </div>
 
-                {/* ✅ خصم النقاط */}
                 <div className="flex items-center gap-2 text-right">
                     <input
                         id="usePoints"
@@ -240,25 +256,32 @@ Checkout) => {
                 </div>
 
                 {/* ✅ المنتجات */}
-                <div className="bg-gray-50 rounded-xl p-3 border text-right">
-                    <h3 className="font-semibold text-gray-700 mb-1">
-                        🛍️ المنتجات:
-                    </h3>
-                    <ul className="space-y-1 text-sm text-black">
-                        {items.map((item) => (
-                            <li
-                                key={item.id}
-                                className="flex justify-between border-b pb-1">
-                                <span>{item.product.name}</span>
-                                <span>
-                                    {item.qty} × {item.price_after_discount} ج.م
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+               <div className="grid grid-cols-1  sm:grid-cols-3 md:grid-cols-1 gap-4 mb-8 text-center text-sm sm:text-base">
+    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+      <p className="text-gray-700 font-semibold mb-1">💰 المجموع الفرعى</p>
+      <p className="text-green-700 text-lg font-bold">{items?.total} ج.م</p>
+    </div>
 
-                {/* ✅ كود الخصم */}
+    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+      <p className="text-gray-700 font-semibold mb-1">🚚 رسوم التوصيل</p>
+      <p className="text-orange-600 text-lg font-bold">{delivery??0}  ج.م</p>
+    </div>
+    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+      <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
+      <p className="text-orange-600 text-lg font-bold">
+  {Number(items?.total || 0) + Number(delivery || 0)} ج.م
+</p>
+
+    </div>
+    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+      <p className="text-gray-700 font-semibold mb-1">⭐ نقاطك</p>
+      <p className="text-purple-700 text-lg font-bold">
+         {(profile?.points ?? 0) * Number(profile?.pointsSettings?.point_price  ?? 0)}
+           </p>
+    </div>
+
+  </div>
+
                 {code && (
                     <div className="text-right text-green-700 font-medium">
                         🎁 كود الخصم المفعّل:{" "}

@@ -1,8 +1,8 @@
+import { headers,BaseUrl } from './../components/Baseurl';
 // SearchproductsStore.ts
 import { ApiResponse, ProductsState } from './../lib/type';
 import { create } from 'zustand';
-import { fetchData } from '../lib/methodes';
-import { BaseUrl } from '../components/Baseurl';
+import axios from 'axios';
 
 export const Searchproduct = create<ProductsState>((set, get) => ({
   products: [],
@@ -56,22 +56,25 @@ export const Searchproduct = create<ProductsState>((set, get) => ({
 
     set({ loading: true });
 
-    try {
-      const response: ApiResponse<any> = await fetchData(url);
-      const result = response.data;
+   try {
+  const response: ApiResponse<any> = await axios.get(url, { headers });
 
-      const newProducts = result.data;
-      const newLastPage = result.meta.last_page;
+  const result = response.data.data;
 
-      set((state) => ({
-        products: reset ? newProducts : [...state.products, ...newProducts],
-        page: currentPage + 1,
-        lastPage: newLastPage,
-        hasMore: currentPage < newLastPage,
-      }));
-    } catch (error) {
-      console.error('Fetch Error:', error);
-    } finally {
+  const newProducts = result.data;
+
+  const newLastPage = result.meta.last_page;
+
+  set((state) => ({
+    products: reset ? newProducts : [...state.products, ...newProducts],
+    page: currentPage + 1,
+    lastPage: newLastPage,
+    hasMore: currentPage < newLastPage,
+  }));
+} catch (error) {
+  console.error('Fetch Error:', error);
+}
+ finally {
       set({ loading: false });
     }
   }

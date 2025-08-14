@@ -86,6 +86,7 @@ export default function Cart() {
   const [code, setcode] = useState<Record<string, any>>({});
   const [open,setopen]=useState<boolean>(false)
   const [verificatio,setverification]=useState(false);
+
   const [discount_copoun,setdescount]=useState<Coupoun>({
     type:'',
     value:0
@@ -276,14 +277,7 @@ const handelcode = async (e: React.FormEvent) => {
       <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
       <p className="text-orange-600 text-lg font-bold">{cartInfo.total}ج.م</p>
     </div>
-    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">⭐ نقاطك</p>
-      <p className="text-purple-700 text-lg font-bold">
-        {cartInfo.points_settings.points} نقطة = {cartInfo.points_settings.price} ج.م
-      </p>
-    </div>
-
-       <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+      <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
       <p className="text-gray-700 font-semibold mb-1">الخصم</p>
       <p className="text-gray-700 text-lg font-bold">
         {(discount_copoun.type==='percentage')?(
@@ -403,7 +397,7 @@ const handelcode = async (e: React.FormEvent) => {
   show={open}
   id={1}
   code={(verificatio)?code.code:undefined}
-  items={items}
+  items={cartInfo}
   oncheckout={() => {
     console.log("🚀 بيانات الطلب:");
   }}

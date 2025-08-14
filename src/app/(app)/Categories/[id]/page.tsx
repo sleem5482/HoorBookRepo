@@ -21,9 +21,14 @@ export default function ProductPage() {
     const pathname = usePathname();
     const categoryId = pathname.split("/").pop();
   const [inputValue, setInputValue] = useState("");
+    const [loader, setLoader] = useState<boolean>(false)
+useEffect(()=>{
+  setTimeout(() => {
+    setLoader(true)
+  }, 1500);
+},[])
 const token = Cookies.get("access_token_login");
 
-  const [homeData, setHomeData] = useState<HomePageData | null>(null);
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const { cartCount, refreshCartCount } = useCartStore()
   const [login,setlogin]=useState<boolean>(false)
@@ -39,27 +44,7 @@ const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
 });
 const url =`${BaseUrl}api/products/favourite`
 
-const handelfavorit = async (id: number) => {
-  try {
-    if(!token){
-      setlogin(true)
-      console.log(login);
-      
-     return;
-    }
-    setlogin(false)
-    const dataToSend = { product_id: id };
-    const res: ApiResponse<Favorit> = await CallApi("post", url, dataToSend, headers);
-    console.log('Accepted', res);
-    setFavoriteIds((prev) =>
-      prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
-  );
-      
-  
-  } catch (error) {
-    console.log(error);
-  }
-};
+
 
 const [favoriteProducts, setFavoriteProducts] = useState<number[]>([]);
 
@@ -297,39 +282,28 @@ const IconsBlock = (cartCount: number) => (
     
         <p className="text-center text-gray-500 mt-20 text-lg"> لاتوجد منتجات </p>
           </div>
-      ) : (
-        <div
+        ) : (
+          <section>
+
+            {loader&&
+          <div
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 px-2 sm:px-6 lg:px-12 mt-28"
           dir="rtl"
-        >
+          >
           {renderProducts.map((image, index) => (
             <div
-              key={index}
-              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.015] border border-gray-100"
+            key={index}
+            className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.015] border border-gray-100"
             >
               <Card
-                id={image.id}
-                image={image.image}
-                name={image.name}
-                description={image.description}
-                price={image.price}
-                originalPrice={image.originalPrice}
-                category={image.category}
-                discount={image.discount}
-                love={favoriteProducts.includes(image.id)}
-                stock={image.stock}
-                soldOut={image.soldOut}
-                packet_pieces={image.packet_pieces}
-                packet_price={image.packet_price}
-                piece_price_after_offer={image.piece_price_after_offer}
-                packet_price_after_offer={image.packet_price_after_offer}
-                reviews_avg={image.reviews_avg}
-                handellove={() => (handelfavorit(image.id))}
-                offer={image.offer}
+              {...image} 
+              
               />
+              </div>
+            ))}
             </div>
-          ))}
-        </div>
+          }
+            </section>
       )}
 
       {/* Infinite Scroll Trigger */}

@@ -1,15 +1,18 @@
 "use client";
 import { useState } from "react";
-import Container from "../components/Container";
-import FormField from "../components/ui/Formfield";
-import { ApiResponse, FieldForm, Register } from "../lib/type";
+import Container from "@/app/components/Container";
+import FormField from "@/app/components/ui/Formfield";
+
+import { ApiResponse, FieldForm, Register } from "@/app/lib/type";
 import { Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import SmartNavbar from "../components/ui/Navbar";
-import Logo from "../../../public/asset/images/حورلوجو.jpeg";
-import { Postresponse } from "../lib/methodes";
-import { BaseUrl } from "../components/Baseurl";
+import SmartNavbar from "@/app/components/ui/Navbar";
+
+import Logo from "../../../../public/asset/images/حورلوجو.jpeg";
+import { Postresponse } from "@/app/lib/methodes";
+import { BaseUrl } from "@/app/components/Baseurl";
+
 import Cookies from 'js-cookie'
 import toast from "react-hot-toast";
 
