@@ -294,14 +294,14 @@ const handelcode = async (e: React.FormEvent) => {
 <form onSubmit={handelcode} className="w-full">
   <div className="flex justify-center items-center gap-3 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow border border-gray-200">
     
-    <div className="flex-1">
+    <div>
       <FormField fields={fields} data={code} onChange={setcode} />
     </div>
-<div className='mt-11'>
+<div className='mt-11 w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold rounded-lg shadow hover:opacity-90 transition text-center'>
 
     <button
       type="submit"
-      className="p-4  bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold rounded-lg shadow hover:opacity-90 transition"
+      className="p-2 "
       >
       تفعيل
     </button>

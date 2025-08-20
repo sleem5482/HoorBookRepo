@@ -14,8 +14,10 @@ import toast from "react-hot-toast";
 import Cookies from 'js-cookie'
 import { LoginRequiredModal } from "@/app/components/ui/Pop-up-login";
 import ErrorPopUP from "@/app/components/ui/pop-up_show_message_error";
+import { X } from "lucide-react";
 export default function Details() {
   const [showPopup, setShowPopup] = useState(false);
+  const [scale_image,setscale]=useState<boolean>(false)
   const sendres = `${BaseUrl}api/carts`;
   const pathname = usePathname();
   const productid = pathname.split("/").pop();
@@ -133,8 +135,7 @@ const imgcomment=`${BaseUrl}${details.image}`
   return (
     <Container>
       <SmartNavbar />
-      <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-2 gap-10">
-        {/* صورة المنتج */}
+      <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-2 gap-10 relative">
         <div className="flex justify-center md:justify-end">
           <div className="w-full max-w-md aspect-square relative rounded-2xl overflow-hidden shadow-lg">
             <Image
@@ -142,8 +143,9 @@ const imgcomment=`${BaseUrl}${details.image}`
               alt="صورة المنتج"
               fill
               objectFit="contain"
-              className="transition-transform duration-300 hover:scale-105 rounded-xl"
+              className="transition-transform duration-300 hover:scale-105 rounded-xl cursor-pointer"
               unoptimized
+              onClick={()=>{setscale(true)}}
             />
           </div>
         </div>
@@ -208,7 +210,6 @@ const imgcomment=`${BaseUrl}${details.image}`
             )}
           </div>
 
-          {/* الألوان */}
           <div className="mb-4">
             {(details.colors.length>0)?(
               <>
@@ -234,19 +235,15 @@ const imgcomment=`${BaseUrl}${details.image}`
             ):('')}
           </div>
 
-          {/* عرض حالة المخزون */}
           {((selectedColor && selectedColor.stock === 0) || (!selectedColor && details.stock === 0)) ? (
             <p className="text-red-600 font-semibold mb-4 text-sm md:text-base">نفذت الكميه</p>
           ) : (
-            <p className="text-green-600 font-semibold mb-4 text-sm md:text-base">✅ متوفر حالياً</p>
+            <p className="text-green-600 font-semibold mb-4 text-sm md:text-base"> متوفر حالياً</p>
           )}
 
-          {/* السعر والكمية */}
           <div className="flex items-center justify-between mb-6 text-black">
-            {/* السعر */}
             <span className="text-2xl font-bold text-orange-600">{price} ج.م</span>
 
-            {/* تحديد الكمية من select */}
             {((selectedColor && selectedColor.stock === 0) || (!selectedColor && details.stock === 0)) ? (
 
             <div className="flex items-center gap-2">
@@ -323,8 +320,6 @@ const imgcomment=`${BaseUrl}${details.image}`
             🛒 أضف إلى السلة
           </button>
         </div>
-
-        {/* وصف المنتج */}
         <div className="md:col-span-2 mt-10">
           <h2 className="font-semibold text-lg text-violet-900 mb-2">📦 تفاصيل المنتج:</h2>
           <div className="text-gray-800 text-sm leading-relaxed space-y-2">
@@ -334,7 +329,8 @@ const imgcomment=`${BaseUrl}${details.image}`
           </div>
         </div>
 
-        {/* التقييمات */}
+
+
         <div className="md:col-span-2 mt-10">
           <h3 className="text-md font-semibold text-violet-900 mb-3">
             {details.reviews_avg !== null ? (
@@ -374,7 +370,39 @@ const imgcomment=`${BaseUrl}${details.image}`
 
 
         </div>
+{scale_image && (
+  <div className="scale_image fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[1000]">
+    <div className="bg-white rounded-lg shadow-xl p-4 max-w-[90vw] max-h-[90vh] relative" 
+        onClick={() => setscale(false)}
+    
+    >
+      
+      <button
+        className="absolute top-2 right-2 text-gray-600 hover:text-black bg-white rounded-full shadow-md p-1"
+    
+    >
+        <X size={24} />
+      </button>
+
+      {/* Image */}
+      <div className="relative w-[80vw] h-[80vh]">
+        <Image
+          src={`${BaseUrl}/${mainImage}`}
+          alt="صورة المنتج"
+          fill
+          style={{ objectFit: "contain" }}
+          className="transition-transform duration-300 hover:scale-105 rounded-xl cursor-pointer"
+          unoptimized
+        />
       </div>
+    </div>
+  </div>
+)}
+
+      </div>
+
+
+
     </Container>
   );
 }

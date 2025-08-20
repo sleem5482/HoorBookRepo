@@ -5,6 +5,7 @@ import Container from "@/app/components/Container"
 import SmartNavbar from "@/app/components/ui/Navbar";
 import { Order } from "@/app/lib/type";
 import axios from "axios";
+import { Car, DollarSign } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaMoneyBillWave, FaMapMarkerAlt, FaBoxOpen, FaCalendarAlt } from "react-icons/fa";
@@ -53,8 +54,8 @@ return (
           >
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-indigo-600 font-bold text-lg">#{order.id}</h2>
-              <span className={`text-xs px-3 py-1 rounded-full font-semibold ${order.status === "Pending" ? "bg-yellow-100 text-yellow-600" : "bg-green-100 text-green-600"}`}>
-                {order.status}
+              <span className={`text-xs px-3 py-1 rounded-full font-semibold ${order.status === "Pending" ? "bg-yellow-100 text-yellow-600" :(order.status==="Cancelled")? "bg-gray-100 text-red-600": "bg-green-100 text-green-600"}`}>
+                {(order.status==="Pending")?('فى المراجعه'):(order.status==="Cancelled")?("تم الالغاء"):('')}
               </span>
             </div>
 
@@ -70,6 +71,16 @@ return (
               <div className="flex items-center gap-2">
                 <FaMapMarkerAlt className="text-pink-500" />
                 <span>{order.address.city} - {order.address.area}، {order.address.address_details}</span>
+              </div>
+                 <div className="flex items-center gap-2">
+                <DollarSign className="text-green-500" />
+
+                <span>{(order.payment_type==="Cash On Delivery")?('الدفع عند الاستلام'):('الدفع فيزا')}</span>
+              </div>
+                  <div className="flex items-center gap-2">
+                <Car className="text-green-500" />
+
+                <span>يرسل الى : {order.address.full_name}</span>
               </div>
             </div>
 

@@ -184,7 +184,7 @@ const IconsBlock = (cartCount: number) => (
     <ShoppingCart size={18} />
     
     {cartCount > 0 && (
-      <span className="absolute -top-1 -right-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] rounded-full font-bold">
+      <span className="absolute -top-1 -left-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] rounded-full font-bold">
         {cartCount}
       </span>
     )}
@@ -218,9 +218,7 @@ const IconsBlock = (cartCount: number) => (
         } bg-gradient-to-tr from-[#6B2B7A] via-[#844C9A] to-[#6B2B7A] shadow-lg backdrop-blur-md`}
       >
         <div className="max-w-screen-xl mx-auto px-4 py-3 flex flex-row items-center justify-between gap-6">
-          {/* الشعار والبحث */}
          <div className="flex flex-row md:justify-between items-center w-full md:gap-60 gap-4">
-  {/* الشعار */}
   <div className="w-full md:w-36 flex justify-center md:justify-start">
     <Link href="/" className="block">
       <Image
@@ -234,7 +232,6 @@ const IconsBlock = (cartCount: number) => (
     </Link>
   </div>
 
-  {/* مربع البحث */}
   <div className="w-full md:w-full flex justify-center items-center">
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center bg-white/90 rounded-full px-4 py-2 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
@@ -275,7 +272,6 @@ const IconsBlock = (cartCount: number) => (
 </div>
     <div className="p-4 mb-4">
 
-      {/* عرض المنتجات في شكل شبكة */}
       {renderProducts.length === 0 ? (
         <div className="flex justify-center item-center flex-col">
 

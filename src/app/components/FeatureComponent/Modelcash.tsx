@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { CheckCircle2, MapPin, Pencil, Plus, Wallet } from "lucide-react";
+import { CheckCircle2, MapPin, Pencil, Plus, Wallet, X } from "lucide-react";
 import Image from "next/image";
 import { AddressData, Checkout, Profile, surecash } from "@/app/lib/type";
 import { BaseUrl, headers } from "../Baseurl";
@@ -28,7 +28,7 @@ Checkout) => {
         payment_type: "1",
         notes: "",
         code: code,
-        use_points: "",
+        use_points: "0",
     });
     const [check, setcheck] = useState(false);
     const order = `${BaseUrl}api/orders`;
@@ -99,7 +99,7 @@ Checkout) => {
             const res = await axios.post(order, finalSure, { headers });
 
             if (res.data?.status.code === 200) {
-                toast.success("✅ تم إنشاء الطلب بنجاح");
+                toast.success("تم إنشاء الطلب بنجاح");
 
                 if (res.data?.data?.order_number) {
                     toast(`📦 رقم الطلب: ${res.data.data.order_number}`, {
@@ -147,7 +147,7 @@ Checkout) => {
                 <button
                     className="absolute top-3 left-3 text-xl text-gray-500 hover:text-red-500"
                     onClick={close}>
-                    ×
+                    <X/>
                 </button>
 
                 <h2 className="text-xl font-bold text-center text-gray-800 mb-2">
@@ -176,7 +176,7 @@ Checkout) => {
                                     onClick={() => {
                                         handeldelete_address(addr.id);
                                     }}>
-                                    ×
+                                    <X/>
                                 </button>
                                 <div className="flex items-center justify-between mb-1">
                                     <span className="font-bold text-gray-800 flex items-center gap-1">
@@ -226,7 +226,7 @@ Checkout) => {
                                     : "bg-gray-100 border-gray-300 text-gray-700"
                             }`}>
                             <Wallet size={18} />
-                            <span>كاش عند الاستلام</span>
+                            <span>الدفع عند الاستلام</span>
                             <Image
                                 src={cash}
                                 alt="Cash"

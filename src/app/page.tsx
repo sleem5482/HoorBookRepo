@@ -130,7 +130,7 @@ const handelfavorit = async (id: number) => {
     objectFit="cover"
     showNavigation={true}
     showPagination={true}
-    autoPlayDelay={3000}
+    autoPlayDelay={6000}
   
     />
     )}
@@ -199,7 +199,7 @@ const handelfavorit = async (id: number) => {
         slidesPerGroup={1}
         loop={true}
         autoplay={{
-          delay: 2500,
+          delay: 6500,
           disableOnInteraction: false,
         }}
         navigation={{
@@ -264,7 +264,7 @@ const handelfavorit = async (id: number) => {
         slidesPerGroup={1}
         loop={true}
         autoplay={{
-          delay: 3000,
+          delay: 6000,
           disableOnInteraction: false,
         }}
         navigation={{
@@ -307,9 +307,18 @@ const handelfavorit = async (id: number) => {
   <div className="w-full bg-white mt-3">
   {data.categoriesWithProducts?.map((item) => (
     <div key={item.id} className="mb-6 relative">
-      <h2 className="text-btn-color font-bold text-[26px] sm:text-[30px]  tracking-tight text-center px-4 mb-4">
-        {item.name}
-      </h2>
+     <div className="flex justify-between items-center mb-2">
+  <h2 className="text-btn-color font-bold text-[26px] sm:text-[30px] md:text-[20px] tracking-tight text-center px-4">
+    {item.name}
+  </h2>
+  <Link
+    href={`/Categories/${item.id}`}
+    className="text-btn-color font-bold text-[16px] underline sm:text-[30px] md:text-[16px] tracking-tight text-center px-4"
+  >
+    عرض المزيد
+  </Link>
+</div>
+
 
       <Swiper
         dir="rtl"
@@ -319,7 +328,7 @@ const handelfavorit = async (id: number) => {
         slidesPerGroup={1}
         loop={true}
         autoplay={{
-          delay: 3100,
+          delay: 6100,
           disableOnInteraction: false,
         }}
         navigation={{

@@ -12,8 +12,6 @@ import debounce from "lodash.debounce";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from "@/app/store/cartStore";
 import { BaseUrl, headers } from "@/app/components/Baseurl";
-import Cookies from "js-cookie";
-import { CallApi } from "@/app/lib/utilits";
 
 export default function ProductPage() {
   const [inputValue, setInputValue] = useState("");
@@ -26,8 +24,6 @@ export default function ProductPage() {
   hasPacket: "",
   hasOffer: ""
 });
-  const [login,setlogin]=useState<boolean>(false)
-const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
 const [showFilters,setShowFilters]=useState(false)
   const {
     products,
@@ -36,46 +32,6 @@ const [showFilters,setShowFilters]=useState(false)
     loading,
     setSearchTerm,
   } = Searchproduct();
-const token = Cookies.get("access_token_login");
-const url =`${BaseUrl}api/products/favourite`
-
-const [favoriteProducts, setFavoriteProducts] = useState<number[]>([]);
-
-const fetchFavorites = async () => {
-  try {
-    const res: any = await CallApi("get", `${BaseUrl}api/products?page=1&favourite=1`, {}, headers);
-    const favIds = res?.data?.data?.map((item: any) => item.id) || [];
-    setFavoriteProducts(favIds);
-  } catch (error) {
-    console.error("Error fetching favorites:", error);
-  }
-};
-useEffect(() => {
-  fetchFavorites();
-}, []);
-
-
-const handelfavorit = async (id: number) => {
-  try {
-    if(!token){
-      setlogin(true)
-      console.log(login);
-      
-     return;
-    }
-    setlogin(false)
-    const dataToSend = { product_id: id };
-    const res: ApiResponse<Favorit> = await CallApi("post", url, dataToSend, headers);
-    console.log('Accepted', res);
-    setFavoriteIds((prev) =>
-      prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
-  );
-      
-  
-  } catch (error) {
-    console.log(error);
-  }
-};
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -93,11 +49,10 @@ const handelfavorit = async (id: number) => {
 
   useEffect(() => {
     if (inputValue === "") return; 
-    fetchProducts(true, inputValue);
+    fetchProducts (true, inputValue);
 
   }, []);
 
-  // Debounce input
 
 const debouncedSearch = useRef(
   debounce((value: string, filtersParam: typeof filters) => {
@@ -113,7 +68,6 @@ useEffect(() => {
 }, [inputValue,filters]);
 
 
-  // Infinite Scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -130,11 +84,15 @@ useEffect(() => {
     };
   }, [hasMore, loading]);
 
+useEffect(() => {
+  fetchProducts(true, "");
+}, []);
 
 
   
   const isSearching = inputValue.trim().length > 0;
-  const renderProducts = isSearching ? products : homeData?.data ?? [];
+  const renderProducts = products;
+
 const [visible, setVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
 
@@ -178,7 +136,6 @@ const [visible, setVisible] = useState(true)
   
   }
 
-// Move IconsBlock outside of return
 const IconsBlock = (cartCount: number) => (
   <>
 
@@ -204,7 +161,7 @@ const IconsBlock = (cartCount: number) => (
     <ShoppingCart size={18} />
     
     {cartCount > 0 && (
-      <span className="absolute -top-1 -right-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] rounded-full font-bold">
+      <span className="absolute -top-1 -left-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] rounded-full font-bold">
         {cartCount}
       </span>
     )}
@@ -330,7 +287,7 @@ return (
                 piece_price_after_offer={image.piece_price_after_offer}
                 packet_price_after_offer={image.packet_price_after_offer}
                 reviews_avg={image.reviews_avg}
-                handellove={() => (handelfavorit(image.id))}
+                // handellove={() => (handelfavorit(image.id))}
                 offer={`${image.offer}`}
               />
             </div>

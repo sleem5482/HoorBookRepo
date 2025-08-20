@@ -51,8 +51,11 @@ export const Searchproduct = create<ProductsState>((set, get) => ({
       hasPacket: filter.hasPacket || '',
       category: filter.category || ''
     });
-
+  if (params.get("name") === "") {
+  params.delete("name");
+}
     const url = `${BaseUrl}api/products?${params.toString()}`;
+    
 
     set({ loading: true });
 

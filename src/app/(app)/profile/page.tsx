@@ -53,6 +53,14 @@ export default function ProfilePage() {
               <h2 className="text-xl font-bold text-purple-800 ">{profile?.name}</h2>
               <p className="text-sm text-gray-600">{profile?.email}</p>
             </div>
+            <div className="w-full mt-2 bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition">
+              <p>
+              نقاطى : <span>  
+                  {profile?.points}     
+</span>   
+
+              </p>
+            </div>
 
             <div className="grid grid-cols-2 gap-4 text-center">
               <div className="bg-purple-100 rounded-xl p-4">
@@ -69,6 +77,8 @@ export default function ProfilePage() {
 </p>
 
               </div>
+
+              
 
                 <Link href={'/cart'} className="bg-blue-100 rounded-xl p-4">
               <div >
@@ -100,7 +110,11 @@ export default function ProfilePage() {
     <Star className="text-purple-600 mb-1" size={24} />
     <span className="text-sm text-purple-800 font-semibold">المفضلة</span>
   </Link>
+
+  
 </div>
+
+
 
 {/* زر تسجيل الخروج */}
 <button
