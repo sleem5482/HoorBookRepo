@@ -149,7 +149,7 @@ Checkout) => {
                                 onClick={() => {
                                     handelcash("user_address_id", addr.id);
                                 }}
-                                className={`p-3 min-w-[250px] rounded-xl relative cursor-pointer border-2 transition hover:shadow-md text-right ${
+                                className={`p-3 min-w-[300px] whitespace-normal break-words rounded-xl relative cursor-pointer border-2 transition hover:shadow-md text-right ${
                                     sure.user_address_id === addr.id
                                         ? "border-purple-700 bg-purple-50"
                                         : "border-gray-200 bg-gray-50"
@@ -230,7 +230,7 @@ Checkout) => {
                         onClick={() => {
                             handelcheck();
                         }}
-                        className="w-5 h-5 accent-purple-700"
+                        className="w-5 h-5 accent-purple-700 cursor-pointer"
                     />
                     <label
                         htmlFor="usePoints"
@@ -240,7 +240,7 @@ Checkout) => {
                 </div>
 
                 {/* ✅ المنتجات */}
-                <div className="bg-gray-50 rounded-xl p-3 border text-right">
+                {/* <div className="bg-gray-50 rounded-xl p-3 border text-right">
                     <h3 className="font-semibold text-gray-700 mb-1">
                         🛍️ المنتجات:
                     </h3>
@@ -256,7 +256,7 @@ Checkout) => {
                             </li>
                         ))}
                     </ul>
-                </div>
+                </div> */}
 
                 {/* ✅ كود الخصم */}
                 {code && (

@@ -127,7 +127,7 @@ export default function Cart() {
       console.error('حدث خطأ أثناء تحميل البيانات:', error)
     }
   }
-
+console.log(cartInfo)
 useEffect(() => {
   if (token) {
     setlogin(false);
