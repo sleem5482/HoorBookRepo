@@ -47,11 +47,7 @@ const [showFilters,setShowFilters]=useState(false)
     loadData();
   }, []);
 
-  useEffect(() => {
-    if (inputValue === "") return; 
-    fetchProducts (true, inputValue);
 
-  }, []);
 
 
 const debouncedSearch = useRef(
@@ -268,7 +264,7 @@ return (
           {renderProducts.map((image, index) => (
             <div
               key={index}
-              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.015] border border-gray-100"
+              className="bg-white rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.015] border border-gray-100"
             >
               <Card
                 id={image.id}
@@ -296,7 +292,7 @@ return (
       )}
 
       {/* Infinite Scroll Trigger */}
-      {isSearching && hasMore && (
+      { hasMore && (
         <div
           ref={loaderRef}
           className="h-10 w-full mt-6 flex justify-center items-center"

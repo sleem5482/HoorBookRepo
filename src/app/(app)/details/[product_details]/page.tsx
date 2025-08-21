@@ -15,6 +15,7 @@ import Cookies from 'js-cookie'
 import { LoginRequiredModal } from "@/app/components/ui/Pop-up-login";
 import ErrorPopUP from "@/app/components/ui/pop-up_show_message_error";
 import { X } from "lucide-react";
+import { useCartStore } from "@/app/store/cartStore";
 export default function Details() {
   const [showPopup, setShowPopup] = useState(false);
   const [scale_image,setscale]=useState<boolean>(false)
@@ -120,6 +121,7 @@ const imgcomment=`${BaseUrl}${details.image}`
         }
         if(res.status?.code===200 ){
           toast.success("تمت الاضافه بنجاح")
+            await useCartStore.getState().refreshCartCount()
         }
         console.log(payload);
       }

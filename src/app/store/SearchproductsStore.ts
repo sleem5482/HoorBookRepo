@@ -66,7 +66,7 @@ export const Searchproduct = create<ProductsState>((set, get) => ({
 
   const newProducts = result.data;
 
-  const newLastPage = result.meta.last_page;
+const newLastPage = result.meta?.last_page || currentPage;
 
   set((state) => ({
     products: reset ? newProducts : [...state.products, ...newProducts],

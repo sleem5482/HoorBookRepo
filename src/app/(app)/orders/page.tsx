@@ -54,9 +54,34 @@ return (
           >
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-indigo-600 font-bold text-lg">#{order.id}</h2>
-              <span className={`text-xs px-3 py-1 rounded-full font-semibold ${order.status === "Pending" ? "bg-yellow-100 text-yellow-600" :(order.status==="Cancelled")? "bg-gray-100 text-red-600": "bg-green-100 text-green-600"}`}>
-                {(order.status==="Pending")?('فى المراجعه'):(order.status==="Cancelled")?("تم الالغاء"):('')}
-              </span>
+     <span
+  className={`text-xs px-3 py-1 rounded-full font-semibold 
+    ${{
+      Pending: "bg-yellow-100 text-yellow-600",
+      Processing: "bg-yellow-100 text-yellow-600",
+      Shipped: "bg-blue-100 text-blue-600",
+      Delivered: "bg-green-100 text-green-600",
+      Cancelled: "bg-red-100 text-red-600",
+      Refund:
+        order.payment_status === "Refunded"
+          ? "bg-green-100 text-green-600"
+          : "bg-orange-100 text-orange-600",
+    }[order.status] || "bg-gray-100 text-gray-600"}`}
+>
+  {{
+    Pending: "فى المراجعة",
+    Processing: "جاري التجهيز",
+    Shipped: "فى الشحن",
+    Delivered: "تم التوصيل",
+    Cancelled: "تم الإلغاء",
+    Refund:
+      order.payment_status === "Refunded"
+        ? "تم إرجاع الطلب"
+        : "جاري مراجعة إرجاع الطلب",
+  }[order.status] || "غير معروف"}
+</span>
+
+
             </div>
 
             <div className="space-y-2 text-gray-700 text-sm">
@@ -75,7 +100,7 @@ return (
                  <div className="flex items-center gap-2">
                 <DollarSign className="text-green-500" />
 
-                <span>{(order.payment_type==="Cash On Delivery")?('الدفع عند الاستلام'):('الدفع فيزا')}</span>
+                <span>{(order.payment_type==="Cash On Delivery")?('الدفع عند الاستلام'):('بطاقة الائتمان')}</span>
               </div>
                   <div className="flex items-center gap-2">
                 <Car className="text-green-500" />

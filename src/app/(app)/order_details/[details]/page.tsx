@@ -88,24 +88,27 @@ return (
 
     <Container>
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">
-            تفاصيل الطلب #{order_id}
-          </h1>
-          <p className="mt-1 text-gray-500">معلومات إضافية حول الطلب.</p>
-        </div>
+     {/* Buttons */}
+<div className="flex gap-3">
+  {["Pending", "Processing"].includes(details.status) && (
+    <button 
+      onClick={() => { setCancelOrder(!cancel), setrefundOrder(false) }} 
+      className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-red-600 rounded-xl hover:bg-red-700 transition"
+    >
+      <Ban size={18} /> إلغاء
+    </button>
+  )}
 
-        {/* Buttons */}
-        <div className="flex gap-3">
-          <button onClick={()=>{setCancelOrder(!cancel),setrefundOrder(false)}} className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-red-600 rounded-xl hover:bg-red-700 transition">
-            <Ban size={18} /> إلغاء
-          </button>
-          <button onClick={()=>{setrefundOrder(!refundOrder),setCancelOrder(false)}} className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-yellow-500 rounded-xl hover:bg-yellow-600 transition">
-            <RotateCcw size={18} /> استرجاع
-          </button>
-        </div>
-      </div>
+  {details.status === "Delivered" && details.refund && (
+    <button 
+      onClick={() => { setrefundOrder(!refundOrder), setCancelOrder(false) }} 
+      className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-yellow-500 rounded-xl hover:bg-yellow-600 transition"
+    >
+      <RotateCcw size={18} /> استرجاع
+    </button>
+  )}
+</div>
+
 
       {/* Order Info + Address */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -113,7 +116,43 @@ return (
         <div className="bg-gradient-to-br from-white via-indigo-50 to-indigo-100 border border-indigo-200 shadow-md rounded-xl p-5 h-full">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">بيانات الطلب</h2>
           <div className="space-y-2 text-sm text-gray-700">
-            <p><strong>الحالة:</strong> {details.status}</p>
+<div className="flex items-center gap-2">
+  <span className="text-sm text-gray-700 font-semibold">الحالة:</span>
+  <span
+    className={`text-xs rounded-full font-semibold
+      ${details.status === "Pending" || details.status === "Processing"
+        ? " text-yellow-600"
+        : details.status === "Cancelled"
+        ? " text-red-600"
+        : details.status === "Shipped"
+        ? " text-blue-600"
+        : details.status === "Delivered"
+        ? " text-green-600"
+        : details.status === "Refund" && details.payment_status === "Refunded"
+        ? " text-green-600"
+        : details.status === "Refund"
+        ? " text-orange-600"
+        : " text-gray-600"}`}
+  >
+    {details.status === "Pending"
+      ? "في المراجعة"
+      : details.status === "Processing"
+      ? "قيد التحضير"
+      : details.status === "Shipped"
+      ? "قيد الشحن"
+      : details.status === "Delivered"
+      ? "تم التوصيل"
+      : details.status === "Cancelled"
+      ? "تم الإلغاء"
+      : details.status === "Refund" && details.payment_status === "Refunded"
+      ? "تم إرجاع الطلب"
+      : details.status === "Refund"
+      ? "جاري مراجعة إرجاع الطلب"
+      : "غير معروف"}
+  </span>
+</div>
+
+
             <p><strong>الدفع:</strong> {details.payment_type} - {details.payment_status}</p>
             <p><strong>الإجمالي:</strong> {details.total} جنيه</p>
             <p><strong>الخصم:</strong> {details.discount} ({details.discount_type})</p>

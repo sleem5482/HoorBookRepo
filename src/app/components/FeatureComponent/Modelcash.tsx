@@ -171,13 +171,7 @@ Checkout) => {
                                         ? "border-purple-700 bg-purple-50"
                                         : "border-gray-200 bg-gray-50"
                                 }`}>
-                                <button
-                                    className="absolute top-0 left-3 text-xl text-gray-500 hover:text-red-500"
-                                    onClick={() => {
-                                        handeldelete_address(addr.id);
-                                    }}>
-                                    <X/>
-                                </button>
+                      
                                 <div className="flex items-center justify-between mb-1">
                                     <span className="font-bold text-gray-800 flex items-center gap-1">
                                         <MapPin size={16} />
@@ -206,7 +200,7 @@ Checkout) => {
                         href={"/editLocation"}
                         className="mt-2 flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200">
                         <Pencil size={16} />
-                        تعديل العنواين
+                        تعديل العنوان
                     </Link>
                 </div>
 
@@ -239,6 +233,9 @@ Checkout) => {
                     </div>
                 </div>
 
+<div  className="points w-full p-3  bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition">
+نقاطك : {profile?.points}
+</div>
                 <div className="flex items-center gap-2 text-right">
                     <input
                         id="usePoints"

@@ -155,6 +155,7 @@ useEffect(() => {
       setItems(prev => prev.filter(item => item.id !== id))
       refreshCartCount()
       toast.success('🗑️ تم حذف المنتج بنجاح')
+        await useCartStore.getState().refreshCartCount()
        fetchData(1)
     } catch (error) {
       console.error('فشل حذف العنصر:', error)
@@ -269,10 +270,7 @@ const handelcode = async (e: React.FormEvent) => {
       <p className="text-green-700 text-lg font-bold">{cartInfo.total} ج.م</p>
     </div>
 
-    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">🚚 رسوم التوصيل</p>
-      <p className="text-orange-600 text-lg font-bold">{cartInfo.delivery_discount}%</p>
-    </div>
+
     <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
       <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
       <p className="text-orange-600 text-lg font-bold">{cartInfo.total}ج.م</p>
@@ -298,13 +296,26 @@ const handelcode = async (e: React.FormEvent) => {
       <FormField fields={fields} data={code} onChange={setcode} />
     </div>
 <div className='mt-11 w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold rounded-lg shadow hover:opacity-90 transition text-center'>
+{(!verificatio)?
+(
 
-    <button
-      type="submit"
-      className="p-2 "
-      >
+  <button
+  
+  type="submit"
+  className="p-2 "
+  >
       تفعيل
     </button>
+    ):(
+        <button
+  disabled
+  type="submit"
+  className="p-2 "
+  >
+      تفعيل
+    </button>
+    )
+      }
       </div>
   </div>
 </form>
