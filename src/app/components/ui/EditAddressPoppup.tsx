@@ -143,7 +143,7 @@ const EditAddressPoppup: React.FC<EditAddressPoppupProps> = (props) => {
                 { headers }
             );
             if (res.status === 200) {
-                toast.success("تم حفظ العنوان بنجاح!");
+                toast.success("تم تعديل العنوان بنجاح!");
                 onClose();
                 if (onSave) onSave();
             } else toast.error("حدث خطأ أثناء حفظ العنوان");

@@ -8,6 +8,9 @@ import { BaseUrl, headers } from "../Baseurl";
 import Link from "next/link";
 import cash from "../../../../public/asset/images/cash.png";
 import toast from "react-hot-toast";
+import { Edit2 } from "lucide-react";
+import EditAddressPoppup from "../../components/ui/EditAddressPoppup";
+
 
 export const Cash = ({
     show,
@@ -17,23 +20,34 @@ export const Cash = ({
     oncheckout,
     close,
 }: // color_id,
-Checkout) => {
+    Checkout) => {
     const [addressList, setAddressList] = useState<AddressData[]>([]);
     const [paymentMethod, setPaymentMethod] = useState("cash");
     const [usePoints, setUsePoints] = useState<string>("0");
-      const [profile, setProfile] = useState<Profile>();
-      const [delivery,setdelivery]=useState(0)
+
+    const [editOpen, setEditOpen] = useState(false);
+    const [selectedAddress, setSelectedAddress] = useState<AddressData | null>(
+        null
+    );
+    const [loading, setLoading] = useState(true);
+
+
+    const [profile, setProfile] = useState<Profile>();
+    const [delivery, setdelivery] = useState(0)
+
     const [sure, setsure] = useState<surecash>({
         user_address_id: 0,
         payment_type: "1",
         notes: "",
         code: code,
+
         use_points: "0",
     });
     const [check, setcheck] = useState(false);
     const order = `${BaseUrl}api/orders`;
     const delete_address = `${BaseUrl}api/address/`;
-  const url = `${BaseUrl}api/user/profile`;
+
+    const url = `${BaseUrl}api/user/profile`;
 
     useEffect(() => {
         const fetchAddresses = async () => {
@@ -50,20 +64,20 @@ Checkout) => {
                 console.error("فشل تحميل العناوين:", err);
             }
         };
-         const getProfile = async () => {
-      try {
-        const res = await axios.get(url, { headers });
-        console.log(res.data.data.name);
-        setProfile(res.data.data);
-      } catch (error) {
-        console.log(error);
-        toast.error("خطأ فى جلب المعلومات الخاصه بك");
-      }
-    };
+        const getProfile = async () => {
+            try {
+                const res = await axios.get(url, { headers });
+                console.log(res.data.data.name);
+                setProfile(res.data.data);
+            } catch (error) {
+                console.log(error);
+                toast.error("خطأ فى جلب المعلومات الخاصه بك");
+            }
+        };
 
         fetchAddresses();
         getProfile();
-    }, []);
+    }, [addressList]);
 
     useEffect(() => {
         document.body.style.overflow = show ? "hidden" : "auto";
@@ -84,7 +98,7 @@ Checkout) => {
     const handelcash = (field: keyof surecash, value: any) => {
         setsure((prevsure) => ({ ...prevsure, [field]: value }));
     };
-    const handel_delivery_cost=(cost:number)=>{
+    const handel_delivery_cost = (cost: number) => {
         setdelivery(cost);
     }
     const handleConfirm = async () => {
@@ -120,23 +134,26 @@ Checkout) => {
         console.log("📦 الطلب المرسل:", finalSure);
     };
 
-    const handeldelete_address = (id: number) => {
-        axios
-            .delete(`${delete_address}${id}`, { headers })
-            .then((res) => {
-                if (res.data.status) {
-                    toast.success("✅ تم حذف العنوان بنجاح");
-                    setAddressList((prev) =>
-                        prev.filter((addr) => addr.id !== id)
-                    );
-                } else {
-                    toast.error("❌ فشل حذف العنوان");
-                }
-            })
-            .catch((err) => {
-                console.error("🚨 خطأ في حذف العنوان:", err);
-                toast.error("⚠️ حدث خطأ أثناء حذف العنوان");
-            });
+    // const handeldelete_address = (id: number) => {
+    //     axios
+    //         .delete(`${delete_address}${id}`, { headers })
+    //         .then((res) => {
+    //             if (res.data.status) {
+    //                 toast.success("✅ تم حذف العنوان بنجاح");
+    //                 setAddressList((prev) =>
+    //                     prev.filter((addr) => addr.id !== id)
+    //                 );
+    //             } else {
+    //                 toast.error("❌ فشل حذف العنوان");
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             console.error("🚨 خطأ في حذف العنوان:", err);
+    //             toast.error("⚠️ حدث خطأ أثناء حذف العنوان");
+    //         });
+    // };
+    const handleSave = () => {
+        setEditOpen(false);
     };
 
     if (!show) return null;
@@ -147,12 +164,14 @@ Checkout) => {
                 <button
                     className="absolute top-3 left-3 text-xl text-gray-500 hover:text-red-500"
                     onClick={close}>
-                    <X/>
+
+                    <X />
                 </button>
 
                 <h2 className="text-xl font-bold text-center text-gray-800 mb-2">
                     🧾 تفاصيل الدفع
                 </h2>
+
 
                 <div className="space-y-2">
                     <h3 className="text-right font-semibold text-gray-700">
@@ -162,29 +181,45 @@ Checkout) => {
                         {addressList.map((addr) => (
                             <div
                                 key={addr.id}
+
                                 onClick={() => {
                                     handelcash("user_address_id", addr.id),
-                                    handel_delivery_cost(addr.area.final_cost)
+                                        handel_delivery_cost(addr.area.final_cost)
                                 }}
-                                className={`p-3 min-w-[250px] whitespace-normal break-words rounded-xl relative cursor-pointer border-2 transition hover:shadow-md text-right ${
-                                    sure.user_address_id === addr.id
+                                className={`p-3 min-w-[250px] whitespace-normal break-words rounded-xl relative cursor-pointer border-2 transition hover:shadow-md text-right ${sure.user_address_id === addr.id
                                         ? "border-purple-700 bg-purple-50"
                                         : "border-gray-200 bg-gray-50"
-                                }`}>
-                      
+                                    }`}>
+
                                 <div className="flex items-center justify-between mb-1">
                                     <span className="font-bold text-gray-800 flex items-center gap-1">
                                         <MapPin size={16} />
                                         {addr.full_name}
                                     </span>
+                                    <button
+                                        className="p-2 rounded-full hover:bg-purple-200 transition"
+                                        title="تعديل"
+                                    >
+                                        <Edit2
+                                            className="text-gray-700 hover:text-purple-700 transition"
+                                            size={20}
+                                            onClick={() => {
+                                                setSelectedAddress(addr);
+                                                setEditOpen(true);
+                                            }}
+                                        />
+                                    </button>
                                 </div>
+
                                 <p className="text-sm text-gray-600">
                                     {addr.address_details}, {addr.area.name},{" "}
                                     {addr.city.name}
+
                                 </p>
                                 <p className="text-xs text-gray-500 mt-1">
                                     تكلفة التوصيل: {addr.area.final_cost} ج.م
                                 </p>
+
                             </div>
                         ))}
                     </div>
@@ -196,15 +231,15 @@ Checkout) => {
                         إضافة عنوان جديد
                     </Link>
 
-                    <Link
+                    {/* <Link
                         href={"/editLocation"}
                         className="mt-2 flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200">
                         <Pencil size={16} />
+
                         تعديل العنوان
-                    </Link>
+                    </Link> */}
                 </div>
 
-                {/* ✅ طريقة الدفع */}
                 <div className="text-right">
                     <label className="block mb-2 font-medium text-gray-700">
                         💳 طريقة الدفع:
@@ -214,12 +249,12 @@ Checkout) => {
                             onClick={() => {
                                 handelcash("payment_type", "1");
                             }}
-                            className={`flex items-center gap-3 px-4 py-2 border rounded-lg transition ${
-                                paymentMethod === "cash"
+                            className={`flex items-center gap-3 px-4 py-2 border rounded-lg transition ${paymentMethod === "cash"
                                     ? "bg-gradient-to-r from-purple-700 to-orange-400 text-white border-none"
                                     : "bg-gray-100 border-gray-300 text-gray-700"
-                            }`}>
+                                }`}>
                             <Wallet size={18} />
+
                             <span>الدفع عند الاستلام</span>
                             <Image
                                 src={cash}
@@ -233,9 +268,10 @@ Checkout) => {
                     </div>
                 </div>
 
-<div  className="points w-full p-3  bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition">
-نقاطك : {profile?.points}
-</div>
+
+                <div className="points w-full p-3  bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition">
+                    نقاطك : {profile?.points}
+                </div>
                 <div className="flex items-center gap-2 text-right">
                     <input
                         id="usePoints"
@@ -243,7 +279,8 @@ Checkout) => {
                         onClick={() => {
                             handelcheck();
                         }}
-                        className="w-5 h-5 accent-purple-700"
+
+                        className="w-5 h-5 accent-purple-700 cursor-pointer"
                     />
                     <label
                         htmlFor="usePoints"
@@ -253,31 +290,32 @@ Checkout) => {
                 </div>
 
                 {/* ✅ المنتجات */}
-               <div className="grid grid-cols-1  sm:grid-cols-3 md:grid-cols-1 gap-4 mb-8 text-center text-sm sm:text-base">
-    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">💰 المجموع الفرعى</p>
-      <p className="text-green-700 text-lg font-bold">{items?.total} ج.م</p>
-    </div>
 
-    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">🚚 رسوم التوصيل</p>
-      <p className="text-orange-600 text-lg font-bold">{delivery??0}  ج.م</p>
-    </div>
-    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
-      <p className="text-orange-600 text-lg font-bold">
-  {Number(items?.total || 0) + Number(delivery || 0)} ج.م
-</p>
+                <div className="grid grid-cols-1  sm:grid-cols-3 md:grid-cols-1 gap-4 mb-8 text-center text-sm sm:text-base">
+                    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+                        <p className="text-gray-700 font-semibold mb-1">💰 المجموع الفرعى</p>
+                        <p className="text-green-700 text-lg font-bold">{items?.total} ج.م</p>
+                    </div>
 
-    </div>
-    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">⭐ نقاطك</p>
-      <p className="text-purple-700 text-lg font-bold">
-         {(profile?.points ?? 0) * Number(profile?.pointsSettings?.point_price  ?? 0)}
-           </p>
-    </div>
+                    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+                        <p className="text-gray-700 font-semibold mb-1">🚚 رسوم التوصيل</p>
+                        <p className="text-orange-600 text-lg font-bold">{delivery ?? 0}  ج.م</p>
+                    </div>
+                    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+                        <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
+                        <p className="text-orange-600 text-lg font-bold">
+                            {Number(items?.total || 0) + Number(delivery || 0)} ج.م
+                        </p>
 
-  </div>
+                    </div>
+                    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+                        <p className="text-gray-700 font-semibold mb-1">⭐ نقاطك</p>
+                        <p className="text-purple-700 text-lg font-bold">
+                            {(profile?.points ?? 0) * Number(profile?.pointsSettings?.point_price ?? 0)}
+                        </p>
+                    </div>
+
+                </div>
 
                 {code && (
                     <div className="text-right text-green-700 font-medium">
@@ -307,6 +345,14 @@ Checkout) => {
                     </button>
                 </div>
             </div>
+            {/* Popup for editing address */}
+            <EditAddressPoppup
+                open={editOpen}
+                address={selectedAddress}
+                onClose={() => setEditOpen(false)}
+                onSave={handleSave}
+            />
         </div>
     );
+
 };

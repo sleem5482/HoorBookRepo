@@ -4,19 +4,23 @@ import Container from '../Container'
 import {
   FaFacebookF,
   FaInstagram,
-  FaTwitter,
+  // FaTwitter,
   FaMapMarkerAlt,
   FaPhoneAlt,
   FaEnvelope,
   FaCcVisa,
   FaCcMastercard,
   FaCcPaypal,
+  FaLinkedin,
 } from 'react-icons/fa'
 
 import Logo from '../../../../public/asset/images/حورلوجو-1.png'
 import Link from 'next/link'
 
 const Footer: React.FC = () => {
+    const  facebook = "https://www.facebook.com/profile.php?id=100091247261037&mibextid=ZbWKwL"
+          const instagram = "https://instagram.com/hoorbook1?igshid=NGExMmI2YTkyZg=="
+          const  linkedin = "https://www.linkedin.com/company/hoor-book/"
   return (
     <footer className="bg-[#6B2B7A] text-white mt-20 rounded-t-3xl shadow-2xl pb-3">
       <Container>
@@ -28,10 +32,23 @@ const Footer: React.FC = () => {
               هايبر حور – كل احتياجات بيتك من مكان واحد. عروض يومية، جودة مضمونة، وخدمة عملاء ممتازة.
             </p>
             <div className="flex items-center gap-4 mt-6">
-              <Link href="#" className="text-white hover:text-purple-200 transition"><FaFacebookF size={18} /></Link>
-              <Link href="#" className="text-white hover:text-purple-200 transition"><FaInstagram size={18} /></Link>
-              <Link href="#" className="text-white hover:text-purple-200 transition"><FaTwitter size={18} /></Link>
+              <Link href={facebook} target='_blank' rel='nooper noreferrer' className="text-white hover:text-purple-200 transition"><FaFacebookF size={18} /></Link>
+              <Link href={instagram} target='_blank' rel='nooper noreferrer' className="text-white hover:text-purple-200 transition"><FaInstagram size={18} /></Link>
+              <Link href={linkedin} target='_blank' rel='nooper noreferrer' className="text-white hover:text-purple-200 transition"><FaLinkedin size={18} /></Link>
             </div>
+             <div className="flex flex-col mt-6">
+      <Link href="/Terms&Conditions" target="_blank" rel='nooper noreferrer' className="text-white hover:cursor-pointer">
+        الشروط والأحكام
+      </Link>
+
+      <Link href="/PrivacyPolicy" target="_blank" rel='nooper noreferrer' className="text-white hover:cursor-pointer">
+        سياسة الخصوصية
+      </Link>
+
+      <Link href="/ReturnPolicy" target="_blank" rel='nooper noreferrer' className="text-white hover:cursor-pointer">
+        سياسة الاستبدال والاسترجاع
+      </Link>
+    </div>
           </div>
 
           {/* Categories */}
@@ -74,7 +91,6 @@ const Footer: React.FC = () => {
             </div>
           </div>
         </div>
-
         {/* Bottom */}
         <div className="mt-10 border-t border-purple-400 pt-6 text-center text-sm text-gray-200">
           &copy; {new Date().getFullYear()} جميع الحقوق محفوظة – <span className="font-semibold">Hoor Hyper Market</span>

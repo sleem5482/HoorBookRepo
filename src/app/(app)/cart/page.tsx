@@ -7,12 +7,12 @@ import Image from 'next/image'
 import { Trash2, Pencil } from 'lucide-react'
 import { BaseUrl, headers } from '@/app/components/Baseurl'
 import Container from '@/app/components/Container'
-import {  CartItem, CartResponse, Coupoun, FieldForm } from '@/app/lib/type'
+import { CartItem, CartResponse, Coupoun, FieldForm } from '@/app/lib/type'
 import SmartNavbar from '@/app/components/ui/Navbar'
 import toast from 'react-hot-toast'
 import { useCartStore } from '@/app/store/cartStore'
 import Cookies from "js-cookie";
-import { LoginRequiredModal} from '@/app/components/ui/Pop-up-login'
+import { LoginRequiredModal } from '@/app/components/ui/Pop-up-login'
 import FormField from '@/app/components/ui/Formfield'
 import { Cash } from '@/app/components/FeatureComponent/Modelcash'
 import Link from 'next/link';
@@ -76,7 +76,7 @@ const EditModal = ({
 
 export default function Cart() {
   const token = Cookies.get("access_token_login");
-  const [login,setlogin]=useState<boolean>(true);
+  const [login, setlogin] = useState<boolean>(true);
   const [items, setItems] = useState<CartItem[]>([])
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState<boolean>(true)
@@ -84,63 +84,63 @@ export default function Cart() {
   const { refreshCartCount } = useCartStore()
   const [cartInfo, setCartInfo] = useState<any>(null)
   const [code, setcode] = useState<Record<string, any>>({});
-  const [open,setopen]=useState<boolean>(false)
-  const [verificatio,setverification]=useState(false);
+  const [open, setopen] = useState<boolean>(false)
+  const [verificatio, setverification] = useState(false);
 
-  const [discount_copoun,setdescount]=useState<Coupoun>({
-    type:'',
-    value:0
+  const [discount_copoun, setdescount] = useState<Coupoun>({
+    type: '',
+    value: 0
   });
-  const discount=`${BaseUrl}api/check-valid-copoun`;
-  const fields:FieldForm[]=[
+  const discount = `${BaseUrl}api/check-valid-copoun`;
+  const fields: FieldForm[] = [
     {
       label: "كود الخصم ",
       name: "code",
       type: "text",
       requierd: false,
-      placeholder:"ادخل كود الخصم"
+      placeholder: "ادخل كود الخصم"
     },
   ]
 
   const fetchData = async (pageNum: number) => {
     try {
-      if(!token){
+      if (!token) {
         setlogin(true);
       }
-      else{
+      else {
         setlogin(false)
         const res = await axios.get<CartResponse>(
           `${BaseUrl}api/carts?page=${pageNum}`,
           { headers }
-      )
+        )
 
-      const newItems = res.data.data.data.data
-      const info=res.data.data.info
-      
-      
-      const currentPage = res.data.data.data.meta.current_page
-      const lastPage = res.data.data.data.meta.last_page
-      setCartInfo(info)
-      setItems(prev => {
-        const ids = new Set(prev.map(p => p.id));
-        const filtered = newItems.filter(p => !ids.has(p.id));
-        return [...prev, ...filtered];
-      });
-      setHasMore(currentPage < lastPage)
-    }
+        const newItems = res.data.data.data.data
+        const info = res.data.data.info
+
+
+        const currentPage = res.data.data.data.meta.current_page
+        const lastPage = res.data.data.data.meta.last_page
+        setCartInfo(info)
+        setItems(prev => {
+          const ids = new Set(prev.map(p => p.id));
+          const filtered = newItems.filter(p => !ids.has(p.id));
+          return [...prev, ...filtered];
+        });
+        setHasMore(currentPage < lastPage)
+      }
     } catch (error) {
       console.error('حدث خطأ أثناء تحميل البيانات:', error)
     }
   }
 
-useEffect(() => {
-  if (token) {
-    setlogin(false);
-    fetchData(1);
-  } else {
-    setlogin(true);
-  }
-}, [token]);
+  useEffect(() => {
+    if (token) {
+      setlogin(false);
+      fetchData(1);
+    } else {
+      setlogin(true);
+    }
+  }, [token]);
 
 
   const loadMore = () => {
@@ -155,8 +155,8 @@ useEffect(() => {
       setItems(prev => prev.filter(item => item.id !== id))
       refreshCartCount()
       toast.success('🗑️ تم حذف المنتج بنجاح')
-        await useCartStore.getState().refreshCartCount()
-       fetchData(1)
+      await useCartStore.getState().refreshCartCount()
+      fetchData(1)
     } catch (error) {
       console.error('فشل حذف العنصر:', error)
       toast.error('حدث خطأ أثناء حذف المنتج')
@@ -184,7 +184,7 @@ useEffect(() => {
         )
       )
 
-      refreshCartCount() 
+      refreshCartCount()
       toast.success('🎉 تم تعديل المنتج بنجاح')
       setEditingItem(null)
       fetchData(1);
@@ -192,55 +192,55 @@ useEffect(() => {
       toast.error('❌ حدث خطأ أثناء التعديل')
     }
   }
-const handelcode = async (e: React.FormEvent) => {
-  e.preventDefault();
-  try {
-    const res = await axios.post(discount, code, { headers });
+  const handelcode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(discount, code, { headers });
 
-    const status = res.data.status;
+      const status = res.data.status;
 
-    if (status.status === false ) {
-      toast.error("❌ خطأ في الكود");
-      setverification(false)
-      return;
+      if (status.status === false) {
+        toast.error("❌ خطأ في الكود");
+        setverification(false)
+        return;
+      }
+
+      toast.success("✅ تم تفعيل الكود بنجاح");
+      setverification(true)
+      const discountData = res.data;
+
+
+      if (!discountData) {
+        toast.error("حدث خطأ في قراءة بيانات الخصم");
+        return;
+      }
+
+      let updatedTotal = Number((cartInfo.total));
+
+      if (discountData.data.type === 'percentage') {
+        updatedTotal = updatedTotal - (updatedTotal * (discountData.data.value / 100));
+        setdescount((prev) => ({ ...prev, type: 'percentage' }));
+        setdescount((prev) => ({ ...prev, value: discountData.data.value }));
+      } else {
+        updatedTotal -= discountData.data.value;
+        console.log(updatedTotal);
+        setdescount((prev) => ({ ...prev, type: 'fixed' }));
+        setdescount((prev) => ({ ...prev, value: discountData.data.value }));
+
+      }
+
+      updatedTotal = Math.max(0, updatedTotal);
+
+      setCartInfo((prev: any) => ({
+        ...prev,
+        total: String(updatedTotal.toFixed(2)),
+      }));
+
+    } catch (error: any) {
+      console.error(error);
+      toast.error(" حدث خطأ أثناء التفعيل");
     }
-    
-    toast.success("✅ تم تفعيل الكود بنجاح");
-    setverification(true)
-    const discountData = res.data;
-  
-
-    if (!discountData) {
-      toast.error("حدث خطأ في قراءة بيانات الخصم");
-      return;
-    }
-
-    let updatedTotal = Number( (cartInfo.total));
-
-    if (discountData.data.type === 'percentage') {
-      updatedTotal = updatedTotal - (updatedTotal * (discountData.data.value / 100));
-      setdescount((prev) => ({ ...prev, type: 'percentage' }));
-      setdescount((prev) => ({ ...prev, value: discountData.data.value}));
-    } else {
-      updatedTotal -=   discountData.data.value;
-      console.log(updatedTotal);
-       setdescount((prev) => ({ ...prev, type: 'fixed' }));
-      setdescount((prev) => ({ ...prev, value: discountData.data.value}));
-      
-    }
-
-    updatedTotal = Math.max(0, updatedTotal);
-
-    setCartInfo((prev: any) => ({
-      ...prev,
-      total: String(updatedTotal.toFixed(2)),
-    }));
-
-  } catch (error: any) {
-    console.error(error);
-    toast.error(" حدث خطأ أثناء التفعيل" );
-  }
-};
+  };
 
 
   return (
@@ -264,64 +264,64 @@ const handelcode = async (e: React.FormEvent) => {
 
 
           {cartInfo && (
-  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-center text-sm sm:text-base">
-    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">💰 المجموع الفرعى</p>
-      <p className="text-green-700 text-lg font-bold">{cartInfo.total} ج.م</p>
-    </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-center text-sm sm:text-base">
+              <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+                <p className="text-gray-700 font-semibold mb-1">💰 المجموع الفرعى</p>
+                <p className="text-green-700 text-lg font-bold">{cartInfo.total} ج.م</p>
+              </div>
 
 
-    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
-      <p className="text-orange-600 text-lg font-bold">{cartInfo.total}ج.م</p>
-    </div>
-      <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">الخصم</p>
-      <p className="text-gray-700 text-lg font-bold">
-        {(discount_copoun.type==='percentage')?(
-          `${discount_copoun.value} %` 
-        ):(
-          `${discount_copoun.value} ج.م` 
+              <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+                <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
+                <p className="text-orange-600 text-lg font-bold">{cartInfo.total}ج.م</p>
+              </div>
+              <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+                <p className="text-gray-700 font-semibold mb-1">الخصم</p>
+                <p className="text-gray-700 text-lg font-bold">
+                  {(discount_copoun.type === 'percentage') ? (
+                    `${discount_copoun.value} %`
+                  ) : (
+                    `${discount_copoun.value} ج.م`
 
-        )}
-      </p>
-    </div>
-  </div>
-)}
-<div className="code mb-7">
-<form onSubmit={handelcode} className="w-full">
-  <div className="flex justify-center items-center gap-3 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow border border-gray-200">
-    
-    <div>
-      <FormField fields={fields} data={code} onChange={setcode} />
-    </div>
-<div className='mt-11 w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold rounded-lg shadow hover:opacity-90 transition text-center'>
-{(!verificatio)?
-(
+                  )}
+                </p>
+              </div>
+            </div>
+          )}
+          <div className="code mb-7">
+            <form onSubmit={handelcode} className="w-full">
+              <div className="flex justify-center items-center gap-3 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow border border-gray-200">
 
-  <button
-  
-  type="submit"
-  className="p-2 "
-  >
-      تفعيل
-    </button>
-    ):(
-        <button
-  disabled
-  type="submit"
-  className="p-2 "
-  >
-      تفعيل
-    </button>
-    )
-      }
-      </div>
-  </div>
-</form>
+                <div>
+                  <FormField fields={fields} data={code} onChange={setcode} />
+                </div>
+                <div className='mt-11 w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold rounded-lg shadow hover:opacity-90 transition text-center'>
+                  {(!verificatio) ?
+                    (
 
-</div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-10">
+                      <button
+
+                        type="submit"
+                        className="p-2 "
+                      >
+                        تفعيل
+                      </button>
+                    ) : (
+                      <button
+                        disabled
+                        type="submit"
+                        className="p-2 "
+                      >
+                        تفعيل
+                      </button>
+                    )
+                  }
+                </div>
+              </div>
+            </form>
+
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-10">
             {items.map(item => (
               <div
                 key={item.id}
@@ -339,33 +339,33 @@ const handelcode = async (e: React.FormEvent) => {
 
                 <Link href={`/details/${item.product_id}`} className="flex-1 text-center sm:text-right">
                   <h3 className="font-bold text-lg text-gray-800 mb-1">{item.product.name}</h3>
-                  { ((item.product_type)=== "Piece")?(
+                  {((item.product_type) === "Piece") ? (
 
                     <p className="text-sm text-gray-700 mb-1">الكمية: {item.qty}  قطعه</p>
-                  ):
-                  (
-                    <p className="text-sm text-gray-700 mb-1">الكمية: {item.qty} دسته</p>
-                  )}
+                  ) :
+                    (
+                      <p className="text-sm text-gray-700 mb-1">الكمية: {item.qty} دسته</p>
+                    )}
                   <div className='flex items-center justify-center'>
 
-                  <p className="text-sm text-green-700 font-semibold">
-                    السعر : {item.price_after_discount}  ج.م
-                  </p>
-                  {(item.price_before_discount!=null)?(
-                    <p className='text-gray-400 text-sm line-through mr-4'> {item.price_before_discount} ج .م</p>
-                  ):('')}
+                    <p className="text-sm text-green-700 font-semibold">
+                      السعر : {item.price_after_discount}  ج.م
+                    </p>
+                    {(item.price_before_discount != null) ? (
+                      <p className='text-gray-400 text-sm line-through mr-4'> {item.price_before_discount} ج .م</p>
+                    ) : ('')}
                   </div>
-                 <div className="flex items-center justify-center gap-2">
-                  {(item.color.code!=null)?(
-<>
-                    <span className='text-gray-500' > اللون:</span>
-  <span
-  className="w-4 h-4 rounded border"
-  style={{ backgroundColor: item.color?.code }}
-  ></span>
-  </>
-):('')}
-</div>
+                  <div className="flex items-center justify-center gap-2">
+                    {(item.color.code != null) ? (
+                      <>
+                        <span className='text-gray-500' > اللون:</span>
+                        <span
+                          className="w-4 h-4 rounded border"
+                          style={{ backgroundColor: item.color?.code }}
+                        ></span>
+                      </>
+                    ) : ('')}
+                  </div>
 
 
                 </Link>
@@ -388,37 +388,37 @@ const handelcode = async (e: React.FormEvent) => {
                 </div>
               </div>
             ))}
-      </div>
+          </div>
 
 
-<div className="sale">
-        <button
-      type="submit"
-      onClick={()=>{
-        setopen(true)
-      }}
-      className="p-4  w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold rounded-lg shadow hover:opacity-90 transition"
-      >
-      اتمام الشراء
-    </button>
-      </div>
+          <div className="sale">
+            <button
+              type="submit"
+              onClick={() => {
+                setopen(true)
+              }}
+              className="p-4  w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold rounded-lg shadow hover:opacity-90 transition"
+            >
+              اتمام الشراء
+            </button>
+          </div>
         </InfiniteScroll>
 
-  <Cash
-  show={open}
-  id={1}
-  code={(verificatio)?code.code:undefined}
-  items={cartInfo}
-  oncheckout={() => {
-    console.log("🚀 بيانات الطلب:");
-  }}
-  close={() => setopen(false)} 
-/>
+        <Cash
+          show={open}
+          id={1}
+          code={(verificatio) ? code.code : undefined}
+          items={cartInfo}
+          oncheckout={() => {
+            console.log("🚀 بيانات الطلب:");
+          }}
+          close={() => setopen(false)}
+        />
 
 
 
 
-   </Container>
+      </Container>
 
       {editingItem && (
         <EditModal
@@ -427,7 +427,7 @@ const handelcode = async (e: React.FormEvent) => {
           onSave={handleSaveEdit}
         />
       )}
-      <LoginRequiredModal show={login}/>
+      <LoginRequiredModal show={login} />
     </div>
   )
 }
