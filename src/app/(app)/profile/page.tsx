@@ -53,6 +53,14 @@ export default function ProfilePage() {
               <h2 className="text-xl font-bold text-purple-800 ">{profile?.name}</h2>
               <p className="text-sm text-gray-600">{profile?.email}</p>
             </div>
+            <div className="w-full mt-2 bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition">
+              <p>
+              نقاطى : <span>  
+                  {profile?.points}     
+</span>   
+
+              </p>
+            </div>
 
             <div className="grid grid-cols-2 gap-4 text-center">
               <div className="bg-purple-100 rounded-xl p-4">
@@ -64,13 +72,18 @@ export default function ProfilePage() {
               <div className="bg-orange-100 rounded-xl p-4">
                 <Star className="text-orange-500 mb-2 mx-auto" />
                 <p className="text-sm text-gray-700">النقاط</p>
-                <p className="text-lg font-bold text-orange-600">{profile?.points}</p>
+ <p className="text-lg font-bold text-orange-600">
+  {(profile?.points ?? 0) * Number(profile?.pointsSettings?.point_price  ?? 0)}
+</p>
+
               </div>
+
+              
 
                 <Link href={'/cart'} className="bg-blue-100 rounded-xl p-4">
               <div >
                 <ShoppingCart className="text-blue-500 mb-2 mx-auto" />
-                <p className="text-sm text-gray-700">عدد السلع في السلة</p>
+                <p className="text-sm text-gray-700">عدد السلع في السلة </p>
                 <p className="text-md font-semibold text-blue-700">{profile?.CartCount}</p>
               </div>
                 </Link>
@@ -83,19 +96,25 @@ export default function ProfilePage() {
 <div className="grid grid-cols-3 gap-4 text-center mt-6">
   <Link href="/orders" className="flex flex-col items-center bg-purple-50 p-4 rounded-xl hover:shadow transition">
     <ShoppingCart className="text-purple-600 mb-1" size={24} />
-    <span className="text-sm text-purple-800 font-semibold">الطلبات</span>
+    <span className="text-sm text-purple-800 font-semibold">الطلبات  </span>
   </Link>
 
   <Link href="/account" className="flex flex-col items-center bg-purple-50 p-4 rounded-xl hover:shadow transition">
     <User className="text-purple-600 mb-1" size={24} />
-    <span className="text-sm text-purple-800 font-semibold">الحساب</span>
+    <span className="text-sm text-purple-800 font-semibold">الحساب
+      
+    </span>
   </Link>
 
   <Link href="/favorite" className="flex flex-col items-center bg-purple-50 p-4 rounded-xl hover:shadow transition">
     <Star className="text-purple-600 mb-1" size={24} />
     <span className="text-sm text-purple-800 font-semibold">المفضلة</span>
   </Link>
+
+  
 </div>
+
+
 
 {/* زر تسجيل الخروج */}
 <button

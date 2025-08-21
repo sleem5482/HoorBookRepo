@@ -123,7 +123,7 @@ const IconsBlock = (cartCount: number) => (
     <ShoppingCart size={18} />
     
     {cartCount > 0 && (
-      <span className="absolute -top-1 -right-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] rounded-full font-bold">
+      <span className="absolute -top-1 -left-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] rounded-full font-bold">
         {cartCount}
       </span>
     )}

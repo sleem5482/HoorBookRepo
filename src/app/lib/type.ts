@@ -459,11 +459,20 @@ export interface BottomSelectFieldProps {
   onBlockedOpen?: () => void; // new prop
 }
 
+
+export interface Details_Order{
+  total:number
+  delivery_discount:number;
+  points_settings:{
+    points:number;
+    price:number;
+  }
+}
 export interface Checkout {
   show: boolean;
   id: number;
   code?: string;
-  items: CartItem[];
+  items: Details_Order;
   use_points?: boolean;
   oncheckout: () => void;
   // color_id:number|null
@@ -599,3 +608,9 @@ export type moodel_order = {
   cancelOrder?: (reason: string, status: string) => void;
   setReason?: (reason: string) => void;
 };
+
+
+export interface Coupoun{
+  type:string,
+  value:number;
+}

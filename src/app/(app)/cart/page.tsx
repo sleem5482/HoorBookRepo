@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { Trash2, Pencil } from 'lucide-react'
 import { BaseUrl, headers } from '@/app/components/Baseurl'
 import Container from '@/app/components/Container'
-import {  CartItem, CartResponse, FieldForm } from '@/app/lib/type'
+import {  CartItem, CartResponse, Coupoun, FieldForm } from '@/app/lib/type'
 import SmartNavbar from '@/app/components/ui/Navbar'
 import toast from 'react-hot-toast'
 import { useCartStore } from '@/app/store/cartStore'
@@ -86,6 +86,11 @@ export default function Cart() {
   const [code, setcode] = useState<Record<string, any>>({});
   const [open,setopen]=useState<boolean>(false)
   const [verificatio,setverification]=useState(false);
+
+  const [discount_copoun,setdescount]=useState<Coupoun>({
+    type:'',
+    value:0
+  });
   const discount=`${BaseUrl}api/check-valid-copoun`;
   const fields:FieldForm[]=[
     {
@@ -150,6 +155,7 @@ useEffect(() => {
       setItems(prev => prev.filter(item => item.id !== id))
       refreshCartCount()
       toast.success('🗑️ تم حذف المنتج بنجاح')
+        await useCartStore.getState().refreshCartCount()
        fetchData(1)
     } catch (error) {
       console.error('فشل حذف العنصر:', error)
@@ -213,9 +219,13 @@ const handelcode = async (e: React.FormEvent) => {
 
     if (discountData.data.type === 'percentage') {
       updatedTotal = updatedTotal - (updatedTotal * (discountData.data.value / 100));
+      setdescount((prev) => ({ ...prev, type: 'percentage' }));
+      setdescount((prev) => ({ ...prev, value: discountData.data.value}));
     } else {
       updatedTotal -=   discountData.data.value;
       console.log(updatedTotal);
+       setdescount((prev) => ({ ...prev, type: 'fixed' }));
+      setdescount((prev) => ({ ...prev, value: discountData.data.value}));
       
     }
 
@@ -223,12 +233,12 @@ const handelcode = async (e: React.FormEvent) => {
 
     setCartInfo((prev: any) => ({
       ...prev,
-      total: String(updatedTotal),
+      total: String(updatedTotal.toFixed(2)),
     }));
 
   } catch (error: any) {
     console.error(error);
-    toast.error("حدث خطأ أثناء التفعيل");
+    toast.error(" حدث خطأ أثناء التفعيل" );
   }
 };
 
@@ -256,21 +266,25 @@ const handelcode = async (e: React.FormEvent) => {
           {cartInfo && (
   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-center text-sm sm:text-base">
     <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">💰 السعر الإجمالي</p>
+      <p className="text-gray-700 font-semibold mb-1">💰 المجموع الفرعى</p>
       <p className="text-green-700 text-lg font-bold">{cartInfo.total} ج.م</p>
     </div>
 
-    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">🚚 خصم التوصيل</p>
-      <p className="text-orange-600 text-lg font-bold">{cartInfo.delivery_discount}%</p>
-    </div>
 
     <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">⭐ نقاطك</p>
-      <p className="text-purple-700 text-lg font-bold">
-        {cartInfo.points_settings.points} نقطة = {cartInfo.points_settings.price} ج.م
+      <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
+      <p className="text-orange-600 text-lg font-bold">{cartInfo.total}ج.م</p>
+    </div>
+      <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+      <p className="text-gray-700 font-semibold mb-1">الخصم</p>
+      <p className="text-gray-700 text-lg font-bold">
+        {(discount_copoun.type==='percentage')?(
+          `${discount_copoun.value} %` 
+        ):(
+          `${discount_copoun.value} ج.م` 
+
+        )}
       </p>
-      <p className="text-gray-500 text-xs mt-1">سعر النقطة: {cartInfo.points_settings.point_price} ج.م</p>
     </div>
   </div>
 )}
@@ -278,17 +292,30 @@ const handelcode = async (e: React.FormEvent) => {
 <form onSubmit={handelcode} className="w-full">
   <div className="flex justify-center items-center gap-3 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow border border-gray-200">
     
-    <div className="flex-1">
+    <div>
       <FormField fields={fields} data={code} onChange={setcode} />
     </div>
-<div className='mt-11'>
+<div className='mt-11 w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold rounded-lg shadow hover:opacity-90 transition text-center'>
+{(!verificatio)?
+(
 
-    <button
-      type="submit"
-      className="p-4  bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold rounded-lg shadow hover:opacity-90 transition"
-      >
+  <button
+  
+  type="submit"
+  className="p-2 "
+  >
       تفعيل
     </button>
+    ):(
+        <button
+  disabled
+  type="submit"
+  className="p-2 "
+  >
+      تفعيل
+    </button>
+    )
+      }
       </div>
   </div>
 </form>
@@ -322,7 +349,7 @@ const handelcode = async (e: React.FormEvent) => {
                   <div className='flex items-center justify-center'>
 
                   <p className="text-sm text-green-700 font-semibold">
-                    السعر : {item.price_after_discount} ج.م
+                    السعر : {item.price_after_discount}  ج.م
                   </p>
                   {(item.price_before_discount!=null)?(
                     <p className='text-gray-400 text-sm line-through mr-4'> {item.price_before_discount} ج .م</p>
@@ -381,7 +408,7 @@ const handelcode = async (e: React.FormEvent) => {
   show={open}
   id={1}
   code={(verificatio)?code.code:undefined}
-  items={items}
+  items={cartInfo}
   oncheckout={() => {
     console.log("🚀 بيانات الطلب:");
   }}

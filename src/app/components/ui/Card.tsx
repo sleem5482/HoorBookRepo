@@ -16,6 +16,7 @@ export const Card: React.FC<CardProps> = ({
 }) => {
   const [loveit, setLove] = useState<boolean>(love)
 
+
   useEffect(() => {
     setLove(love)
   }, [love])
@@ -78,7 +79,7 @@ export const Card: React.FC<CardProps> = ({
 
         {/* صورة المنتج */}
         <div className="relative w-full h-56">
-          <Image src={`${BaseUrl}${image}`} alt={name} fill className="object-contain rounded-t-2xl pt-5" unoptimized />
+           <Image src={`${BaseUrl}${image}`} alt={name} fill unoptimized className="object-contain rounded-t-2xl pt-5" />
         </div>
 
         {/* التفاصيل */}
@@ -100,10 +101,12 @@ export const Card: React.FC<CardProps> = ({
           <div className="flex items-center justify-end mt-2">
             <div className="space-x-1 rtl:space-x-reverse">
               <span className="font-bold text-lg text-black">
-              {(piece_price_after_offer===null)?(
+              {(piece_price_after_offer===null||piece_price_after_offer=="")?(
                 <span className='text-black' dir='rtl'>ج.م {piece_price} </span>
               ):(
-                <span className='text-black ' dir='rtl'> {piece_price_after_offer} ج.م <span className='text-gray-500 line-through'>{piece_price} </span></span>
+                <>
+                <span className='text-black ' dir='rtl'> {piece_price_after_offer} ج.م <br /><span className='text-gray-500 line-through'>{piece_price} ج.م</span></span>
+                </>
 
               )}
               

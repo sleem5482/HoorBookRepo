@@ -21,9 +21,14 @@ export default function ProductPage() {
     const pathname = usePathname();
     const categoryId = pathname.split("/").pop();
   const [inputValue, setInputValue] = useState("");
+    const [loader, setLoader] = useState<boolean>(false)
+useEffect(()=>{
+  setTimeout(() => {
+    setLoader(true)
+  }, 1500);
+},[])
 const token = Cookies.get("access_token_login");
 
-  const [homeData, setHomeData] = useState<HomePageData | null>(null);
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const { cartCount, refreshCartCount } = useCartStore()
   const [login,setlogin]=useState<boolean>(false)
@@ -39,27 +44,7 @@ const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
 });
 const url =`${BaseUrl}api/products/favourite`
 
-const handelfavorit = async (id: number) => {
-  try {
-    if(!token){
-      setlogin(true)
-      console.log(login);
-      
-     return;
-    }
-    setlogin(false)
-    const dataToSend = { product_id: id };
-    const res: ApiResponse<Favorit> = await CallApi("post", url, dataToSend, headers);
-    console.log('Accepted', res);
-    setFavoriteIds((prev) =>
-      prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
-  );
-      
-  
-  } catch (error) {
-    console.log(error);
-  }
-};
+
 
 const [favoriteProducts, setFavoriteProducts] = useState<number[]>([]);
 
@@ -199,7 +184,7 @@ const IconsBlock = (cartCount: number) => (
     <ShoppingCart size={18} />
     
     {cartCount > 0 && (
-      <span className="absolute -top-1 -right-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] rounded-full font-bold">
+      <span className="absolute -top-1 -left-1 bg-[#d2a400] text-white text-[12px] px-1.5 py-[1px] rounded-full font-bold">
         {cartCount}
       </span>
     )}
@@ -233,9 +218,7 @@ const IconsBlock = (cartCount: number) => (
         } bg-gradient-to-tr from-[#6B2B7A] via-[#844C9A] to-[#6B2B7A] shadow-lg backdrop-blur-md`}
       >
         <div className="max-w-screen-xl mx-auto px-4 py-3 flex flex-row items-center justify-between gap-6">
-          {/* الشعار والبحث */}
          <div className="flex flex-row md:justify-between items-center w-full md:gap-60 gap-4">
-  {/* الشعار */}
   <div className="w-full md:w-36 flex justify-center md:justify-start">
     <Link href="/" className="block">
       <Image
@@ -249,7 +232,6 @@ const IconsBlock = (cartCount: number) => (
     </Link>
   </div>
 
-  {/* مربع البحث */}
   <div className="w-full md:w-full flex justify-center items-center">
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center bg-white/90 rounded-full px-4 py-2 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
@@ -290,46 +272,34 @@ const IconsBlock = (cartCount: number) => (
 </div>
     <div className="p-4 mb-4">
 
-      {/* عرض المنتجات في شكل شبكة */}
       {renderProducts.length === 0 ? (
         <div className="flex justify-center item-center flex-col">
 
     
         <p className="text-center text-gray-500 mt-20 text-lg"> لاتوجد منتجات </p>
           </div>
-      ) : (
-        <div
+        ) : (
+          <section>
+
+            {loader&&
+          <div
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 px-2 sm:px-6 lg:px-12 mt-28"
           dir="rtl"
-        >
+          >
           {renderProducts.map((image, index) => (
             <div
-              key={index}
-              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.015] border border-gray-100"
+            key={index}
+            className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.015] border border-gray-100"
             >
               <Card
-                id={image.id}
-                image={image.image}
-                name={image.name}
-                description={image.description}
-                price={image.price}
-                originalPrice={image.originalPrice}
-                category={image.category}
-                discount={image.discount}
-                love={favoriteProducts.includes(image.id)}
-                stock={image.stock}
-                soldOut={image.soldOut}
-                packet_pieces={image.packet_pieces}
-                packet_price={image.packet_price}
-                piece_price_after_offer={image.piece_price_after_offer}
-                packet_price_after_offer={image.packet_price_after_offer}
-                reviews_avg={image.reviews_avg}
-                handellove={() => (handelfavorit(image.id))}
-                offer={image.offer}
+              {...image} 
+              
               />
+              </div>
+            ))}
             </div>
-          ))}
-        </div>
+          }
+            </section>
       )}
 
       {/* Infinite Scroll Trigger */}

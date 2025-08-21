@@ -1,14 +1,14 @@
 "use client";
-import Container from "../components/Container";
+import Container from "@/app/components/Container";
 import { signIn } from "next-auth/react";
-import { ApiResponse, FieldForm, Login } from "../lib/type";
+import { ApiResponse, FieldForm, Login } from "@/app/lib/type";
 import { useState } from "react";
-import FormField from "../components/ui/Formfield";
-import SmartNavbar from "../components/ui/Navbar";
+import FormField from "@/app/components/ui/Formfield";
+import SmartNavbar from "@/app/components/ui/Navbar";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
-import { BaseUrl } from "../components/Baseurl";
-import { Postresponse } from "../lib/methodes";
+import { BaseUrl } from "@/app/components/Baseurl";
+import { Postresponse } from "@/app/lib/methodes";
 import Cookies from 'js-cookie'
 import toast, {Toaster} from 'react-hot-toast';
 import { usePathname, useRouter } from "next/navigation";
@@ -16,7 +16,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { Button } from "@headlessui/react";
-import ForgotPasswordModal from "../components/ui/forgetPasswordModel";
+import ForgotPasswordModal from "@/app/components/ui/forgetPasswordModel";
 
 export default function LoginPage() {
   const [login, setLogin] = useState<Record<string, any>>({});
