@@ -349,7 +349,7 @@ const handelcode = async (e: React.FormEvent) => {
                   <div className='flex items-center justify-center'>
 
                   <p className="text-sm text-green-700 font-semibold">
-                    السعر : {item.price_after_discount} ج.م
+                    السعر : {item.price_after_discount}  ج.م
                   </p>
                   {(item.price_before_discount!=null)?(
                     <p className='text-gray-400 text-sm line-through mr-4'> {item.price_before_discount} ج .م</p>

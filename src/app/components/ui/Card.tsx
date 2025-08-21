@@ -104,7 +104,9 @@ export const Card: React.FC<CardProps> = ({
               {(piece_price_after_offer===null||piece_price_after_offer=="")?(
                 <span className='text-black' dir='rtl'>ج.م {piece_price} </span>
               ):(
-                <span className='text-black ' dir='rtl'> {piece_price_after_offer} ج.م <span className='text-gray-500 line-through'>{piece_price} </span></span>
+                <>
+                <span className='text-black ' dir='rtl'> {piece_price_after_offer} ج.م <br /><span className='text-gray-500 line-through'>{piece_price} ج.م</span></span>
+                </>
 
               )}
               
