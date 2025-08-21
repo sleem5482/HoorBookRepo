@@ -16,6 +16,7 @@ import { LoginRequiredModal } from "@/app/components/ui/Pop-up-login";
 import ErrorPopUP from "@/app/components/ui/pop-up_show_message_error";
 import { X } from "lucide-react";
 import { useCartStore } from "@/app/store/cartStore";
+import axios from "axios";
 export default function Details() {
   const [showPopup, setShowPopup] = useState(false);
   const [scale_image,setscale]=useState<boolean>(false)
@@ -49,8 +50,8 @@ export default function Details() {
   useEffect(() => {
     const getDetails = async () => {
       try {
-        const res: ApiResponse<ProductDetails> = await fetchData(`${BaseUrl}api/products/${productid}`);
-        setDetails(res.data);
+        const res = await axios.get(`${BaseUrl}api/products/${productid}`,{headers});
+        setDetails(res.data.data);
       } catch (error:any) {
         console.log( error?.response?.data?.status?.messages);
           setModal({
