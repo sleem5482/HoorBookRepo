@@ -473,6 +473,7 @@ export interface Checkout {
   id: number;
   code?: string;
   items: Details_Order;
+  discount?:Coupoun;
   use_points?: boolean;
   oncheckout: () => void;
   // color_id:number|null

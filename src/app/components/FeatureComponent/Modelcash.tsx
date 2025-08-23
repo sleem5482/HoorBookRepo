@@ -19,6 +19,7 @@ export const Cash = ({
     items,
     oncheckout,
     close,
+    discount
 }: // color_id,
 Checkout) => {
     const [addressList, setAddressList] = useState<AddressData[]>([]);
@@ -160,7 +161,7 @@ Checkout) => {
 
     return (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4 overflow-y-auto">
-            <div className="bg-white w-full max-w-xl rounded-2xl shadow-2xl p-4 space-y-4 animate-fadeIn relative max-h-screen overflow-y-auto">
+            <div className="bg-white w-full max-w-xl rounded-2xl shadow-2xl p-4 space-y-4 animate-fadeIn relative z-[1000] max-h-screen overflow-y-auto">
                 <button
                     className="absolute top-3 left-3 text-xl text-gray-500 hover:text-red-500"
                     onClick={close}>
@@ -272,8 +273,9 @@ Checkout) => {
                 </div>
 
 
-<div  className="points w-full p-3  bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition">
-نقاطك : {profile?.points}
+<div  className="points w-full p-3 flex gap-5 bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition">
+<span>نقاطك : {profile?.points}</span>
+<span> رصيد النقاط : {((profile?.points ?? 0) * Number(profile?.pointsSettings?.point_price  ?? 0)).toFixed(2)} ج.م</span>
 </div>
                 <div className="flex items-center gap-2 text-right">
                     <input
@@ -304,18 +306,31 @@ Checkout) => {
       <p className="text-gray-700 font-semibold mb-1">🚚 رسوم التوصيل</p>
       <p className="text-orange-600 text-lg font-bold">{delivery??0}  ج.م</p>
     </div>
-    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+  
+    {/* <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+      <p className="text-gray-700 font-semibold mb-1">⭐ نقاطك</p>
+      <p className="text-purple-700 text-lg font-bold">
+         {(profile?.points ?? 0) * Number(profile?.pointsSettings?.point_price  ?? 0)}
+           </p>
+    </div> */}
+
+     <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+      <p className="text-gray-700 font-semibold mb-1"> الخصم</p>
+      <p className="text-purple-700 text-lg font-bold">
+        {(discount?.type==='percentage')?(
+          `${discount?.value} %` 
+        ):(
+          `${discount?.value} ج.م` 
+
+        )}
+           </p>
+    </div>
+      <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
       <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
       <p className="text-orange-600 text-lg font-bold">
   {Number(items?.total || 0) + Number(delivery || 0)} ج.م
 </p>
 
-    </div>
-    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">⭐ نقاطك</p>
-      <p className="text-purple-700 text-lg font-bold">
-         {(profile?.points ?? 0) * Number(profile?.pointsSettings?.point_price  ?? 0)}
-           </p>
     </div>
 
   </div>

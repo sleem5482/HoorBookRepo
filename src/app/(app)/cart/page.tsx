@@ -409,6 +409,7 @@ const handelcode = async (e: React.FormEvent) => {
   id={1}
   code={(verificatio)?code.code:undefined}
   items={cartInfo}
+  discount={discount_copoun}
   oncheckout={() => {
     console.log("🚀 بيانات الطلب:");
   }}
