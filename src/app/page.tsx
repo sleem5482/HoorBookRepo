@@ -229,7 +229,6 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
   {...image} 
   love={(image.user_favourite)} 
   handellove={() => handelfavorit(image.id)} 
-  
 />
 
   </div>

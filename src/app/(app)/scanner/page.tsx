@@ -10,7 +10,6 @@ import toast, { Toaster } from "react-hot-toast";
 import SmartNavbar from "@/app/components/ui/Navbar";
 import Loading from "@/app/components/ui/loading";
 import { useRouter } from "next/navigation";
-// const API_BASE = `${BaseUrl}api`;
 const Scanner = () => {
     const [modal, setModal] = useState({ show: false, message: "" });
     const [code, setCode] = useState("");

@@ -245,13 +245,7 @@ export const Cash = ({
                         إضافة عنوان جديد
                     </Link>
 
-                    {/* <Link
-                        href={"/editLocation"}
-                        className="mt-2 flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200">
-                        <Pencil size={16} />
-
-                        تعديل العنوان
-                    </Link> */}
+               
                 </div>
 
                 {/* ✅ طريقة الدفع */}
@@ -371,7 +365,7 @@ export const Cash = ({
                     <div className="pt-3">
                     <button
                     disabled
-                        className="bg-gradient-to-r from-purple-700 to-orange-400 hover:opacity-90 text-white px-4 py-2 rounded-full flex items-center justify-center gap-2 w-full font-semibold shadow-md text-sm transition">
+                        className="bg-gray-300 hover:opacity-90 text-white px-4 py-2 rounded-full flex items-center justify-center gap-2 w-full font-semibold shadow-md text-sm transition">
                         <CheckCircle2 size={18} />
                         تأكيد الطلب
                     </button>
