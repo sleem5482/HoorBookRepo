@@ -48,7 +48,7 @@ const EditAddressPoppup: React.FC<EditAddressPoppupProps> = (props) => {
 
     useEffect(() => {
         if (!form.governorate) return;
-        const id = governorates.find((g) => g.name_ar === form.governorate)?.id;
+        const id = governorates?.find((g) => g.name_ar === form.governorate)?.id;
         axios
             .get(`${API_BASE}/cities?governorate_id=${id}`)
             .then((res) => setCities(res.data.data))
@@ -59,7 +59,7 @@ const EditAddressPoppup: React.FC<EditAddressPoppupProps> = (props) => {
 
     useEffect(() => {
         if (!form.city) return;
-        const id = cities.find((c) => c.name_ar === form.city)?.id;
+        const id = cities?.find((c) => c.name_ar === form.city)?.id;
         axios
             .get(`${API_BASE}/areas?city_id=${id}`)
             .then((res) => setAreas(res.data.data))
@@ -156,8 +156,10 @@ const EditAddressPoppup: React.FC<EditAddressPoppupProps> = (props) => {
 
     return (
         <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 no_scrollbar"
-            onClick={handleOverlayClick}>
+  className="fixed inset-0 z-[1200] flex items-center justify-center bg-black bg-opacity-40 no_scrollbar"
+  onClick={handleOverlayClick}
+>
+
             <div className="bg-white rounded-3xl shadow-2xl p-4 sm:p-8 w-full max-w-md sm:max-w-lg md:max-w-xl space-y-6 border border-purple-100 relative mx-2 sm:mx-auto overflow-y-auto max-h-[70vh] md:max-h-[80vh] mt-20">
                 <button
                     className="absolute top-1 right-3 p-2 rounded-full text-gray-500 hover:text-red-600 transition "

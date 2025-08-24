@@ -19,12 +19,13 @@ export const Cash = ({
     items,
     oncheckout,
     close,
+    discount
 }: // color_id,
     Checkout) => {
     const [addressList, setAddressList] = useState<AddressData[]>([]);
     const [paymentMethod, setPaymentMethod] = useState("cash");
     const [usePoints, setUsePoints] = useState<string>("0");
-
+    const [chooseAddress, setChooseAddress] = useState<boolean>(false);
     const [editOpen, setEditOpen] = useState(false);
     const [selectedAddress, setSelectedAddress] = useState<AddressData | null>(
         null
@@ -38,7 +39,7 @@ export const Cash = ({
     const [sure, setsure] = useState<surecash>({
         user_address_id: 0,
         payment_type: "1",
-        notes: "",
+        notes: "حور بوك ويب سايت",
         code: code,
 
         use_points: "0",
@@ -64,20 +65,21 @@ export const Cash = ({
                 console.error("فشل تحميل العناوين:", err);
             }
         };
-        const getProfile = async () => {
-            try {
-                const res = await axios.get(url, { headers });
-                console.log(res.data.data.name);
-                setProfile(res.data.data);
-            } catch (error) {
-                console.log(error);
-                toast.error("خطأ فى جلب المعلومات الخاصه بك");
-            }
-        };
 
-        fetchAddresses();
+        const getProfile = async () => {
+    try {
+        const res = await axios.get(url, { headers });
+        console.log(res.data.data.name);
+        setProfile(res.data.data);
+    } catch (error) {
+        console.log(error);
+        toast.error("خطأ فى جلب المعلومات الخاصه بك");
+    }
+};
+
         getProfile();
-    }, [addressList]);
+        fetchAddresses();
+    }, []);
 
     useEffect(() => {
         document.body.style.overflow = show ? "hidden" : "auto";
@@ -102,7 +104,7 @@ export const Cash = ({
         setdelivery(cost);
     }
     const handleConfirm = async () => {
-        const finalCode = code ?? ""; // تفادي undefined
+        const finalCode = code ?? ""; 
 
         const finalSure: surecash = {
             ...sure,
@@ -112,7 +114,7 @@ export const Cash = ({
         try {
             const res = await axios.post(order, finalSure, { headers });
 
-            if (res.data?.status.code === 200) {
+            if (res.data?.status.status === true) {
                 toast.success("تم إنشاء الطلب بنجاح");
 
                 if (res.data?.data?.order_number) {
@@ -152,15 +154,25 @@ export const Cash = ({
     //             toast.error("⚠️ حدث خطأ أثناء حذف العنوان");
     //         });
     // };
-    const handleSave = () => {
-        setEditOpen(false);
-    };
+  const handleSave = async () => {
+    try {
+        const res = await axios.get(`${BaseUrl}api/address`, { headers });
+        if (Array.isArray(res.data?.data?.data)) {
+            setAddressList(res.data.data.data); 
+        }
+    } catch (err) {
+        console.error("فشل تحديث العناوين:", err);
+        toast.error("خطأ في تحديث العنوان");
+    }
+    setEditOpen(false);
+};
+
 
     if (!show) return null;
 
     return (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 backdrop-blur-sm px-4 overflow-y-auto">
-            <div className="bg-white w-full max-w-xl rounded-2xl shadow-2xl p-4 space-y-4 animate-fadeIn relative max-h-screen overflow-y-auto">
+            <div className="bg-white w-full max-w-xl rounded-2xl shadow-2xl p-4 space-y-4 animate-fadeIn relative z-[1000] max-h-screen overflow-y-auto">
                 <button
                     className="absolute top-3 left-3 text-xl text-gray-500 hover:text-red-500"
                     onClick={close}>
@@ -185,6 +197,8 @@ export const Cash = ({
                                 onClick={() => {
                                     handelcash("user_address_id", addr.id),
                                         handel_delivery_cost(addr.area.final_cost)
+                                                setChooseAddress(true)
+
                                 }}
                                 className={`p-3 min-w-[250px] whitespace-normal break-words rounded-xl relative cursor-pointer border-2 transition hover:shadow-md text-right ${sure.user_address_id === addr.id
                                         ? "border-purple-700 bg-purple-50"
@@ -240,6 +254,7 @@ export const Cash = ({
                     </Link> */}
                 </div>
 
+                {/* ✅ طريقة الدفع */}
                 <div className="text-right">
                     <label className="block mb-2 font-medium text-gray-700">
                         💳 طريقة الدفع:
@@ -269,8 +284,9 @@ export const Cash = ({
                 </div>
 
 
-                <div className="points w-full p-3  bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition">
-                    نقاطك : {profile?.points}
+                <div className="points w-full p-3 flex gap-5 bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition">
+                    <span>نقاطك : {profile?.points}</span>
+                    <span> رصيد النقاط : {((profile?.points ?? 0) * Number(profile?.pointsSettings?.point_price ?? 0)).toFixed(2)} ج.م</span>
                 </div>
                 <div className="flex items-center gap-2 text-right">
                     <input
@@ -289,7 +305,6 @@ export const Cash = ({
                     </label>
                 </div>
 
-                {/* ✅ المنتجات */}
 
                 <div className="grid grid-cols-1  sm:grid-cols-3 md:grid-cols-1 gap-4 mb-8 text-center text-sm sm:text-base">
                     <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
@@ -301,18 +316,26 @@ export const Cash = ({
                         <p className="text-gray-700 font-semibold mb-1">🚚 رسوم التوصيل</p>
                         <p className="text-orange-600 text-lg font-bold">{delivery ?? 0}  ج.م</p>
                     </div>
+
+
+
+                    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+                        <p className="text-gray-700 font-semibold mb-1"> الخصم</p>
+                        <p className="text-purple-700 text-lg font-bold">
+                            {(discount?.type === 'percentage') ? (
+                                `${discount?.value} %`
+                            ) : (
+                                `${discount?.value} ج.م`
+
+                            )}
+                        </p>
+                    </div>
                     <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
                         <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
                         <p className="text-orange-600 text-lg font-bold">
                             {Number(items?.total || 0) + Number(delivery || 0)} ج.م
                         </p>
 
-                    </div>
-                    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-                        <p className="text-gray-700 font-semibold mb-1">⭐ نقاطك</p>
-                        <p className="text-purple-700 text-lg font-bold">
-                            {(profile?.points ?? 0) * Number(profile?.pointsSettings?.point_price ?? 0)}
-                        </p>
                     </div>
 
                 </div>
@@ -332,10 +355,10 @@ export const Cash = ({
                         className="w-full h-20 p-2 text-gray-700 border rounded-md focus:
     border-purple-700"
                         onChange={(e) => {
-                            handelcash("notes", e.target.value);
+                            handelcash("notes", `${e.target.value} حور بوك للويب سايت `);
                         }}></textarea>
                 </div>
-                {/* ✅ زر التأكيد */}
+                {chooseAddress===true?
                 <div className="pt-3">
                     <button
                         onClick={handleConfirm}
@@ -344,8 +367,16 @@ export const Cash = ({
                         تأكيد الطلب
                     </button>
                 </div>
+                    :
+                    <div className="pt-3">
+                    <button
+                    disabled
+                        className="bg-gradient-to-r from-purple-700 to-orange-400 hover:opacity-90 text-white px-4 py-2 rounded-full flex items-center justify-center gap-2 w-full font-semibold shadow-md text-sm transition">
+                        <CheckCircle2 size={18} />
+                        تأكيد الطلب
+                    </button>
+                </div>}
             </div>
-            {/* Popup for editing address */}
             <EditAddressPoppup
                 open={editOpen}
                 address={selectedAddress}

@@ -404,16 +404,17 @@ export default function Cart() {
           </div>
         </InfiniteScroll>
 
-        <Cash
-          show={open}
-          id={1}
-          code={(verificatio) ? code.code : undefined}
-          items={cartInfo}
-          oncheckout={() => {
-            console.log("🚀 بيانات الطلب:");
-          }}
-          close={() => setopen(false)}
-        />
+    <Cash
+  show={open}
+  id={1}
+  code={(verificatio)?code.code:undefined}
+  items={cartInfo}
+  discount={discount_copoun}
+  oncheckout={() => {
+    console.log("🚀 بيانات الطلب:");
+  }}
+  close={() => setopen(false)} 
+/>
 
 
 

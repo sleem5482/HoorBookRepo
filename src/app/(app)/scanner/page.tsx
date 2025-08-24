@@ -18,7 +18,7 @@ const Scanner = () => {
     const router = useRouter();
      const handleNavigate = (e: React.FormEvent, path: string) => {
     e.preventDefault();
-    if (code)
+    if (code || path === '/cart')
     router.push(path); 
 else
     setModal({ show: true, message: "الرجاء ادخال كود المنتج" });

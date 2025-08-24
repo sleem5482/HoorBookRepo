@@ -78,7 +78,7 @@ export default function BottomSelectField({
 
       {/* Modal */}
       <Transition.Root show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-50" onClose={handleClose}>
+        <Dialog as="div" className="relative z-[1300]" onClose={handleClose}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-200"
@@ -88,10 +88,10 @@ export default function BottomSelectField({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black/30" />
+            <div className="fixed inset-0 bg-black/30 z-[1300]" />
           </Transition.Child>
 
-          <div className="fixed inset-x-0 bottom-0 lg:w-1/2 mx-auto">
+          <div className="fixed inset-x-0 bottom-0 lg:w-1/2 mx-auto z-[1300]">
             <Transition.Child
               as={Fragment}
               enter="transform transition ease-out duration-300"
@@ -101,7 +101,7 @@ export default function BottomSelectField({
               leaveFrom="translate-y-0"
               leaveTo="translate-y-full"
             >
-              <Dialog.Panel className="bg-white rounded-t-2xl px-4 max-h-[70vh] overflow-y-auto">
+              <Dialog.Panel className="bg-white rounded-t-2xl px-4 max-h-[70vh] overflow-y-auto relative z-[1400]">
                 <div className="sticky top-0 bg-white z-10 p-3 border-b border-gray-200">
                   <Dialog.Title className="text-center font-bold text-xl mb-3 text-black">
                     {title}
