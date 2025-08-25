@@ -1,5 +1,4 @@
 'use client'
-
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -15,6 +14,7 @@ import Cookies from "js-cookie";
 import { LoginRequiredModal } from '@/app/components/ui/Pop-up-login'
 import FormField from '@/app/components/ui/Formfield'
 import { Cash } from '@/app/components/FeatureComponent/Modelcash'
+import Search from '../../../../public/asset/images/Search.jpg'
 import Link from 'next/link';
 const EditModal = ({
   item,
@@ -86,7 +86,8 @@ export default function Cart() {
   const [code, setcode] = useState<Record<string, any>>({});
   const [open, setopen] = useState<boolean>(false)
   const [verificatio, setverification] = useState(false);
-
+  const [total,setotoal]=useState<string>('')
+   const [showTimeoutMessage, setShowTimeoutMessage] = useState(false);
   const [discount_copoun, setdescount] = useState<Coupoun>({
     type: '',
     value: 0
@@ -121,6 +122,7 @@ export default function Cart() {
         const currentPage = res.data.data.data.meta.current_page
         const lastPage = res.data.data.data.meta.last_page
         setCartInfo(info)
+        setotoal(info.total)
         setItems(prev => {
           const ids = new Set(prev.map(p => p.id));
           const filtered = newItems.filter(p => !ids.has(p.id));
@@ -242,6 +244,17 @@ export default function Cart() {
     }
   };
 
+useEffect(() => {
+  if (!total) {
+    const timer = setTimeout(() => {
+      setShowTimeoutMessage(true);
+    }, 5000); 
+
+    return () => clearTimeout(timer); 
+  } else {
+    setShowTimeoutMessage(false);
+  }
+}, [cartInfo]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-pink-100 to-yellow-100">
@@ -263,19 +276,15 @@ export default function Cart() {
           </div>
 
 
-          {cartInfo && (
+          {(total ) && (
+            <>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-center text-sm sm:text-base">
               <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
                 <p className="text-gray-700 font-semibold mb-1">💰 المجموع الفرعى</p>
-                <p className="text-green-700 text-lg font-bold">{cartInfo.total} ج.م</p>
+                <p className="text-green-700 text-lg font-bold">{total} ج.م</p>
               </div>
 
-
-              <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-                <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
-                <p className="text-orange-600 text-lg font-bold">{cartInfo.total}ج.م</p>
-              </div>
-              <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+<div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
                 <p className="text-gray-700 font-semibold mb-1">الخصم</p>
                 <p className="text-gray-700 text-lg font-bold">
                   {(discount_copoun.type === 'percentage') ? (
@@ -286,41 +295,41 @@ export default function Cart() {
                   )}
                 </p>
               </div>
-            </div>
-          )}
-          <div className="code mb-7">
-            <form onSubmit={handelcode} className="w-full">
-              <div className="flex justify-center items-center gap-3 bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow border border-gray-200">
 
-                <div>
-                  <FormField fields={fields} data={code} onChange={setcode} />
-                </div>
-                <div className='mt-11 w-full bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold rounded-lg shadow hover:opacity-90 transition text-center'>
-                  {(!verificatio) ?
-                    (
 
-                      <button
-
-                        type="submit"
-                        className="p-2 "
-                      >
-                        تفعيل
-                      </button>
-                    ) : (
-                      <button
-                        disabled
-                        type="submit"
-                        className="p-2 "
-                      >
-                        تفعيل
-                      </button>
-                    )
-                  }
-                </div>
+               <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+                <p className="text-gray-700 font-semibold mb-1">قيمه الخصم</p>
+                <p className="text-orange-600 text-lg font-bold">{Math.abs(Number(cartInfo.total) - Number(total)).toFixed(2)}ج.م</p>
               </div>
-            </form>
+              <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+                <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
+                <p className="text-orange-600 text-lg font-bold">{cartInfo.total}ج.م</p>
+              </div>
+              
+            </div>
+          <div className="code mb-7">
+  <form onSubmit={handelcode}>
+    <div className="flex justify-start items-center gap-3 max-w-[850px] bg-white/80 backdrop-blur-md p-4 rounded-2xl shadow border border-gray-200">
 
-          </div>
+      <div className="flex-1">
+        <FormField fields={fields} data={code} onChange={setcode} />
+      </div>
+<div>
+
+      <button
+        type="submit"
+        disabled={verificatio}
+        className="mt-12 px-3 py-3 w-40 rounded-2xl font-semibold shadow 
+                   text-white bg-gradient-to-r from-purple-700 to-orange-400 
+                   hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        تفعيل
+      </button>
+</div>
+    </div>
+  </form>
+</div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 pb-10">
             {items.map(item => (
               <div
@@ -402,6 +411,38 @@ export default function Cart() {
               اتمام الشراء
             </button>
           </div>
+            </>
+          )
+          }
+          {!total && (
+            <div className="flex flex-col justify-center items-center py-12">
+        {!showTimeoutMessage ? (
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-gray-500">جاري تحميل السلة...</p>
+          </div>
+        ) : (
+  <div className="flex flex-col items-center justify-center gap-6 animate-fadeIn">
+  {/* الصورة */}
+  <div className="w-72 h-72 relative">
+    <Image
+      src="/asset/images/Search.jpg"
+      alt="Empty Cart"
+      fill
+      className="object-contain drop-shadow-lg rounded-2xl"
+      priority
+    />
+  </div>
+
+  {/* النص */}
+  <p className="text-purple-700 font-bold text-2xl sm:text-3xl text-center leading-relaxed">
+    ماذا تنتظر؟ <span className="text-orange-500">قم بالشراء الآن </span>
+  </p>
+</div>
+
+        )}
+      </div>
+          )}
         </InfiniteScroll>
 
     <Cash

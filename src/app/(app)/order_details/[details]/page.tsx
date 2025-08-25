@@ -12,8 +12,10 @@ import { Moodel_Cancel } from "@/app/components/ui/Moodel_order";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import ErrorPopUP from "@/app/components/ui/pop-up_show_message_error";
+import { useRouter } from "next/navigation"
 
 export default function OrderDetails() {
+  const router = useRouter();
   const pathname = usePathname();
   const order_id = pathname.split("/").pop();
   const get_order_by_id = `${BaseUrl}api/orders/${order_id}`;
@@ -21,7 +23,6 @@ export default function OrderDetails() {
   const [cancel, setCancelOrder] = useState<boolean>(false);
   const [refundOrder, setrefundOrder] = useState<boolean>(false);
   const [selectedReason, setSelectedReason] = useState("");
-  
   useEffect(() => {
     const getDetails = async () => {
       try {
@@ -43,9 +44,13 @@ export default function OrderDetails() {
       if(res.status === 200) {
         if (status === "cancel") {
         toast.success("تم إلغاء الطلب بنجاح");
+                router.push('/orders');
+
         setCancelOrder(false);
       } else if (status === "refund") {
         toast.success("تم استرجاع الطلب بنجاح");
+                router.push('/orders');
+
         setrefundOrder(false);
       } 
  0   }

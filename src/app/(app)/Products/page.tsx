@@ -5,7 +5,7 @@ import { fetchData } from "@/app/lib/methodes";
 import { ApiResponse, Favorit, HomePageData } from "@/app/lib/type";
 import { Card } from "@/app/components/ui/Card";
 import Image from "next/image";
-import { ArrowRight, ChevronLeft, ChevronRight, Heart, Home, LayoutGrid, Package, ScanBarcode, Search, Settings2Icon, ShoppingCart, User2 } from "lucide-react";
+import { ArrowRight, ChevronLeft, Heart, Home, LayoutGrid, Package, ScanBarcode, Search, Settings2Icon, ShoppingCart, User2 } from "lucide-react";
 import Link from "next/link";
 import Logo from '../../../../public/asset/images/حورلوجو-1.png'
 import debounce from "lodash.debounce";
@@ -290,40 +290,24 @@ return (
           </div>
       ) : (
         <div
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 px-2 sm:px-6 lg:px-12 mt-28"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3  gap-4 sm:gap-6 px-2 sm:px-6 lg:px-12 xl:gap-3 mt-20"
           dir="rtl"
         >
           {renderProducts.map((image, index) => (
             <div
               key={index}
-              className="bg-white rounded-2xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.015] border border-gray-100"
+              className="bg-white rounded-2xl transition-all duration-300 transform hover:-translate-y-1 "
             >
-              <Card
-                id={image.id}
-                image={image.image}
-                name={image.name}
-                description={image.description}
-                price={image.price}
-                originalPrice={image.originalPrice}
-                category={image.category}
-                discount={image.discount}
-                love={image.love}
-                stock={image.stock}
-                soldOut={image.soldOut}
-                packet_pieces={image.packet_pieces}
-                packet_price={image.packet_price}
-                piece_price_after_offer={image.piece_price_after_offer}
-                packet_price_after_offer={image.packet_price_after_offer}
-                reviews_avg={image.reviews_avg}
-                handellove={() => (handelfavorit(image.id))}
-                offer={`${image.offer}`}
-              />
+      <Card 
+  {...image} 
+  love={(image.user_favourite)} 
+  handellove={() => handelfavorit(image.id)} 
+/>
             </div>
           ))}
         </div>
       )}
 
-      {/* Infinite Scroll Trigger */}
       { hasMore && (
         <div
           ref={loaderRef}

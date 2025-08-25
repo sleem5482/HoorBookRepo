@@ -45,7 +45,7 @@ return (
     <Container>
       <h1 className="text-4xl font-extrabold mb-10 text-center text-gray-900 tracking-wide">طلباتك</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {orders.map((order) => (
           <Link
           href={`/order_details/${order.id}`}
