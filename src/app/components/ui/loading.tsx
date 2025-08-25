@@ -5,8 +5,8 @@ const Loading = () => {
       <div className="loader-spinner" />
 
       {/* "Loading" with animated dots */}
-      <div className="text-blue-700 w-full font-mono text-2xl font-bold p-4">
-      <span className="loading-dots" />
+      <div className="text-blue-700 font-mono text-2xl font-bold p-4">
+        جارى التحميل<span className="loading-dots"></span>
       </div>
     </div>
   );

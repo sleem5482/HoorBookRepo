@@ -7,6 +7,7 @@ import { Menu } from "lucide-react"; // لو هتستخدم أيقونة (npm in
 import SmartNavbar from "@/app/components/ui/Navbar";
 import { BaseUrl } from "@/app/components/Baseurl";
 import Link from "next/link";
+import Loading from "@/app/components/ui/loading";
 interface Category {
   id: number;
   name: string;
