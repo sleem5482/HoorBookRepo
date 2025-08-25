@@ -21,25 +21,26 @@ export const Cash = ({
     close,
     discount
 }: // color_id,
-Checkout) => {
+    Checkout) => {
     const [addressList, setAddressList] = useState<AddressData[]>([]);
     const [paymentMethod, setPaymentMethod] = useState("cash");
     const [usePoints, setUsePoints] = useState<string>("0");
 
+    const [chooseAddress, setChooseAddress] = useState<boolean>(false);
     const [editOpen, setEditOpen] = useState(false);
-      const [selectedAddress, setSelectedAddress] = useState<AddressData | null>(
-            null
-        );
-         const [loading, setLoading] = useState(true);
-        
+    const [selectedAddress, setSelectedAddress] = useState<AddressData | null>(
+        null
+    );
+    const [loading, setLoading] = useState(true);
 
-      const [profile, setProfile] = useState<Profile>();
-      const [delivery,setdelivery]=useState(0)
+
+    const [profile, setProfile] = useState<Profile>();
+    const [delivery, setdelivery] = useState(0)
 
     const [sure, setsure] = useState<surecash>({
         user_address_id: 0,
         payment_type: "1",
-        notes: "",
+        notes: "حور بوك ويب سايت",
         code: code,
 
         use_points: "0",
@@ -48,7 +49,8 @@ Checkout) => {
     const order = `${BaseUrl}api/orders`;
     const delete_address = `${BaseUrl}api/address/`;
 
-  const url = `${BaseUrl}api/user/profile`;
+
+    const url = `${BaseUrl}api/user/profile`;
 
     useEffect(() => {
         const fetchAddresses = async () => {
@@ -65,20 +67,22 @@ Checkout) => {
                 console.error("فشل تحميل العناوين:", err);
             }
         };
-         const getProfile = async () => {
-      try {
+
+        const getProfile = async () => {
+    try {
         const res = await axios.get(url, { headers });
         console.log(res.data.data.name);
         setProfile(res.data.data);
-      } catch (error) {
+    } catch (error) {
         console.log(error);
         toast.error("خطأ فى جلب المعلومات الخاصه بك");
-      }
-    };
+    }
+};
+
+        getProfile();
 
         fetchAddresses();
-        getProfile();
-    }, [addressList]);
+    }, []);
 
     useEffect(() => {
         document.body.style.overflow = show ? "hidden" : "auto";
@@ -99,11 +103,11 @@ Checkout) => {
     const handelcash = (field: keyof surecash, value: any) => {
         setsure((prevsure) => ({ ...prevsure, [field]: value }));
     };
-    const handel_delivery_cost=(cost:number)=>{
+    const handel_delivery_cost = (cost: number) => {
         setdelivery(cost);
     }
     const handleConfirm = async () => {
-        const finalCode = code ?? ""; // تفادي undefined
+        const finalCode = code ?? ""; 
 
         const finalSure: surecash = {
             ...sure,
@@ -113,7 +117,7 @@ Checkout) => {
         try {
             const res = await axios.post(order, finalSure, { headers });
 
-            if (res.data?.status.code === 200) {
+            if (res.data?.status.status === true) {
                 toast.success("تم إنشاء الطلب بنجاح");
 
                 if (res.data?.data?.order_number) {
@@ -153,9 +157,20 @@ Checkout) => {
     //             toast.error("⚠️ حدث خطأ أثناء حذف العنوان");
     //         });
     // };
-     const handleSave = () => {
-        setEditOpen(false);
-    };
+
+  const handleSave = async () => {
+    try {
+        const res = await axios.get(`${BaseUrl}api/address`, { headers });
+        if (Array.isArray(res.data?.data?.data)) {
+            setAddressList(res.data.data.data); 
+        }
+    } catch (err) {
+        console.error("فشل تحديث العناوين:", err);
+        toast.error("خطأ في تحديث العنوان");
+    }
+    setEditOpen(false);
+};
+
 
     if (!show) return null;
 
@@ -166,7 +181,8 @@ Checkout) => {
                     className="absolute top-3 left-3 text-xl text-gray-500 hover:text-red-500"
                     onClick={close}>
 
-                    <X/>
+
+                    <X />
                 </button>
 
                 <h2 className="text-xl font-bold text-center text-gray-800 mb-2">
@@ -185,13 +201,15 @@ Checkout) => {
 
                                 onClick={() => {
                                     handelcash("user_address_id", addr.id),
-                                    handel_delivery_cost(addr.area.final_cost)
+                                        handel_delivery_cost(addr.area.final_cost)
+                                                setChooseAddress(true)
+
                                 }}
-                                className={`p-3 min-w-[250px] whitespace-normal break-words rounded-xl relative cursor-pointer border-2 transition hover:shadow-md text-right ${
-                                    sure.user_address_id === addr.id
+                                className={`p-3 min-w-[250px] whitespace-normal break-words rounded-xl relative cursor-pointer border-2 transition hover:shadow-md text-right ${sure.user_address_id === addr.id
                                         ? "border-purple-700 bg-purple-50"
                                         : "border-gray-200 bg-gray-50"
-                                }`}>
+
+                                    }`}>
 
                                 <div className="flex items-center justify-between mb-1">
                                     <span className="font-bold text-gray-800 flex items-center gap-1">
@@ -201,27 +219,30 @@ Checkout) => {
                                     <button
                                         className="p-2 rounded-full hover:bg-purple-200 transition"
                                         title="تعديل"
-                                      >
+
+                                    >
                                         <Edit2
                                             className="text-gray-700 hover:text-purple-700 transition"
                                             size={20}
                                             onClick={() => {
-                                            setSelectedAddress(addr);
-                                            setEditOpen(true);
-                                        }}
+
+                                                setSelectedAddress(addr);
+                                                setEditOpen(true);
+                                            }}
                                         />
                                     </button>
                                 </div>
-                                 
+
                                 <p className="text-sm text-gray-600">
                                     {addr.address_details}, {addr.area.name},{" "}
                                     {addr.city.name}
-                                    
+
                                 </p>
                                 <p className="text-xs text-gray-500 mt-1">
                                     تكلفة التوصيل: {addr.area.final_cost} ج.م
                                 </p>
-                               
+
+
                             </div>
                         ))}
                     </div>
@@ -233,13 +254,8 @@ Checkout) => {
                         إضافة عنوان جديد
                     </Link>
 
-                    {/* <Link
-                        href={"/editLocation"}
-                        className="mt-2 flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200">
-                        <Pencil size={16} />
 
-                        تعديل العنوان
-                    </Link> */}
+               
                 </div>
 
                 {/* ✅ طريقة الدفع */}
@@ -252,11 +268,10 @@ Checkout) => {
                             onClick={() => {
                                 handelcash("payment_type", "1");
                             }}
-                            className={`flex items-center gap-3 px-4 py-2 border rounded-lg transition ${
-                                paymentMethod === "cash"
+                            className={`flex items-center gap-3 px-4 py-2 border rounded-lg transition ${paymentMethod === "cash"
                                     ? "bg-gradient-to-r from-purple-700 to-orange-400 text-white border-none"
                                     : "bg-gray-100 border-gray-300 text-gray-700"
-                            }`}>
+                                }`}>
                             <Wallet size={18} />
 
                             <span>الدفع عند الاستلام</span>
@@ -273,10 +288,11 @@ Checkout) => {
                 </div>
 
 
-<div  className="points w-full p-3 flex gap-5 bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition">
-<span>نقاطك : {profile?.points}</span>
-<span> رصيد النقاط : {((profile?.points ?? 0) * Number(profile?.pointsSettings?.point_price  ?? 0)).toFixed(2)} ج.م</span>
-</div>
+
+                <div className="points w-full p-3 flex gap-5 bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition">
+                    <span>نقاطك : {profile?.points}</span>
+                    <span> رصيد النقاط : {((profile?.points ?? 0) * Number(profile?.pointsSettings?.point_price ?? 0)).toFixed(2)} ج.م</span>
+                </div>
                 <div className="flex items-center gap-2 text-right">
                     <input
                         id="usePoints"
@@ -294,46 +310,41 @@ Checkout) => {
                     </label>
                 </div>
 
-                {/* ✅ المنتجات */}
 
-               <div className="grid grid-cols-1  sm:grid-cols-3 md:grid-cols-1 gap-4 mb-8 text-center text-sm sm:text-base">
-    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">💰 المجموع الفرعى</p>
-      <p className="text-green-700 text-lg font-bold">{items?.total} ج.م</p>
-    </div>
 
-    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">🚚 رسوم التوصيل</p>
-      <p className="text-orange-600 text-lg font-bold">{delivery??0}  ج.م</p>
-    </div>
-  
-    {/* <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">⭐ نقاطك</p>
-      <p className="text-purple-700 text-lg font-bold">
-         {(profile?.points ?? 0) * Number(profile?.pointsSettings?.point_price  ?? 0)}
-           </p>
-    </div> */}
+                <div className="grid grid-cols-1  sm:grid-cols-3 md:grid-cols-1 gap-4 mb-8 text-center text-sm sm:text-base">
+                    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+                        <p className="text-gray-700 font-semibold mb-1">💰 المجموع الفرعى</p>
+                        <p className="text-green-700 text-lg font-bold">{items?.total} ج.م</p>
+                    </div>
 
-     <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1"> الخصم</p>
-      <p className="text-purple-700 text-lg font-bold">
-        {(discount?.type==='percentage')?(
-          `${discount?.value} %` 
-        ):(
-          `${discount?.value} ج.م` 
+                    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+                        <p className="text-gray-700 font-semibold mb-1">🚚 رسوم التوصيل</p>
+                        <p className="text-orange-600 text-lg font-bold">{delivery ?? 0}  ج.م</p>
+                    </div>
 
-        )}
-           </p>
-    </div>
-      <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
-      <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
-      <p className="text-orange-600 text-lg font-bold">
-  {Number(items?.total || 0) + Number(delivery || 0)} ج.م
-</p>
 
-    </div>
 
-  </div>
+                    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+                        <p className="text-gray-700 font-semibold mb-1"> الخصم</p>
+                        <p className="text-purple-700 text-lg font-bold">
+                            {(discount?.type === 'percentage') ? (
+                                `${discount?.value} %`
+                            ) : (
+                                `${discount?.value} ج.م`
+
+                            )}
+                        </p>
+                    </div>
+                    <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-4 border border-gray-200">
+                        <p className="text-gray-700 font-semibold mb-1">الاجمالى</p>
+                        <p className="text-orange-600 text-lg font-bold">
+                            {Number(items?.total || 0) + Number(delivery || 0)} ج.م
+                        </p>
+
+                    </div>
+
+                </div>
 
                 {code && (
                     <div className="text-right text-green-700 font-medium">
@@ -350,10 +361,10 @@ Checkout) => {
                         className="w-full h-20 p-2 text-gray-700 border rounded-md focus:
     border-purple-700"
                         onChange={(e) => {
-                            handelcash("notes", e.target.value);
+                            handelcash("notes", `${e.target.value} حور بوك للويب سايت `);
                         }}></textarea>
                 </div>
-                {/* ✅ زر التأكيد */}
+                {chooseAddress===true?
                 <div className="pt-3">
                     <button
                         onClick={handleConfirm}
@@ -362,8 +373,17 @@ Checkout) => {
                         تأكيد الطلب
                     </button>
                 </div>
+                    :
+                    <div className="pt-3">
+                    <button
+                    disabled
+                        className="bg-gray-300 hover:opacity-90 text-white px-4 py-2 rounded-full flex items-center justify-center gap-2 w-full font-semibold shadow-md text-sm transition">
+                        <CheckCircle2 size={18} />
+                        تأكيد الطلب
+                    </button>
+                </div>}
             </div>
-              {/* Popup for editing address */}
+
             <EditAddressPoppup
                 open={editOpen}
                 address={selectedAddress}
@@ -372,5 +392,6 @@ Checkout) => {
             />
         </div>
     );
+
 
 };

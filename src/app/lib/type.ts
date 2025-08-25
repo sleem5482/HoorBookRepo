@@ -470,6 +470,7 @@ export interface Details_Order{
 }
 export interface Checkout {
   show: boolean;
+  discount:Coupoun;
   id: number;
   code?: string;
   items: Details_Order;

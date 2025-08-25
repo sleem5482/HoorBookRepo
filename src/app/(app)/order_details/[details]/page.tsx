@@ -93,7 +93,7 @@ return (
   {["Pending", "Processing"].includes(details.status) && (
     <button 
       onClick={() => { setCancelOrder(!cancel), setrefundOrder(false) }} 
-      className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-red-600 rounded-xl hover:bg-red-700 transition"
+      className="flex items-center gap-2 mb-4  px-4 py-2 text-sm text-white bg-red-600 rounded-xl hover:bg-red-700 transition"
     >
       <Ban size={18} /> إلغاء
     </button>
@@ -102,7 +102,7 @@ return (
   {details.status === "Delivered" && details.refund && (
     <button 
       onClick={() => { setrefundOrder(!refundOrder), setCancelOrder(false) }} 
-      className="flex items-center gap-2 px-4 py-2 text-sm text-white bg-yellow-500 rounded-xl hover:bg-yellow-600 transition"
+      className="flex items-center mb-4 gap-2 px-4 py-2 text-sm text-white bg-yellow-500 rounded-xl hover:bg-yellow-600 transition"
     >
       <RotateCcw size={18} /> استرجاع
     </button>

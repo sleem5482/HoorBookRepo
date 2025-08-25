@@ -37,15 +37,16 @@ const Footer: React.FC = () => {
               <Link href={linkedin} target='_blank' rel='nooper noreferrer' className="text-white hover:text-purple-200 transition"><FaLinkedin size={18} /></Link>
             </div>
              <div className="flex flex-col mt-6">
-      <Link href="/Terms&Conditions" target="_blank" rel='nooper noreferrer' className="text-blue-500 hover:underline">
+
+      <Link href="/Terms&Conditions" target="_blank" rel='nooper noreferrer' className="text-white hover:cursor-pointer">
         الشروط والأحكام
       </Link>
 
-      <Link href="/PrivacyPolicy" target="_blank" rel='nooper noreferrer' className="text-blue-500 hover:underline">
+      <Link href="/PrivacyPolicy" target="_blank" rel='nooper noreferrer' className="text-white hover:cursor-pointer">
         سياسة الخصوصية
       </Link>
 
-      <Link href="/ReturnPolicy" target="_blank" rel='nooper noreferrer' className="text-blue-500 hover:underline">
+      <Link href="/ReturnPolicy" target="_blank" rel='nooper noreferrer' className="text-white hover:cursor-pointer">
         سياسة الاستبدال والاسترجاع
       </Link>
     </div>

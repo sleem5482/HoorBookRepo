@@ -10,7 +10,6 @@ import toast, { Toaster } from "react-hot-toast";
 import SmartNavbar from "@/app/components/ui/Navbar";
 import Loading from "@/app/components/ui/loading";
 import { useRouter } from "next/navigation";
-// const API_BASE = `${BaseUrl}api`;
 const Scanner = () => {
     const [modal, setModal] = useState({ show: false, message: "" });
     const [code, setCode] = useState("");
@@ -18,10 +17,11 @@ const Scanner = () => {
     const router = useRouter();
      const handleNavigate = (e: React.FormEvent, path: string) => {
     e.preventDefault();
-    if (code || path=='/cart')
-    router.push(path); 
-else
-    setModal({ show: true, message: "الرجاء ادخال كود المنتج" });
+
+    if (code || path === '/cart')
+        router.push(path);
+    else
+        setModal({ show: true, message: "الرجاء ادخال كود المنتج" });
 
 
   };

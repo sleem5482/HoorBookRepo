@@ -17,6 +17,7 @@ import React from "react";
 import Cookies from "js-cookie";
 
 import { CallApi } from "@/app/lib/utilits";
+import toast from "react-hot-toast";
 export default function ProductPage() {
     const pathname = usePathname();
     const categoryId = pathname.split("/").pop();
@@ -111,6 +112,29 @@ useEffect(() => {
   }, [hasMore, loading]);
 
 
+const handelfavorit = async (id: number) => {
+  try {
+    if(!token){
+      setlogin(true)
+      console.log(login);
+      
+     return;
+    }
+    setlogin(false)
+    const dataToSend = { product_id: id };
+    const res: ApiResponse<Favorit> = await CallApi("post", url, dataToSend, headers);
+    console.log('Accepted', res);
+    toast.success("تم اضافه منتج الى المفضله ");
+    setFavoriteIds((prev) =>
+      prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
+  );
+      
+  
+  } catch (error) {
+    toast.error("خطأ فى اضافه المنتج برجاء اعاده المحاوله")
+    console.log(error);
+  }
+};
 
   
   const isSearching = inputValue.trim().length > 0;
@@ -293,7 +317,8 @@ const IconsBlock = (cartCount: number) => (
             >
               <Card
               {...image} 
-              
+  love={favoriteProducts.includes(image.id)} 
+ handellove={() => {handelfavorit(image.id)}} 
               />
               </div>
             ))}
@@ -312,7 +337,6 @@ const IconsBlock = (cartCount: number) => (
         </div>
       )}
 
-      {/* زر الفلاتر */}
       <button
         onClick={() => setShowFilters(!showFilters)}
         className={`fixed bottom-20 left-4 sm:bottom-6 sm:left-6 z-[999] w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-2xl flex items-center justify-center text-white text-xl sm:text-2xl transition-transform duration-500 hover:rotate-12 ${

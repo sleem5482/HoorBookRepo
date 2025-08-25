@@ -101,9 +101,11 @@ const url = `${BaseUrl}api/user/register`
 
             <FormField fields={fields} data={formData} onChange={setFormData} />
 
+           
             <p className="text-xs text-gray-600 text-right leading-relaxed">
               بالضغط على الزر، فأنت توافق على{" "}
-              <Link href="/Terms&Conditions" target='_blank' rel='nooper noreferrer'>
+
+              <Link href="/Terms&Conditions" target='_blank' >
                 <span className="text-purple-600 underline cursor-pointer hover:text-orange-500 transition">
                   شروط الاستخدام
                 </span>

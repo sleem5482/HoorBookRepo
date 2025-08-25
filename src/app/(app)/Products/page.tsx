@@ -12,18 +12,27 @@ import debounce from "lodash.debounce";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from "@/app/store/cartStore";
 import { BaseUrl, headers } from "@/app/components/Baseurl";
-
+import { CallApi } from "@/app/lib/utilits";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 export default function ProductPage() {
   const [inputValue, setInputValue] = useState("");
     const { cartCount, refreshCartCount } = useCartStore()
+      const [show, setShow] = useState(true);
+  const [login,setlogin]=useState<boolean>(false)
   const [homeData, setHomeData] = useState<HomePageData | null>(null);
   const loaderRef = useRef<HTMLDivElement | null>(null);
+const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
+
   const [filters, setFilters] = useState({
   hasStock: "",
   hasColors: "",
   hasPacket: "",
   hasOffer: ""
 });
+const token = Cookies.get("access_token_login");
+  
+const url =`${BaseUrl}api/products/favourite`
 const [showFilters,setShowFilters]=useState(false)
   const {
     products,
@@ -48,6 +57,29 @@ const [showFilters,setShowFilters]=useState(false)
   }, []);
 
 
+const handelfavorit = async (id: number) => {
+  try {
+    if(!token){
+      setlogin(true)
+      console.log(login);
+      
+     return;
+    }
+    setlogin(false)
+    const dataToSend = { product_id: id };
+    const res: ApiResponse<Favorit> = await CallApi("post", url, dataToSend, headers);
+    console.log('Accepted', res);
+    toast.success("تم اضافه منتج الى المفضله ");
+    setFavoriteIds((prev) =>
+      prev.includes(id) ? prev.filter(pid => pid !== id) : [...prev, id]
+  );
+      
+  
+  } catch (error) {
+    toast.error("خطأ فى اضافه المنتج برجاء اعاده المحاوله")
+    console.log(error);
+  }
+};
 
 
 const debouncedSearch = useRef(
@@ -283,7 +315,7 @@ return (
                 piece_price_after_offer={image.piece_price_after_offer}
                 packet_price_after_offer={image.packet_price_after_offer}
                 reviews_avg={image.reviews_avg}
-                // handellove={() => (handelfavorit(image.id))}
+                handellove={() => (handelfavorit(image.id))}
                 offer={`${image.offer}`}
               />
             </div>

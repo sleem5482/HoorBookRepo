@@ -80,6 +80,15 @@ const handelfavorit = async (id: number) => {
   }
 };
 
+
+function chunkArray<T>(arr: T[], size: number): T[][] {
+  const result: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) {
+    result.push(arr.slice(i, i + size));
+  }
+  return result;
+}
+
   return (
     <section className="bg-white">
       {show?(
@@ -145,35 +154,31 @@ const handelfavorit = async (id: number) => {
     <div className="w-full bg-white mt-3">
     
     <div className="p-5 overflow-x-auto scrollbar-hide space-x-reverse flex flex-row-reverse cursor-grab ">
-
 <Swiper
   dir="rtl"
   spaceBetween={12}
   slidesPerView="auto"
   grabCursor={true}
   modules={[FreeMode]}
-  freeMode={{
-    enabled: true,
-    sticky: false, 
-  }}
+  freeMode={{ enabled: true, sticky: false }}
   className="px-4"
 >
-  {data.categories?.map((image, index) => (
-    <SwiperSlide
-      key={index}
-      style={{ width: 'auto' }}
-    >
-      <Link href={`/Categories/${image.id}`}>
-      <Circle
-        id={image.id}
-        image={image.image}
-        name={image.name}
-        />
-        </Link>
+  {chunkArray(data.categories, 2).map((group, index) => (
+    <SwiperSlide key={index} style={{ width: 'auto' }}>
+      <div className="flex flex-col gap-4"> {/* صفين داخل الشريحة */}
+        {group.map((image) => (
+          <Link key={image.id} href={`/Categories/${image.id}`}>
+            <Circle
+              id={image.id}
+              image={image.image}
+              name={image.name}
+            />
+          </Link>
+        ))}
+      </div>
     </SwiperSlide>
   ))}
 </Swiper>
-
 
     </div>
     </div>
@@ -224,7 +229,6 @@ const handelfavorit = async (id: number) => {
   {...image} 
   love={(image.user_favourite)} 
   handellove={() => handelfavorit(image.id)} 
-  
 />
 
   </div>
