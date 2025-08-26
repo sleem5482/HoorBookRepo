@@ -79,7 +79,7 @@ const handeldelete_address = (id: number) => {
                     <div className="flex flex-col items-center space-y-2">
                         <h2 className="text-2xl font-bold text-purple-800 text-center flex items-center gap-1">
                             <Sparkles className="w-5 h-5 text-orange-400 animate-bounce" />
-                             العنوانين
+                             العناوين
                         </h2>
                     </div>
                     {loading ? (

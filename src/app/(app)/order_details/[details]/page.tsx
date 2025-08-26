@@ -158,9 +158,9 @@ return (
 </div>
 
 
-            <p><strong>الدفع:</strong> {details.payment_type} - {details.payment_status}</p>
-            <p><strong>الإجمالي:</strong> {details.total} جنيه</p>
-            <p><strong>الخصم:</strong> {details.discount} ({details.discount_type})</p>
+       <p><strong>حالة الدفع:</strong> {details.payment_type=="Cash On Delivery"?"الدفع عند الاستلام":"بطاقة الدفع"}</p>            <p><strong>الإجمالي:</strong> {details.total} جنيه</p>
+               <p><strong>الخصم:</strong> {details.discount} ج.م</p>
+            <p><strong>خصم النقاط:</strong> {details.points_discount} ج.م</p>
             <p><strong>ملاحظات:</strong> {details.notes}</p>
             <p><strong>تم الإنشاء:</strong> {details.created_at}</p>
           </div>
@@ -200,7 +200,7 @@ return (
               <div className="mt-auto text-sm text-gray-700 space-y-1">
                 <p><strong>الكمية:</strong> {item.qty}</p>
                 <p><strong>السعر:</strong> {item.price_after_discount} جنيه</p>
-                <p><strong>النوع:</strong> {item.product_type}</p>
+                     <p><strong>النوع:</strong> {item.product_type==="Piece" ? "قطعة" : "دستة"}</p>
               </div>
 
   <div className="flex items-center gap-2">
