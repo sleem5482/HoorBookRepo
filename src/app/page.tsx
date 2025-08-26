@@ -310,9 +310,9 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
   {data.categoriesWithProducts?.map((item) => (
     <div key={item.id} className="mb-6 relative">
      <div className="flex justify-between items-center mb-2">
-  <h2 className="text-btn-color font-bold text-[26px] sm:text-[30px] md:text-[20px] tracking-tight text-center px-4">
+  <p className="text-btn-color font-bold text-[16px] md:text-[20px] tracking-tight text-center px-4">
     {item.name}
-  </h2>
+  </p>
   <Link
     href={`/Categories/${item.id}`}
     className="text-btn-color font-bold text-[16px] underline sm:text-[30px] md:text-[16px] tracking-tight text-center px-4"

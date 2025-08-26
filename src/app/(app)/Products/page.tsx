@@ -244,21 +244,24 @@ return (
 
   {/* مربع البحث */}
   <div className="w-full md:w-full flex justify-center items-center">
+    <Link href="/Products" className="w-full md:w-full flex justify-center items-center">
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center bg-white/90 rounded-full px-4 py-2 shadow-inner focus-within:ring-2 focus-within:ring-yellow-400 transition">
-              <Search className="text-gray-500 ml-2" size={18} />
-              <input
-                type="text"
-                placeholder="إبحث عن منتج..."
-              onChange={(e) => setInputValue(e.target.value)}
-
-                className="bg-transparent flex-1 text-sm focus:outline-none text-gray-700 placeholder:text-gray-400"
-              />
+          <Search className="text-gray-500 ml-2" size={18} />
+          <input
+            type="text"
+            placeholder="إبحث عن منتج..."
+            className="bg-transparent flex-1 text-sm focus:outline-none text-gray-700 placeholder:text-gray-400"
+          />
         </div>
       </div>
+    </Link>
   </div>
-      <Link href={'/scanner'} className='flex text-white mr-3 flex-col items-center hover:text-pink-300 transition transform hover:scale-110'>
-     <div className="p-2 rounded-full  bg-white/10 hover:bg-pink-300/20 transition">
+
+<div>
+
+    <Link href={'/scanner'} className='flex text-white   flex-col items-center hover:text-pink-300 transition transform hover:scale-110'>
+     <div className="p-2 rounded-full bg-white/10 hover:bg-pink-300/20 transition">
         <ScanBarcode size={18} />
       </div>
       <span  className='hidden md:block'>
@@ -266,8 +269,9 @@ return (
       </span>
     </Link>
 </div>
+</div>
 
-          <div className="hidden md:flex justify-center items-center gap-4 text-white text-xs sm:text-sm w-full md:w-auto">
+          <div className="hidden md:flex justify-center items-center gap-4 text-white text-xs sm:text-sm w-full md:w-auto ">
             {IconsBlock(cartCount)}
           </div>
         </div>
