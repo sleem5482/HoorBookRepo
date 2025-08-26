@@ -70,13 +70,13 @@ return (
 >
   {{
     Pending: "فى المراجعة",
-    Processing: "جاري التجهيز",
-    Shipped: "فى الشحن",
+    Processing: "فى التجهيز",
+    Shipped: "خرج للتوصيل",
     Delivered: "تم التوصيل",
     Cancelled: "تم الإلغاء",
     Refund:
       order.payment_status === "Refunded"
-        ? "تم إرجاع الطلب"
+        ? "تم الارجاع "
         : "جاري مراجعة إرجاع الطلب",
   }[order.status] || "غير معروف"}
 </span>

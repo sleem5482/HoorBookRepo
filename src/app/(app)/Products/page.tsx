@@ -283,11 +283,9 @@ return (
 
     </>
       {renderProducts.length === 0 ? (
-        <div className="flex justify-center item-center flex-col">
-
-    
-        <p className="text-center text-gray-500 mt-20 text-lg"> لاتوجد منتجات </p>
-          </div>
+   <div className="flex justify-center items-center min-h-[60vh]">
+      <div className="w-16 h-16 border-8 border-purple-600 border-t-transparent rounded-full animate-spin" />
+    </div>
       ) : (
         <div
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3  gap-4 sm:gap-6 px-2 sm:px-6 lg:px-12 xl:gap-3 mt-20"
@@ -313,7 +311,7 @@ return (
           ref={loaderRef}
           className="h-10 w-full mt-6 flex justify-center items-center"
         >
-          <div className="w-6 h-6 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-4 border-purple-600 border-t-transparent rounded-full animate-spin" />
         </div>
       )}
 

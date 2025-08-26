@@ -165,7 +165,7 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
 >
   {chunkArray(data.categories, 2).map((group, index) => (
     <SwiperSlide key={index} style={{ width: 'auto' }}>
-      <div className="flex flex-col gap-4"> {/* صفين داخل الشريحة */}
+      <div className="flex flex-col gap-4"> 
         {group.map((image) => (
           <Link key={image.id} href={`/Categories/${image.id}`}>
             <Circle
@@ -185,7 +185,6 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
     
     
    <div className="w-full bg-white mt-6 relative shadow-sm rounded-xl">
-      {/* العنوان */}
       <div className="flex justify-center items-center text-2xl mb-4">
       <h2
   className="text-btn-color font-bold text-[26px] sm:text-[30px] mb-4 tracking-tight"
@@ -195,7 +194,6 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
 
       </div>
 
-      {/* السلايدر */}
       <Swiper
         dir="rtl"
         modules={[Autoplay, Navigation]}
