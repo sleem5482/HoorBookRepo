@@ -298,11 +298,9 @@ const IconsBlock = (cartCount: number) => (
     <div className="p-4 mb-4">
 
       {renderProducts.length === 0 ? (
-        <div className="flex justify-center item-center flex-col">
-
-    
-        <p className="text-center text-gray-500 mt-20 text-lg"> لاتوجد منتجات </p>
-          </div>
+       <div className="flex justify-center items-center min-h-[60vh]">
+      <div className="w-16 h-16 border-8 border-purple-600 border-t-transparent rounded-full animate-spin" />
+    </div>
         ) : (
           <section>
 
@@ -329,12 +327,12 @@ const IconsBlock = (cartCount: number) => (
       )}
 
       {/* Infinite Scroll Trigger */}
-      { hasMore && (
+      { hasMore && renderProducts.length != 0 &&  (
         <div
           ref={loaderRef}
           className="h-10 w-full mt-6 flex justify-center items-center"
         >
-          <div className="w-6 h-6 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-4  border-purple-600 border-t-transparent rounded-full animate-spin" />
         </div>
       )}
 

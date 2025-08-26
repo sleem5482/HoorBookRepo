@@ -12,8 +12,10 @@ import { Moodel_Cancel } from "@/app/components/ui/Moodel_order";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import ErrorPopUP from "@/app/components/ui/pop-up_show_message_error";
+import { useRouter } from "next/navigation"
 
 export default function OrderDetails() {
+  const router = useRouter();
   const pathname = usePathname();
   const order_id = pathname.split("/").pop();
   const get_order_by_id = `${BaseUrl}api/orders/${order_id}`;
@@ -21,13 +23,12 @@ export default function OrderDetails() {
   const [cancel, setCancelOrder] = useState<boolean>(false);
   const [refundOrder, setrefundOrder] = useState<boolean>(false);
   const [selectedReason, setSelectedReason] = useState("");
-  
   useEffect(() => {
     const getDetails = async () => {
       try {
         const res = await axios.get(get_order_by_id, { headers });
         setDetails(res.data.data);
-        console.log(res.data.data)
+        // console.log(res.data.data)
       } catch (error) {
         console.log(error);
       }
@@ -44,9 +45,13 @@ export default function OrderDetails() {
       if(res.status === 200) {
         if (status === "cancel") {
         toast.success("تم إلغاء الطلب بنجاح");
+                router.push('/orders');
+
         setCancelOrder(false);
       } else if (status === "refund") {
         toast.success("تم استرجاع الطلب بنجاح");
+                router.push('/orders');
+
         setrefundOrder(false);
       } 
  0   }
@@ -138,15 +143,15 @@ return (
     {details.status === "Pending"
       ? "في المراجعة"
       : details.status === "Processing"
-      ? "قيد التحضير"
+      ? "فى التجهيز"
       : details.status === "Shipped"
-      ? "قيد الشحن"
+      ? "خرج للتوصيل"
       : details.status === "Delivered"
       ? "تم التوصيل"
       : details.status === "Cancelled"
       ? "تم الإلغاء"
       : details.status === "Refund" && details.payment_status === "Refunded"
-      ? "تم إرجاع الطلب"
+      ? "تم الارجاع"
       : details.status === "Refund"
       ? "جاري مراجعة إرجاع الطلب"
       : "غير معروف"}
@@ -154,9 +159,10 @@ return (
 </div>
 
 
-            <p><strong>الدفع:</strong> {details.payment_type} - {details.payment_status}</p>
+            <p><strong>حالة الدفع:</strong> {details.payment_type=="Cash On Delivery"?"الدفع عند الاستلام":"بطاقة الدفع"}</p>
             <p><strong>الإجمالي:</strong> {details.total} جنيه</p>
-            <p><strong>الخصم:</strong> {details.discount} ({details.discount_type})</p>
+            <p><strong>الخصم:</strong> {details.discount} ج.م</p>
+            <p><strong>خصم النقاط:</strong> {details.points_discount} ج.م</p>
             <p><strong>ملاحظات:</strong> {details.notes}</p>
             <p><strong>تم الإنشاء:</strong> {details.created_at}</p>
           </div>

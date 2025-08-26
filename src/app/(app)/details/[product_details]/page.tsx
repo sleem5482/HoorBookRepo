@@ -17,6 +17,11 @@ import ErrorPopUP from "@/app/components/ui/pop-up_show_message_error";
 import { X } from "lucide-react";
 import { useCartStore } from "@/app/store/cartStore";
 import axios from "axios";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 export default function Details() {
   const [showPopup, setShowPopup] = useState(false);
   const [scale_image,setscale]=useState<boolean>(false)
@@ -140,17 +145,53 @@ const imgcomment=`${BaseUrl}${details.image}`
       <SmartNavbar />
       <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-2 gap-10 relative">
         <div className="flex justify-center md:justify-end">
-          <div className="w-full max-w-md aspect-square relative rounded-2xl overflow-hidden shadow-lg">
-            <Image
-              src={`${BaseUrl}/${mainImage}`}
-              alt="صورة المنتج"
-              fill
-              objectFit="contain"
-              className="transition-transform duration-300 hover:scale-105 rounded-xl cursor-pointer"
-              unoptimized
-              onClick={()=>{setscale(true)}}
-            />
-          </div>
+    <div className="w-full max-w-md aspect-square relative rounded-2xl overflow-hidden shadow-lg">
+  {details.colors.length > 0 ? (
+    // حالة وجود ألوان -> صورة واحدة مرتبطة باللون
+    <Image
+      src={`${BaseUrl}/${mainImage}`} // mainImage مبني على selectedColorId
+      alt="صورة المنتج"
+      fill
+      style={{ objectFit: "contain" }}
+      className="rounded-xl cursor-pointer"
+      onClick={() => setscale(true)}
+      unoptimized
+    />
+  ) : details.media && details.media.length > 0 ? (
+    <Swiper
+      modules={[Navigation, Pagination]}
+      navigation
+      pagination={{ clickable: true }}
+      loop
+      className="w-full h-full"
+    >
+      {details.media.map((m) => (
+        <SwiperSlide key={m.id}>
+          <Image
+            src={`${BaseUrl}/${m.image}`}
+            alt="صورة المنتج"
+            fill
+            style={{ objectFit: "contain" }}
+            className="rounded-xl cursor-pointer"
+            onClick={() => setscale(true)}
+            unoptimized
+          />
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  ) : (
+    <Image
+      src={`${BaseUrl}/${details.image}`}
+      alt="صورة المنتج"
+      fill
+      style={{ objectFit: "contain" }}
+      className="rounded-xl cursor-pointer"
+      onClick={() => setscale(true)}
+      unoptimized
+    />
+  )}
+</div>
+
         </div>
 
         <div className="flex flex-col justify-center">

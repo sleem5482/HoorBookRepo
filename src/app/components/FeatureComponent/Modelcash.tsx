@@ -10,6 +10,7 @@ import cash from "../../../../public/asset/images/cash.png";
 import toast from "react-hot-toast";
 import { Edit2 } from "lucide-react";
 import EditAddressPoppup from "../../components/ui/EditAddressPoppup";
+import { useRouter } from "next/navigation"
 
 
 export const Cash = ({
@@ -22,6 +23,8 @@ export const Cash = ({
     discount
 }: // color_id,
     Checkout) => {
+         const router=useRouter();
+
     const [addressList, setAddressList] = useState<AddressData[]>([]);
     const [paymentMethod, setPaymentMethod] = useState("cash");
     const [usePoints, setUsePoints] = useState<string>("0");
@@ -119,7 +122,7 @@ export const Cash = ({
 
             if (res.data?.status.status === true) {
                 toast.success("تم إنشاء الطلب بنجاح");
-
+                router.push('/orders');
                 if (res.data?.data?.order_number) {
                     toast(`📦 رقم الطلب: ${res.data.data.order_number}`, {
                         icon: "🧾",
@@ -163,6 +166,7 @@ export const Cash = ({
         const res = await axios.get(`${BaseUrl}api/address`, { headers });
         if (Array.isArray(res.data?.data?.data)) {
             setAddressList(res.data.data.data); 
+            router.push('/order')
         }
     } catch (err) {
         console.error("فشل تحديث العناوين:", err);
@@ -194,58 +198,68 @@ export const Cash = ({
                     <h3 className="text-right font-semibold text-gray-700">
                         📍 اختر العنوان:
                     </h3>
-                    <div className=" flex gap-4 overflow-x-auto whitespace-nowrap py-4">
-                        {addressList.map((addr) => (
-                            <div
-                                key={addr.id}
+<div className="flex gap-4 overflow-x-auto whitespace-nowrap py-4">
+  {addressList.map((addr) => (
+    <div
+      key={addr.id}
+      onClick={() => {
+        handelcash("user_address_id", addr.id);
+        handel_delivery_cost(addr.area.final_cost);
+        setChooseAddress(true);
+      }}
+      className={`p-3 min-w-[250px] whitespace-normal break-words rounded-xl relative cursor-pointer border-2 transition hover:shadow-md text-right ${
+        sure.user_address_id === addr.id
+          ? "border-purple-700 bg-purple-50"
+          : "border-gray-200 bg-gray-50"
+      }`}
+    >
+        <div className="flex justify-between items-center gap-3">
+            
+        <div>
 
-                                onClick={() => {
-                                    handelcash("user_address_id", addr.id),
-                                        handel_delivery_cost(addr.area.final_cost)
-                                                setChooseAddress(true)
-
-                                }}
-                                className={`p-3 min-w-[250px] whitespace-normal break-words rounded-xl relative cursor-pointer border-2 transition hover:shadow-md text-right ${sure.user_address_id === addr.id
-                                        ? "border-purple-700 bg-purple-50"
-                                        : "border-gray-200 bg-gray-50"
-
-                                    }`}>
-
-                                <div className="flex items-center justify-between mb-1">
-                                    <span className="font-bold text-gray-800 flex items-center gap-1">
-                                        <MapPin size={16} />
-                                        {addr.full_name}
-                                    </span>
-                                    <button
-                                        className="p-2 rounded-full hover:bg-purple-200 transition"
-                                        title="تعديل"
-
-                                    >
-                                        <Edit2
-                                            className="text-gray-700 hover:text-purple-700 transition"
-                                            size={20}
-                                            onClick={() => {
-
-                                                setSelectedAddress(addr);
-                                                setEditOpen(true);
-                                            }}
-                                        />
-                                    </button>
-                                </div>
-
-                                <p className="text-sm text-gray-600">
-                                    {addr.address_details}, {addr.area.name},{" "}
-                                    {addr.city.name}
-
-                                </p>
-                                <p className="text-xs text-gray-500 mt-1">
-                                    تكلفة التوصيل: {addr.area.final_cost} ج.م
-                                </p>
+      <input
+        type="checkbox"
+        checked={sure.user_address_id === addr.id}
+        readOnly
+        className="w-5 h-5 accent-purple-700 cursor-pointer"
+        />
 
 
-                            </div>
-                        ))}
-                    </div>
+</div>
+<div>
+        <button
+          className="p-2 rounded-full hover:bg-purple-200 transition"
+          title="تعديل"
+          onClick={(e) => {
+            e.stopPropagation(); // prevent card click
+            setSelectedAddress(addr);
+            setEditOpen(true);
+          }}
+        >
+          <Edit2
+            className="text-gray-700 hover:text-purple-700 transition"
+            size={20}
+          />
+        </button>
+</div>
+        </div>
+      <div className="flex items-center justify-between mb-1">
+        <span className="font-bold text-gray-800 flex items-center gap-1">
+          <MapPin size={16} />
+          {addr.full_name}
+        </span>
+      </div>
+
+      <p className="text-sm text-gray-600">
+        {addr.address_details}, {addr.area.name}, {addr.city.name}
+      </p>
+      <p className="text-xs text-gray-500 mt-1">
+        تكلفة التوصيل: {addr.area.final_cost} ج.م
+      </p>
+    </div>
+  ))}
+</div>
+
 
                     <Link
                         href={"/location"}
@@ -258,7 +272,6 @@ export const Cash = ({
                
                 </div>
 
-                {/* ✅ طريقة الدفع */}
                 <div className="text-right">
                     <label className="block mb-2 font-medium text-gray-700">
                         💳 طريقة الدفع:

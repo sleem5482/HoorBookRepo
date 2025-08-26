@@ -45,7 +45,7 @@ return (
     <Container>
       <h1 className="text-4xl font-extrabold mb-10 text-center text-gray-900 tracking-wide">طلباتك</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {orders.map((order) => (
           <Link
           href={`/order_details/${order.id}`}
@@ -70,13 +70,13 @@ return (
 >
   {{
     Pending: "فى المراجعة",
-    Processing: "جاري التجهيز",
-    Shipped: "فى الشحن",
+    Processing: "فى التجهيز",
+    Shipped: "خرج للتوصيل",
     Delivered: "تم التوصيل",
     Cancelled: "تم الإلغاء",
     Refund:
       order.payment_status === "Refunded"
-        ? "تم إرجاع الطلب"
+        ? "تم الارجاع "
         : "جاري مراجعة إرجاع الطلب",
   }[order.status] || "غير معروف"}
 </span>
