@@ -27,6 +27,7 @@ useEffect(()=>{
   setTimeout(() => {
     setLoader(true)
   }, 1500);
+  
 },[])
 const token = Cookies.get("access_token_login");
 
@@ -434,7 +435,7 @@ const IconsBlock = (cartCount: number) => (
 </AnimatePresence>
 
     </div>
-</>
+    </>
   );
 
 }

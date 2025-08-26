@@ -27,6 +27,7 @@ export default function OrderDetails() {
       try {
         const res = await axios.get(get_order_by_id, { headers });
         setDetails(res.data.data);
+        console.log(res.data.data)
       } catch (error) {
         console.log(error);
       }
@@ -195,7 +196,7 @@ return (
               <div className="mt-auto text-sm text-gray-700 space-y-1">
                 <p><strong>الكمية:</strong> {item.qty}</p>
                 <p><strong>السعر:</strong> {item.price_after_discount} جنيه</p>
-                <p><strong>النوع:</strong> {item.product_type}</p>
+                <p><strong>النوع:</strong> {item.product_type==="Piece" ? "قطعة" : "دستة"}</p>
               </div>
 
   <div className="flex items-center gap-2">
