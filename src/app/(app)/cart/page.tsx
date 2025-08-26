@@ -14,7 +14,7 @@ import Cookies from "js-cookie";
 import { LoginRequiredModal } from '@/app/components/ui/Pop-up-login'
 import FormField from '@/app/components/ui/Formfield'
 import { Cash } from '@/app/components/FeatureComponent/Modelcash'
-import Search from '../../../../public/asset/images/Search.jpg'
+import Empty_cart from '../../../../public/asset/images/cart_empty.avif'
 import Link from 'next/link';
 const EditModal = ({
   item,
@@ -320,8 +320,8 @@ useEffect(() => {
         type="submit"
         disabled={verificatio}
         className="mt-12 px-3 py-3 w-40 rounded-2xl font-semibold shadow 
-                   text-white bg-gradient-to-r from-purple-700 to-orange-400 
-                   hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                text-white bg-gradient-to-r from-purple-700 to-orange-400 
+                  hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
         تفعيل
       </button>
@@ -422,23 +422,36 @@ useEffect(() => {
             <p className="text-gray-500">جاري تحميل السلة...</p>
           </div>
         ) : (
-  <div className="flex flex-col items-center justify-center gap-6 animate-fadeIn">
-  {/* الصورة */}
+<div className="flex flex-col items-center justify-center gap-6 p-6 bg-gradient-to-b from-white to-purple-50 rounded-2xl shadow-md animate-fadeIn">
   <div className="w-72 h-72 relative">
     <Image
-      src="/asset/images/Search.jpg"
+      src={Empty_cart}
       alt="Empty Cart"
       fill
-      className="object-contain drop-shadow-lg rounded-2xl"
+      className="object-contain "
       priority
     />
   </div>
 
   {/* النص */}
-  <p className="text-purple-700 font-bold text-2xl sm:text-3xl text-center leading-relaxed">
-    ماذا تنتظر؟ <span className="text-orange-500">قم بالشراء الآن </span>
-  </p>
+  <div className="text-center space-y-3">
+    <p className="text-purple-700 font-bold text-2xl sm:text-3xl leading-relaxed">
+      ماذا تنتظر؟ <span className="text-orange-500">قم بالشراء الآن</span>
+    </p>
+    <p className="text-gray-600 text-sm sm:text-base">
+      اكتشف أفضل العروض والمنتجات المميزة بلمسة واحدة فقط ✨
+    </p>
+  </div>
+
+  {/* زر CTA */}
+  <Link
+    href="/Categories"
+    className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full shadow-lg transition-transform hover:scale-105"
+  >
+    تسوق الآن
+  </Link>
 </div>
+
 
         )}
       </div>
