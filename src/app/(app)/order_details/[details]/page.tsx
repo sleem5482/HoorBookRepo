@@ -28,7 +28,7 @@ export default function OrderDetails() {
       try {
         const res = await axios.get(get_order_by_id, { headers });
         setDetails(res.data.data);
-        // console.log(res.data.data)
+        console.log(res.data.data)
       } catch (error) {
         console.log(error);
       }
@@ -160,9 +160,10 @@ return (
 
 
             <p><strong>حالة الدفع:</strong> {details.payment_type=="Cash On Delivery"?"الدفع عند الاستلام":"بطاقة الدفع"}</p>
-            <p><strong>الإجمالي:</strong> {details.total} جنيه</p>
+            <p><strong>المجموع الفرعى:</strong> {details.sub_total} جنيه</p>
             <p><strong>الخصم:</strong> {details.discount} ج.م</p>
             <p><strong>خصم النقاط:</strong> {details.points_discount} ج.م</p>
+            <p className="py-2 px-1 bg-violet-300 w-fit rounded-lg"><strong>الإجمالي:</strong> {details.total} جنيه</p>
             <p><strong>ملاحظات:</strong> {details.notes}</p>
             <p><strong>تم الإنشاء:</strong> {details.created_at}</p>
           </div>
