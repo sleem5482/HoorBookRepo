@@ -32,6 +32,8 @@ export default function Details() {
   const [selectedColorId, setSelectedColorId] = useState<number | null>(null);
   const [selectedUnit, setSelectedUnit] = useState<"Piece" | "Packet">("Piece");
   const [quantity, setQuantity] = useState(1);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   const [auth,setauth]=useState<boolean>(false)
           const [modal, setModal] = useState<{ show: boolean; message: string }>({
         show: false,
@@ -154,7 +156,7 @@ const imgcomment=`${BaseUrl}${details.image}`
       fill
       style={{ objectFit: "contain" }}
       className="rounded-xl cursor-pointer"
-      onClick={() => setscale(true)}
+      onClick={() => { setscale(true); setSelectedImage(`${BaseUrl}/${mainImage}`); }}
       unoptimized
     />
   ) : details.media && details.media.length > 0 ? (
@@ -173,7 +175,7 @@ const imgcomment=`${BaseUrl}${details.image}`
             fill
             style={{ objectFit: "contain" }}
             className="rounded-xl cursor-pointer"
-            onClick={() => setscale(true)}
+            onClick={() => { setscale(true); setSelectedImage(`${BaseUrl}/${m.image}`); }}
             unoptimized
           />
         </SwiperSlide>
@@ -186,7 +188,7 @@ const imgcomment=`${BaseUrl}${details.image}`
       fill
       style={{ objectFit: "contain" }}
       className="rounded-xl cursor-pointer"
-      onClick={() => setscale(true)}
+      onClick={() => { setscale(true); setSelectedImage(`${BaseUrl}/${details.image}`); }}
       unoptimized
     />
   )}
@@ -431,7 +433,7 @@ const imgcomment=`${BaseUrl}${details.image}`
       {/* Image */}
       <div className="relative w-[80vw] h-[80vh]">
         <Image
-          src={`${BaseUrl}/${mainImage}`}
+          src={`${selectedImage}`}
           alt="صورة المنتج"
           fill
           style={{ objectFit: "contain" }}
