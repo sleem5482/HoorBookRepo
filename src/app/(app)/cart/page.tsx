@@ -433,7 +433,6 @@ useEffect(() => {
     />
   </div>
 
-  {/* النص */}
   <div className="text-center space-y-3">
     <p className="text-purple-700 font-bold text-2xl sm:text-3xl leading-relaxed">
       ماذا تنتظر؟ <span className="text-orange-500">قم بالشراء الآن</span>
@@ -443,9 +442,8 @@ useEffect(() => {
     </p>
   </div>
 
-  {/* زر CTA */}
   <Link
-    href="/Categories"
+    href="/"
     className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full shadow-lg transition-transform hover:scale-105"
   >
     تسوق الآن

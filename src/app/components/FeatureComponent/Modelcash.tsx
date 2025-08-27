@@ -139,30 +139,12 @@ export const Cash = ({
         console.log("📦 الطلب المرسل:", finalSure);
     };
 
-    // const handeldelete_address = (id: number) => {
-    //     axios
-    //         .delete(`${delete_address}${id}`, { headers })
-    //         .then((res) => {
-    //             if (res.data.status) {
-    //                 toast.success("✅ تم حذف العنوان بنجاح");
-    //                 setAddressList((prev) =>
-    //                     prev.filter((addr) => addr.id !== id)
-    //                 );
-    //             } else {
-    //                 toast.error("❌ فشل حذف العنوان");
-    //             }
-    //         })
-    //         .catch((err) => {
-    //             console.error("🚨 خطأ في حذف العنوان:", err);
-    //             toast.error("⚠️ حدث خطأ أثناء حذف العنوان");
-    //         });
-    // };
+  
   const handleSave = async () => {
     try {
         const res = await axios.get(`${BaseUrl}api/address`, { headers });
         if (Array.isArray(res.data?.data?.data)) {
             setAddressList(res.data.data.data); 
-            router.push('/order')
         }
     } catch (err) {
         console.error("فشل تحديث العناوين:", err);
