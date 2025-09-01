@@ -102,7 +102,6 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
     <>
  <SmartNavbar/>
     
-    {/* Routing icons */}
     
     <Container >
     <div className="max-w-screen-xl mx-auto">
@@ -236,7 +235,6 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
 
         ))}
 
-        {/* أزرار التنقل */}
         <div className="custom-swiper-button-prev absolute top-1/2 -translate-y-1/2 left-2 z-50 bg-white text-[#6B2B7A] shadow-md hover:bg-gray-100 p-2 rounded-full cursor-pointer transition">
           <ChevronLeft size={24} />
         </div>
@@ -251,7 +249,6 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
     
    
    <div className="w-full bg-white mt-6 relative shadow-sm rounded-xl">
-      {/* العنوان */}
       <div className="flex justify-center items-center text-xl mb-4">
         <h2 className="text-btn-color font-bold text-[20px] sm:text-[30px] mb-4 tracking-tight">    عروض مميزة
 </h2>
@@ -295,7 +292,6 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
 </SwiperSlide>
         ))}
 
-        {/* أزرار التنقل */}
         <div className="custom-swiper-button-prev absolute top-1/2 -translate-y-1/2 left-2 z-50 bg-white text-[#6B2B7A] shadow-md hover:bg-gray-100 p-2 rounded-full cursor-pointer transition">
           <ChevronLeft size={24} />
         </div>
