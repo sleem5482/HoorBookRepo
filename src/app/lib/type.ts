@@ -319,6 +319,7 @@ export interface Product_Card{
   packet_price_after_offer: string;
 }
 export interface CartItem {
+  disabled?: boolean;
   id: number;
   product_id: number;
   color_id: number | null;
