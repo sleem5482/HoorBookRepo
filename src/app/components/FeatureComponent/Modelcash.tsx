@@ -166,7 +166,7 @@ export const Cash = ({
         const res = await axios.get(`${BaseUrl}api/address`, { headers });
         if (Array.isArray(res.data?.data?.data)) {
             setAddressList(res.data.data.data); 
-            router.push('/order')
+            // router.push('/order')
         }
     } catch (err) {
         console.error("فشل تحديث العناوين:", err);

@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
           <div>
             <Image src={Logo} alt="Hoor Hyper Logo" width={150} height={75} className="mb-4" unoptimized/>
             <p className="text-sm leading-relaxed text-gray-100">
-              هايبر حور – كل احتياجات بيتك من مكان واحد. عروض يومية، جودة مضمونة، وخدمة عملاء ممتازة.
+               تطبيق حور بوك – كل احتياجات بيتك من مكان واحد. عروض يومية، جودة مضمونة، وخدمة عملاء ممتازة.
             </p>
             <div className="flex items-center gap-4 mt-6">
               <Link href={facebook} target='_blank' rel='nooper noreferrer' className="text-white hover:text-purple-200 transition"><FaFacebookF size={18} /></Link>
@@ -67,9 +67,10 @@ const Footer: React.FC = () => {
           <div>
             <h3 className="text-lg font-bold mb-4 border-b border-purple-300 pb-2">تواصل معنا</h3>
             <ul className="space-y-3 text-sm text-gray-100">
-              <li className="flex items-center gap-2"><FaMapMarkerAlt /> الفرع الرئيسي: شارع الثورة، القاهرة</li>
-              <li className="flex items-center gap-2"><FaPhoneAlt /> 0100 123 4567</li>
-              <li className="flex items-center gap-2"><FaEnvelope /> support@hoorhyper.com</li>
+              <li className="flex items-center gap-2"><FaMapMarkerAlt /> الفرع الرئيسي: محافظة بنى سويف - بنى سويف</li>
+              <li className="flex items-center gap-2"><FaPhoneAlt /> 01014163225</li>
+              <li className="flex items-center gap-2"><FaPhoneAlt /> 01555051303</li>
+              <li className="flex items-center gap-2"><FaEnvelope /> hoorbookapp@gmail.com</li>
             </ul>
           </div>
 
