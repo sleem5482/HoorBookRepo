@@ -96,7 +96,7 @@ const Footer: React.FC = () => {
             </div>
             <div className='mt-6 text-center'>
               <h1 className='font-bold border-b border-purple-300 pb-2'>حمل تطبيق حور بوك واطلب الان</h1>
-            <div className="grid grid-cols-3 items-center gap-4">
+            <div className="grid grid-cols-3 items-center gap-4 mt-6">
               <Link href='https://play.google.com/store/search?q=hoorbook&c=apps&hl=en' target='_blank' rel='noopener noreferrer'>
                 <Image src="/asset/images/GooglePlay.png" alt="Google Play" width={130} height={30} className="hover:opacity-80 transition" />
               </Link>
