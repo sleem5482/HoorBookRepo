@@ -29,7 +29,10 @@ const Footer: React.FC = () => {
           <div>
             <Image src={Logo} alt="Hoor Hyper Logo" width={150} height={75} className="mb-4" unoptimized/>
             <p className="text-sm leading-relaxed text-gray-100">
-               تطبيق حور بوك – كل احتياجات بيتك من مكان واحد. عروض يومية، جودة مضمونة، وخدمة عملاء ممتازة.
+               تطبيق حور بوك – جميع احتياجاتك في مكان واحد .
+            </p>
+            <p className="text-sm leading-relaxed text-gray-100">
+               عروض يومية، جودة مضمونة، وخدمة عملاء ممتازة.
             </p>
             <div className="flex items-center gap-4 mt-6">
               <Link href={facebook} target='_blank' rel='nooper noreferrer' className="text-white hover:text-purple-200 transition"><FaFacebookF size={18} /></Link>
@@ -89,10 +92,10 @@ const Footer: React.FC = () => {
             <div className="flex items-center gap-4 mt-6 text-white opacity-80">
               <FaCcVisa size={32} className="hover:opacity-100 transition" />
               <FaCcMastercard size={32} className="hover:opacity-100 transition" />
-              <FaCcPaypal size={32} className="hover:opacity-100 transition" />
+              {/* <FaCcPaypal size={32} className="hover:opacity-100 transition" /> */}
             </div>
             <div className='mt-6 text-center'>
-              <h1 className='font-bold border-b border-purple-300 pb-2'>تحميل تطبيق حور بوك من على المتاجر</h1>
+              <h1 className='font-bold border-b border-purple-300 pb-2'>حمل تطبيق حور بوك واطلب الان</h1>
             <div className="grid grid-cols-3 items-center gap-4">
               <Link href='https://play.google.com/store/search?q=hoorbook&c=apps&hl=en' target='_blank' rel='noopener noreferrer'>
                 <Image src="/asset/images/GooglePlay.png" alt="Google Play" width={130} height={30} className="hover:opacity-80 transition" />
