@@ -35,9 +35,7 @@ const { cartCount, refreshCartCount } = useCartStore()
         } bg-gradient-to-tr from-[#6B2B7A] via-[#844C9A] to-[#6B2B7A] shadow-lg backdrop-blur-md`}
       >
         <div className="max-w-screen-xl mx-auto px-4 py-3 flex flex-row items-center justify-between gap-6">
-          {/* الشعار والبحث */}
          <div className="flex flex-row md:justify-between items-center w-full md:gap-60 gap-2">
-  {/* الشعار */}
   <div className="w-full md:w-36 flex justify-center md:justify-start">
     <Link href="/" className="block">
       <Image
@@ -51,7 +49,6 @@ const { cartCount, refreshCartCount } = useCartStore()
     </Link>
   </div>
 
-  {/* مربع البحث */}
   <div className="w-full md:w-full flex justify-center items-center">
     <Link href="/Products" className="w-full md:w-full flex justify-center items-center">
       <div className="w-full max-w-md">
@@ -87,7 +84,7 @@ const { cartCount, refreshCartCount } = useCartStore()
       </header>
 
 <div
-  className={`fixed bottom-0 left-0 w-full z-[100] md:hidden transition-transform duration-300 ${
+  className={`fixed bottom-0 left-0 w-full z-[100]  lg:hidden transition-transform duration-300 ${
     visible ? 'translate-y-0' : 'translate-y-full'
   } bg-gradient-to-tr from-[#6B2B7A] via-[#844C9A] to-[#6B2B7A] shadow-inner px-6 py-2 flex justify-around items-center text-white text-xs`}
 >

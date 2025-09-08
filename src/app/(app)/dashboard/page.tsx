@@ -129,7 +129,6 @@ export default function CategoriesPage() {
         <Menu />
       </button>
 
-      {/* Sidebar */}
      <aside
   className={`fixed top-16 right-0 md:static h-full w-64 p-4 transition-transform z-30 shadow-xl bg-gradient-to-b from-white via-blue-50 to-pink-100 overflow-y-auto border-l border-gray-300 ${
     sidebarOpen ? "translate-x-0" : "translate-x-full md:translate-x-0"
@@ -172,7 +171,9 @@ export default function CategoriesPage() {
         <h2 className="text-2xl font-semibold mb-4 text-right text-gray-800">المنتجات</h2>
 
         {products.length === 0 && !loadingProducts && (
-          <p className="text-center text-gray-600 mt-8 text-lg">لا توجد منتجات</p>
+             <div className="flex justify-center items-center min-h-[60vh]">
+      <div className="w-16 h-16 border-8 border-purple-600 border-t-transparent rounded-full animate-spin" />
+    </div>
         )}
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -182,15 +183,14 @@ export default function CategoriesPage() {
         <div key={product.id} ref={ref}>
       <Link
         href={`/Categories/${product.id}`}
-        className=" bg-white rounded-lg p-4 flex flex-col items-center shadow hover:shadow-md transition"
+        className=" bg-white rounded-lg p-4  flex flex-col items-center shadow hover:shadow-md transition"
       >
         <Image
           src={`${BaseUrl}${product.image}`}
           alt={product.name}
           width={80}
           height={80}
-          className="object-contain mb-2"
-          unoptimized
+          className="w-full h-20 object-contain mb-2"
         />
         <div className="text-center text-sm font-medium text-gray-800">
           {product.name}

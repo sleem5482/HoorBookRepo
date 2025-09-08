@@ -14,15 +14,17 @@ import Cookies from "js-cookie";
 import { LoginRequiredModal } from '@/app/components/ui/Pop-up-login'
 import FormField from '@/app/components/ui/Formfield'
 import { Cash } from '@/app/components/FeatureComponent/Modelcash'
-import Search from '../../../../public/asset/images/Search.jpg'
+import Empty_cart from '../../../../public/asset/images/cart_empty.avif'
 import Link from 'next/link';
 const EditModal = ({
   item,
   onClose,
+  disabled,
   onSave,
 }: {
   item: CartItem
   onClose: () => void
+  disabled: boolean
   onSave: (newQty: number) => void,
 }) => {
   const [newQty, setNewQty] = useState(item.qty);
@@ -33,7 +35,7 @@ const EditModal = ({
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-2xl"
           aria-label="إغلاق"
-        >
+          >
           ×
         </button>
         <div className="w-32 h-32 relative mx-auto mb-4 rounded-xl overflow-hidden shadow-md">
@@ -43,7 +45,7 @@ const EditModal = ({
             layout="fill"
             objectFit="cover"
             unoptimized
-          />
+            />
         </div>
         <h2 className="text-center font-bold text-xl text-gray-800 mb-1">{item.product.name}</h2>
         <p className="text-center text-green-700 font-semibold text-sm mb-4">
@@ -55,7 +57,7 @@ const EditModal = ({
             value={newQty}
             onChange={e => setNewQty(Number(e.target.value))}
             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
+            >
             {[...Array(item.product.stock)].map((_, i) => (
               <option key={i + 1} value={i + 1}>
                 {i + 1}
@@ -67,7 +69,7 @@ const EditModal = ({
           onClick={() => onSave(newQty)}
           className="w-full mt-2 bg-gradient-to-r from-purple-700 to-orange-400 text-white font-semibold py-2 rounded-lg shadow-md hover:opacity-90 transition"
         >
-          حفظ التعديل
+            {disabled ? "جارٍ الحفظ..." : "حفظ التعديل"}
         </button>
       </div>
     </div>
@@ -75,6 +77,7 @@ const EditModal = ({
 }
 
 export default function Cart() {
+  const [isSaving, setIsSaving] = useState(false);
   const token = Cookies.get("access_token_login");
   const [login, setlogin] = useState<boolean>(true);
   const [items, setItems] = useState<CartItem[]>([])
@@ -87,6 +90,7 @@ export default function Cart() {
   const [open, setopen] = useState<boolean>(false)
   const [verificatio, setverification] = useState(false);
   const [total,setotoal]=useState<string>('')
+
    const [showTimeoutMessage, setShowTimeoutMessage] = useState(false);
   const [discount_copoun, setdescount] = useState<Coupoun>({
     type: '',
@@ -173,28 +177,35 @@ export default function Cart() {
     }
   }
 
-  const handleSaveEdit = async (newQty: number) => {
-    if (!editingItem) return
+const handleSaveEdit = async (newQty: number) => {
+  if (!editingItem) return;
 
-    try {
-      await axios.put(`${BaseUrl}api/carts/${editingItem.id}`, {
-        qty: newQty
-      }, { headers })
+  try {
+     setIsSaving(true);
+    await axios.put(
+      `${BaseUrl}api/carts/${editingItem.id}`,
+      { qty: newQty },
+      { headers }
+    );
 
-      setItems(prev =>
-        prev.map(item =>
-          item.id === editingItem.id ? { ...item, qty: newQty } : item
-        )
-      )
-
-      refreshCartCount()
-      toast.success('🎉 تم تعديل المنتج بنجاح')
-      setEditingItem(null)
-      fetchData(1);
-    } catch (error) {
-      toast.error('❌ حدث خطأ أثناء التعديل')
-    }
+    toast.success('🎉 تم تعديل المنتج بنجاح');
+    
+    setItems([]);
+    setPage(1);
+    setEditingItem(null);
+    fetchData(1);
+    refreshCartCount();
+    
+  } catch (error) {
+    toast.error('❌ حدث خطأ أثناء التعديل');
+  } finally {
+    setIsSaving(false); 
   }
+};
+
+
+
+
   const handelcode = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -321,8 +332,8 @@ useEffect(() => {
         type="submit"
         disabled={verificatio}
         className="mt-12 px-3 py-3 w-40 rounded-2xl font-semibold shadow 
-                   text-white bg-gradient-to-r from-purple-700 to-orange-400 
-                   hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                text-white bg-gradient-to-r from-purple-700 to-orange-400 
+                  hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
         تفعيل
       </button>
@@ -423,23 +434,34 @@ useEffect(() => {
             <p className="text-gray-500">جاري تحميل السلة...</p>
           </div>
         ) : (
-  <div className="flex flex-col items-center justify-center gap-6 animate-fadeIn">
-  {/* الصورة */}
+<div className="flex flex-col items-center justify-center gap-6 p-6 bg-gradient-to-b from-white to-purple-50 rounded-2xl shadow-md animate-fadeIn">
   <div className="w-72 h-72 relative">
     <Image
-      src="/asset/images/Search.jpg"
+      src={Empty_cart}
       alt="Empty Cart"
       fill
-      className="object-contain drop-shadow-lg rounded-2xl"
+      className="object-contain "
       priority
     />
   </div>
 
-  {/* النص */}
-  <p className="text-purple-700 font-bold text-2xl sm:text-3xl text-center leading-relaxed">
-    ماذا تنتظر؟ <span className="text-orange-500">قم بالشراء الآن </span>
-  </p>
+  <div className="text-center space-y-3">
+    <p className="text-purple-700 font-bold text-2xl sm:text-3xl leading-relaxed">
+      ماذا تنتظر؟ <span className="text-orange-500">قم بالشراء الآن</span>
+    </p>
+    <p className="text-gray-600 text-sm sm:text-base">
+      اكتشف أفضل العروض والمنتجات المميزة بلمسة واحدة فقط ✨
+    </p>
+  </div>
+
+  <Link
+    href="/"
+    className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full shadow-lg transition-transform hover:scale-105"
+  >
+    تسوق الآن
+  </Link>
 </div>
+
 
         )}
       </div>
@@ -466,6 +488,7 @@ useEffect(() => {
       {editingItem && (
         <EditModal
           item={editingItem}
+           disabled={isSaving}
           onClose={() => setEditingItem(null)}
           onSave={handleSaveEdit}
         />
