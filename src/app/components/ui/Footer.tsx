@@ -95,13 +95,13 @@ const Footer: React.FC = () => {
               <h1 className='font-bold border-b border-purple-300 pb-2'>تحميل تطبيق حور بوك من على المتاجر</h1>
             <div className="grid grid-cols-3 items-center gap-4">
               <Link href='https://play.google.com/store/search?q=hoorbook&c=apps&hl=en' target='_blank' rel='noopener noreferrer'>
-                <Image src="/asset/images/GooglePlay.png" alt="Google Play" width={130} height={40} className="hover:opacity-90 transition" />
+                <Image src="/asset/images/GooglePlay.png" alt="Google Play" width={130} height={30} className="hover:opacity-80 transition" />
               </Link>
               <Link href='https://apps.apple.com/eg/app/hoorbook/id6478924342' target='_blank' rel='noopener noreferrer'>
-                <Image src="/asset/images/App_Store.png" alt="App Store" width={130} height={40} className="hover:opacity-90 transition" />
+                <Image src="/asset/images/App_Store.png" alt="App Store" width={130} height={30} className="hover:opacity-80 transition" />
               </Link>
               <Link href='https://appgallery.huawei.com/#/app/C109527291' target='_blank' rel='noopener noreferrer'>
-                <Image src="/asset/images/AppGallery.png" alt="App Gallery" width={130} height={40} className="hover:opacity-90 transition" />
+                <Image src="/asset/images/AppGallery.png" alt="App Gallery" width={130} height={30} className="hover:opacity-80 transition" />
               </Link>
             </div>
             </div>
