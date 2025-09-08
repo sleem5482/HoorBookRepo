@@ -4,13 +4,15 @@ import Container from "@/app/components/Container";
 import { fetchData, Postresponse } from "@/app/lib/methodes";
 import { AddToChart, ApiResponse, ProductDetails } from "@/app/lib/type";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { NavigationOptions } from "swiper/types";
 import SmartNavbar from "@/app/components/ui/Navbar";
 import { CallApi } from "@/app/lib/utilits";
 import { Button } from "@/app/components/ui/Button";
 import CommentPopup from "@/app/components/ui/popup";
 import toast from "react-hot-toast";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Cookies from 'js-cookie'
 import { LoginRequiredModal } from "@/app/components/ui/Pop-up-login";
 import ErrorPopUP from "@/app/components/ui/pop-up_show_message_error";
@@ -39,7 +41,10 @@ export default function Details() {
         show: false,
         message: "",
     });
-       
+      //  
+const prevRef = useRef(null);
+const nextRef = useRef(null);
+// 
   const [chart, setchart] = useState<Partial<AddToChart>>({
     product_type: "Piece",
     qty: 1,
@@ -161,26 +166,47 @@ const imgcomment=`${BaseUrl}${details.image}`
     />
   ) : details.media && details.media.length > 0 ? (
     <Swiper
-      modules={[Navigation, Pagination]}
-      navigation
-      pagination={{ clickable: true }}
-      loop
-      className="w-full h-full"
-    >
-      {details.media.map((m) => (
-        <SwiperSlide key={m.id}>
-          <Image
-            src={`${BaseUrl}/${m.image}`}
-            alt="صورة المنتج"
-            fill
-            style={{ objectFit: "contain" }}
-            className="rounded-xl cursor-pointer"
-            onClick={() => { setscale(true); setSelectedImage(`${BaseUrl}/${m.image}`); }}
-            unoptimized
-          />
-        </SwiperSlide>
-      ))}
-    </Swiper>
+  modules={[Navigation, Pagination]}
+  navigation={{
+    prevEl: prevRef.current,
+    nextEl: nextRef.current,
+  }}
+onBeforeInit={(swiper) => {
+  const navigation = swiper.params.navigation as NavigationOptions;
+  navigation.prevEl = prevRef.current;
+  navigation.nextEl = nextRef.current;
+}}
+
+  pagination={{ clickable: true }}
+  loop
+  className="w-full h-full relative"
+>
+  {details.media.map((m) => (
+    <SwiperSlide key={m.id}>
+      <Image
+        src={`${BaseUrl}/${m.image}`}
+        alt="صورة المنتج"
+        fill
+        style={{ objectFit: "contain" }}
+        className="rounded-xl cursor-pointer"
+        onClick={() => {
+          setscale(true);
+          setSelectedImage(`${BaseUrl}/${m.image}`);
+        }}
+        unoptimized
+      />
+    </SwiperSlide>
+  ))}
+
+  <div ref={prevRef} className="absolute top-1/2 -translate-y-1/2 left-2 z-50 bg-[#370841] text-white p-2 rounded-full cursor-pointer hover:bg-gray-600 transition">
+    <ChevronLeft size={24} />
+  </div>
+  <div ref={nextRef} className="absolute top-1/2 -translate-y-1/2 right-2 z-50 bg-[#370841] text-white p-2 rounded-full cursor-pointer hover:bg-gray-600 transition">
+    <ChevronRight size={24} />
+  </div>
+</Swiper>
+
+
   ) : (
     <Image
       src={`${BaseUrl}/${details.image}`}

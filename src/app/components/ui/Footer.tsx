@@ -38,15 +38,15 @@ const Footer: React.FC = () => {
             </div>
              <div className="flex flex-col mt-6">
 
-      <Link href="/Terms&Conditions" target="_blank" rel='nooper noreferrer' className="text-white hover:cursor-pointer">
+      <Link href="/Terms&Conditions" target="_blank" rel='nooper noreferrer' className="text-white hover:cursor-pointer hover:underline hover:text-gray-200">
         الشروط والأحكام
       </Link>
 
-      <Link href="/PrivacyPolicy" target="_blank" rel='nooper noreferrer' className="text-white hover:cursor-pointer">
+      <Link href="/PrivacyPolicy" target="_blank" rel='nooper noreferrer' className="text-white hover:cursor-pointer hover:underline hover:text-gray-200">
         سياسة الخصوصية
       </Link>
 
-      <Link href="/ReturnPolicy" target="_blank" rel='nooper noreferrer' className="text-white hover:cursor-pointer">
+      <Link href="/ReturnPolicy" target="_blank" rel='nooper noreferrer' className="text-white hover:cursor-pointer hover:underline hover:text-gray-200">
         سياسة الاستبدال والاسترجاع
       </Link>
     </div>
@@ -90,6 +90,20 @@ const Footer: React.FC = () => {
               <FaCcVisa size={32} className="hover:opacity-100 transition" />
               <FaCcMastercard size={32} className="hover:opacity-100 transition" />
               <FaCcPaypal size={32} className="hover:opacity-100 transition" />
+            </div>
+            <div className='mt-6 text-center'>
+              <h1 className='font-bold border-b border-purple-300 pb-2'>تحميل تطبيق حور بوك من على المتاجر</h1>
+            <div className="grid grid-cols-3 items-center gap-4">
+              <Link href='https://play.google.com/store/search?q=hoorbook&c=apps&hl=en' target='_blank' rel='noopener noreferrer'>
+                <Image src="/asset/images/GooglePlay.png" alt="Google Play" width={130} height={40} className="hover:opacity-90 transition" />
+              </Link>
+              <Link href='https://apps.apple.com/eg/app/hoorbook/id6478924342' target='_blank' rel='noopener noreferrer'>
+                <Image src="/asset/images/App_Store.png" alt="App Store" width={130} height={40} className="hover:opacity-90 transition" />
+              </Link>
+              <Link href='https://appgallery.huawei.com/#/app/C109527291' target='_blank' rel='noopener noreferrer'>
+                <Image src="/asset/images/AppGallery.png" alt="App Gallery" width={130} height={40} className="hover:opacity-90 transition" />
+              </Link>
+            </div>
             </div>
           </div>
         </div>
